@@ -3,13 +3,13 @@ import { getData } from "./ApiFetcher";
 import "./App.css";
 
 function App() {
-    const [apiData, setApiData] = useState(null);
+    const [apiData, setApiData] = useState();
 
     useEffect(() => {
-        getData("posts")
+        getData("academics")
             .then((data) => {
-                console.log(data);
                 setApiData(data);
+                console.log(apiData);
             })
             .catch((error) => {
                 console.error("Error while fetching data:", error);
