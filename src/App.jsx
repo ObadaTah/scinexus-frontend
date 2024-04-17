@@ -1,98 +1,42 @@
-import { useState } from "react";
-// import { getData } from "./ApiFetcher";
-// import Footer from "./Components/Generic/Footer";
-// import SignIn from "./Pages/Auth/SignIn";
-// import SignUp from "./Pages/Auth/SignUp";
+import { createTheme } from "@mui/material/styles";
 import {
-    AppstoreOutlined,
-    RadiusSettingOutlined,
-    HomeFilled,
-    SettingFilled,
-    PictureFilled,
-} from "@ant-design/icons";
-import { Menu } from "antd";
-const items = [
-    {
-        label: "Home",
-        key: "home",
-        icon: <HomeFilled />,
-    },
-    {
-        label: "Navigation Two",
-        key: "app",
-        icon: <AppstoreOutlined />,
-    },
-    {
-        label: "Profile",
-        key: "SubMenu",
-        icon: <PictureFilled />,
-        children: [
-            {
-                type: "group",
-                label: "Profile",
-                children: [
-                    {
-                        label: "My Profile",
-                        key: "myProfile",
-                    },
-                    {
-                        label: "My Organization",
-                        key: "myOrganization",
-                    },
-                ],
-            },
-            {
-                type: "group",
-                label: "Settings",
-                children: [
-                    {
-                        label: "Application Settings",
-                        key: "appSettings",
-                        icon: <SettingFilled />,
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        label: (
-            <a
-                href="https://ant.design"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Navigation Four - Link
-            </a>
-        ),
-        key: "alipay",
-    },
-];
+    Route,
+    RouterProvider,
+    createBrowserRouter,
+    createRoutesFromElements,
+} from "react-router-dom";
+import Navbar from "./Components/Generic/Navbar";
+import Notifications from "./Components/Generic/Notifications";
+import Login from "./Pages/Auth/Login";
+import Register from "./Pages/Auth/Register";
+import MyProfile from "./Pages/MyProfile";
+import Home from "./Pages/Home";
+import MyLinks from "./Pages/MyLinks";
+import NotFound from "./Pages/NotFound";
+import Settings from "./Pages/Settings";
 
+const defaultTheme = createTheme();
+const router = createBrowserRouter(
+    createRoutesFromElements(
+        <Route path="/" element={<Navbar />}>
+            <Route index element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/settings" element={<Settings />} />
+            {/* <Route path="/logout" element={<Logout />} /> */}
+            <Route path="/register" element={<Register />} />
+            <Route path="/myLinks" element={<MyLinks />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/myProfile" element={<MyProfile />} />
+            {/* <Route path="/myOrganization" element={<MyOrganization />} /> */}
+            <Route path="/*" element={<NotFound />} />
+        </Route>
+    )
+);
 function App() {
-    // const [apiData, setApiData] = useState();
-
-    // useEffect(() => {
-    //     // getData("academics")
-    //     //     .then((data) => {
-    //     //         setApiData(data);
-    //     //         console.log(apiData);
-    //     //     })
-    //     //     .catch((error) => {
-    //     //         console.error("Error while fetching data:", error);
-    //     //     });
-    // }, []);
-    const [current, setCurrent] = useState("mail");
-    const onClick = (e) => {
-        console.log("click ", e);
-        setCurrent(e.key);
-    };
     return (
-        <Menu
-            onClick={onClick}
-            selectedKeys={[current]}
-            mode="horizontal"
-            items={items}
-        />
+        <>
+            <RouterProvider router={router} />
+        </>
     );
 }
 
