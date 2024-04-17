@@ -12,6 +12,7 @@ import { Outlet, Link } from "react-router-dom";
 import { Menu } from "antd";
 import { useState } from "react";
 import MyProfileIcon from "./MyProfileIcon";
+import Notifications from "./Notifications";
 const items = [
     {
         label: <Link to="/">Home</Link>,
@@ -24,9 +25,9 @@ const items = [
         icon: <PeopleAltIcon />,
     },
     {
-        label: <Link to="/notifications">Notifications</Link>,
+        label: "",
         key: "notifications",
-        icon: <NotificationsIcon />,
+        icon: <Notifications />,
     },
 
     {
