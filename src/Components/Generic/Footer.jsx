@@ -1,29 +1,116 @@
-import ASSETS from "../../assets/Assets";
-import styles from "./footer.module.css";
-function Footer() {
+import AspectRatio from "@mui/joy/AspectRatio";
+import Box from "@mui/joy/Box";
+import IconButton from "@mui/joy/IconButton";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import Divider from "@mui/joy/Divider";
+import Input from "@mui/joy/Input";
+import List from "@mui/joy/List";
+import ListSubheader from "@mui/joy/ListSubheader";
+import ListItem from "@mui/joy/ListItem";
+import ListItemButton from "@mui/joy/ListItemButton";
+import Typography from "@mui/joy/Typography";
+import Sheet from "@mui/joy/Sheet";
+import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import SendIcon from "@mui/icons-material/Send";
+import ColorLensRoundedIcon from "@mui/icons-material/ColorLensRounded";
+import { Link, Outlet } from "react-router-dom";
+
+export default function ColorInversionFooter() {
+    const color = "danger";
     return (
-        <footer
-            id="footer"
-            className={(styles.background, "row")}
-            style={{
-                backgroundImage: `url(${ASSETS.footerBackground})`,
+        <Sheet
+            variant="solid"
+            color={color}
+            invertedColors
+            sx={{
+                ...(color !== "neutral" && {
+                    bgcolor: `${color}.800`,
+                }),
+                flexGrow: 1,
+                p: 2,
+                borderRadius: { xs: 0, sm: "sm" },
             }}
         >
-            <div className="col">
-                <h1 className={styles.footerHeader}>SciNexus</h1>
-                <p className={styles.footerText}>Science Made for Everyone</p>
-            </div>
-            <img
-                id="spine"
-                className={(styles.spine, "col")}
-                src={ASSETS.spine}
-                alt=""
-            />
-            <div className={styles.lowerSection}>
-                <p>© 2021 - All rights reserved</p>
-            </div>
-        </footer>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <IconButton variant="plain">
+                    <FacebookRoundedIcon />
+                </IconButton>
+                <IconButton variant="plain">
+                    <GitHubIcon />
+                </IconButton>
+            </Box>
+            <Divider sx={{ my: 2 }} />
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", md: "row" },
+                    alignItems: { md: "flex-start" },
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                    gap: 2,
+                }}
+            >
+                <Card
+                    variant="soft"
+                    size="sm"
+                    sx={{
+                        flexDirection: { xs: "row", md: "column" },
+                        minWidth: { xs: "100%", md: "auto" },
+                        gap: 1,
+                    }}
+                >
+                    <CardContent>
+                        <Typography level="body-sm">SciNexus</Typography>
+                    </CardContent>
+                </Card>
+                <List
+                    size="sm"
+                    orientation="horizontal"
+                    wrap
+                    sx={{ flexGrow: 0, "--ListItem-radius": "8px" }}
+                >
+                    <ListItem nested sx={{ width: { xs: "50%", md: 140 } }}>
+                        <ListSubheader sx={{ fontWeight: "xl" }}>
+                            Sitemap
+                        </ListSubheader>
+                        <List>
+                            <ListItem>
+                                <Link to="/home">
+                                    <ListItemButton>Home</ListItemButton>
+                                </Link>
+                            </ListItem>
+                            <ListItem>
+                                <Link to={"/myProfile"}>
+                                    <ListItemButton>My Profile</ListItemButton>
+                                </Link>
+                            </ListItem>
+                            <ListItem>
+                                <Link to={"/logout"}>
+                                    <ListItemButton>Logout</ListItemButton>
+                                </Link>
+                            </ListItem>
+                        </List>
+                    </ListItem>
+                    <ListItem nested sx={{ width: { xs: "50%", md: 180 } }}>
+                        <ListSubheader sx={{ fontWeight: "xl" }}>
+                            Products
+                        </ListSubheader>
+                        <List>
+                            <ListItem>
+                                <ListItemButton>Link</ListItemButton>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemButton>Base UI</ListItemButton>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemButton>Material UI</ListItemButton>
+                            </ListItem>
+                        </List>
+                    </ListItem>
+                </List>
+            </Box>
+        </Sheet>
     );
 }
-
-export default Footer;
