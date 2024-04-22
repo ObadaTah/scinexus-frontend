@@ -14,7 +14,7 @@ import MuiList from "@mui/material/List";
 import MuiListItem from "@mui/material/ListItem";
 import MuiDivider from "@mui/material/Divider";
 import { getCookie } from "../../helpers";
-
+// To be Edited
 async function fetchNotifications() {
     if (process.env.NODE_ENV === "development") {
         const items = (await import("../../notifications.json")).default;
