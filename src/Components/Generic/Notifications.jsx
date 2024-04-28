@@ -1,18 +1,17 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
-import Tooltip from "@mui/material/Tooltip";
-import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
-import Typography from "@mui/material/Typography";
-import Popper from "@mui/material/Popper";
-import Grow from "@mui/material/Grow";
-import MuiPaper from "@mui/material/Paper";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
+import Badge from "@mui/material/Badge";
+import CircularProgress from "@mui/material/CircularProgress";
+import MuiDivider from "@mui/material/Divider";
+import Grow from "@mui/material/Grow";
+import IconButton from "@mui/material/IconButton";
 import MuiList from "@mui/material/List";
 import MuiListItem from "@mui/material/ListItem";
-import MuiDivider from "@mui/material/Divider";
+import Popper from "@mui/material/Popper";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
+import * as React from "react";
 import { getCookie } from "../../helpers";
 // To be Edited
 async function fetchNotifications() {

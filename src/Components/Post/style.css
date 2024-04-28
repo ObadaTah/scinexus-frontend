@@ -1,0 +1,12 @@
+.reactionsHolder {
+    position: absolute;
+    /* z-index: 1000; */
+    float: left;
+    bottom: 40px;
+    left: 15px;
+}
+.reactionButton {
+    overflow: hidden;
+    justify-content: space-between;
+    align-items: center;
+}

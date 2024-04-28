@@ -1,21 +1,17 @@
-import AspectRatio from "@mui/joy/AspectRatio";
+import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/joy/Box";
-import IconButton from "@mui/joy/IconButton";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Divider from "@mui/joy/Divider";
-import Input from "@mui/joy/Input";
+import IconButton from "@mui/joy/IconButton";
 import List from "@mui/joy/List";
-import ListSubheader from "@mui/joy/ListSubheader";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
-import Typography from "@mui/joy/Typography";
+import ListSubheader from "@mui/joy/ListSubheader";
 import Sheet from "@mui/joy/Sheet";
-import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import SendIcon from "@mui/icons-material/Send";
-import ColorLensRoundedIcon from "@mui/icons-material/ColorLensRounded";
-import { Link, Outlet } from "react-router-dom";
+import Typography from "@mui/joy/Typography";
+import { Link } from "react-router-dom";
 
 export default function ColorInversionFooter() {
     const color = "danger";

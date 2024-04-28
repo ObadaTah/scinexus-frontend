@@ -1,11 +1,13 @@
-function SendButton() {
-    const onClick = () => {};
+import SendIcon from "@mui/icons-material/Send";
+function SendButton(props) {
+    const onClick = () => {
+        console.log("Send button clicked " + props.postId);
+    };
 
     return (
         // TBI : To be implemented
-        <button onClick={onClick}>
-            <img src="/Send.svg" alt="Send" />
-        </button>
+
+        <SendIcon onClick={() => onClick()} />
     );
 }
 
