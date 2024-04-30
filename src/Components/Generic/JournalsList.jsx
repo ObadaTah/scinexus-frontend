@@ -5,16 +5,16 @@ import ResearchPaper from "../Jouranl/ResearchPaper/ResearchPaper";
 function JournalsList() {
     // TBI : To be implemented
     const dummyOrgs = [
-        { name: "Bethlehem University", image: "src" },
-        { name: "Bethlehem University", image: "src" },
-        { name: "Bethlehem University", image: "src" },
-        { name: "Bethlehem University", image: "src" },
+        { name: "Bethlehem University", image: "https://placehold.co/400x400" },
+        { name: "Bethlehem University", image: "https://placehold.co/400x400" },
+        { name: "Bethlehem University", image: "https://placehold.co/400x400" },
+        { name: "Bethlehem University", image: "https://placehold.co/400x400" },
     ];
     const dummyCont = [
-        { name: "Obada Tahboub", image: "src" },
-        { name: "Obada Tahboub", image: "src" },
-        { name: "Obada Tahboub", image: "src" },
-        { name: "Obada Tahboub", image: "src" },
+        { name: "Obada Tahboub", image: "https://placehold.co/400x400" },
+        { name: "Obada Tahboub", image: "https://placehold.co/400x400" },
+        { name: "Obada Tahboub", image: "https://placehold.co/400x400" },
+        { name: "Obada Tahboub", image: "https://placehold.co/400x400" },
     ];
     const dummyResearchPapers = [
         {
@@ -22,32 +22,48 @@ function JournalsList() {
             title: "This is a dummy research paper",
             publishDate: "2021-10-10",
             organizations: dummyOrgs,
-            image: "src",
+            image: "https://placehold.co/400x400",
             contributors: dummyCont,
+            content: {
+                header: "Abstraction",
+                paragraph: "This is a dummy research paper",
+            },
         },
         {
             publisher: "UserName",
             title: "This is a dummy research paper",
             publishDate: "2021-10-10",
             organizations: dummyOrgs,
-            image: "src",
+            image: "https://placehold.co/400x400",
             contributors: dummyCont,
+            content: {
+                header: "Abstraction",
+                paragraph: "This is a dummy research paper",
+            },
         },
         {
             publisher: "UserName",
             title: "This is a dummy research paper",
             publishDate: "2021-10-10",
             organizations: dummyOrgs,
-            image: "src",
+            image: "https://placehold.co/400x400",
             contributors: dummyCont,
+            content: {
+                header: "Abstraction",
+                paragraph: "This is a dummy research paper",
+            },
         },
         {
             publisher: "UserName",
             title: "This is a dummy research paper",
             publishDate: "2021-10-10",
             organizations: dummyOrgs,
-            image: "src",
+            image: "https://placehold.co/400x400",
             contributors: dummyCont,
+            content: {
+                header: "Abstraction",
+                paragraph: "This is a dummy research paper",
+            },
         },
     ];
     const dummyPosts = [
@@ -55,34 +71,32 @@ function JournalsList() {
             publisher: "UserName",
             content: "This is a dummy post",
             publishDate: "2021-10-10",
-            image: "src",
         },
         {
             publisher: "UserName",
             content: "This is a dummy post",
             publishDate: "2021-10-10",
-            image: "src",
         },
         {
             publisher: "UserName",
             content: "This is a dummy post",
             publishDate: "2021-10-10",
-            image: "src",
+            image: "https://placehold.co/400x400",
         },
         {
             publisher: "UserName",
             content: "This is a dummy post",
             publishDate: "2021-10-10",
-            image: "src",
+            image: "https://placehold.co/3000x3000",
         },
     ];
     const onClick = () => {};
     return (
         <>
             <List>
-                {dummyPosts.map((post) => {
+                {dummyPosts.map((post, index) => {
                     return (
-                        <ListItem>
+                        <ListItem key={index}>
                             <Post
                                 publisher={post.publisher}
                                 content={post.content}
@@ -92,15 +106,16 @@ function JournalsList() {
                         </ListItem>
                     );
                 })}
-                {dummyResearchPapers.map((researchPaper) => {
+                {dummyResearchPapers.map((researchPaper, index) => {
                     return (
-                        <ListItem>
+                        <ListItem key={index}>
                             <ResearchPaper
                                 publisher={researchPaper.publisher}
                                 title={researchPaper.title}
                                 publishDate={researchPaper.publishDate}
                                 organizations={researchPaper.organizations}
                                 image={researchPaper.image}
+                                content={researchPaper.content}
                                 contributors={researchPaper.contributors}
                             />
                         </ListItem>
