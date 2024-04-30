@@ -14,7 +14,7 @@ import Typography from "@mui/joy/Typography";
 import { Link } from "react-router-dom";
 
 export default function ColorInversionFooter() {
-    const color = "danger";
+    const color = "primary";
     return (
         <Sheet
             variant="solid"
