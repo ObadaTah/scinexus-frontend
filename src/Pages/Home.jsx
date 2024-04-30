@@ -1,6 +1,5 @@
 import { Container, Grid } from "@mui/material";
-import Post from "../Components/Post/Post";
-import PostList from "../Components/Post/PostList";
+import JournalsList from "../Components/Generic/JournalsList";
 
 function Home() {
     return (
@@ -16,7 +15,7 @@ function Home() {
                 <Grid item xs={3}>
                     <h1>Home</h1>
                     <Container>
-                        <PostList />
+                        <JournalsList />
                     </Container>
                 </Grid>
             </Grid>
