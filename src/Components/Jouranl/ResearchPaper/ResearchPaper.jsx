@@ -1,6 +1,6 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import ShareIcon from "@mui/icons-material/Share";
+import { Grid } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -11,12 +11,13 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
+import Divider from "@mui/material/Divider";
+
 import { styled } from "@mui/material/styles";
 import React from "react";
 import ReactionButton from "../Components/ReactionButton";
 import SendButton from "../Components/SendButton";
-import OrganizationIcon from "./OrganizationIcon";
-import { Grid } from "@mui/material";
+import IconAndText from "./IconAndText";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -50,20 +51,48 @@ function ResearchPaper(props) {
                 title="Shrimp and Chorizo Paella"
                 subheader="September 14, 2016"
             />
-            <CardMedia
-                component="img"
-                height="194"
-                image="/static/images/cards/paella.jpg"
-                alt="Paella dish"
-            />
+            {props.image != null ? (
+                <CardMedia
+                    // component="img"
+                    children={
+                        <img
+                            style={{
+                                width: "100%",
+                                maxHeight: "500px",
+                                objectFit: "cover",
+                            }}
+                            src={props.image}
+                            alt="Paella dish"
+                        />
+                    }
+                    // image={props.image}
+                />
+            ) : null}
             <CardContent>
+                <Typography variant="h5">Validated By:</Typography>
                 <Grid container spacing={0.1} rowGap={-0.1}>
-                    {props.organizations.map((organization) => {
+                    {props.organizations.map((organization, index) => {
                         return (
-                            <Grid item xs={3}>
-                                <OrganizationIcon
-                                    orgName={organization.name}
-                                    orgImage={organization.image}
+                            <>
+                                <Grid item xs={3} key={index}>
+                                    <IconAndText
+                                        text={organization.name}
+                                        iconSrc={organization.image}
+                                    />
+                                </Grid>
+                            </>
+                        );
+                    })}
+                </Grid>
+
+                <Typography variant="h5">Contributors</Typography>
+                <Grid container spacing={0.1} rowGap={-0.1}>
+                    {props.contributors.map((contributor, index) => {
+                        return (
+                            <Grid item xs={3} key={index}>
+                                <IconAndText
+                                    text={contributor.name}
+                                    iconSrc={contributor.image}
                                 />
                             </Grid>
                         );
@@ -90,37 +119,10 @@ function ResearchPaper(props) {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                    <Typography paragraph>
-                        Heat 1/2 cup of the broth in a pot until simmering, add
-                        saffron and set aside for 10 minutes.
+                    <Typography variant="h4">
+                        {props.content.header}:
                     </Typography>
-                    <Typography paragraph>
-                        Heat oil in a (14- to 16-inch) paella pan or a large,
-                        deep skillet over medium-high heat. Add chicken, shrimp
-                        and chorizo, and cook, stirring occasionally until
-                        lightly browned, 6 to 8 minutes. Transfer shrimp to a
-                        large plate and set aside, leaving chicken and chorizo
-                        in the pan. Add pimentón, bay leaves, garlic, tomatoes,
-                        onion, salt and pepper, and cook, stirring often until
-                        thickened and fragrant, about 10 minutes. Add saffron
-                        broth and remaining 4 1/2 cups chicken broth; bring to a
-                        boil.
-                    </Typography>
-                    <Typography paragraph>
-                        Add rice and stir very gently to distribute. Top with
-                        artichokes and peppers, and cook without stirring, until
-                        most of the liquid is absorbed, 15 to 18 minutes. Reduce
-                        heat to medium-low, add reserved shrimp and mussels,
-                        tucking them down into the rice, and cook again without
-                        stirring, until mussels have opened and rice is just
-                        tender, 5 to 7 minutes more. (Discard any mussels that
-                        don&apos;t open.)
-                    </Typography>
-                    <Typography>
-                        Set aside off of the heat to let rest for 10 minutes,
-                        and then serve.
-                    </Typography>
+                    <Typography paragraph>{props.content.paragraph}</Typography>
                 </CardContent>
             </Collapse>
         </Card>
