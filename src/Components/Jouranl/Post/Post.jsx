@@ -8,13 +8,32 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import Collapse from "@mui/material/Collapse";
+import ForumIcon from "@mui/icons-material/Forum";
+
 import { red } from "@mui/material/colors";
 import React from "react";
-import OpinionsModal from "../Opinion/OpinionsModal";
+import OpinionButton from "../Opinion/OpinionButton";
+import OpinionsContainer from "../Opinion/OpinionsContainer";
 import ReactionButton from "../Components/ReactionButton";
 import SendButton from "../Components/SendButton";
+import { styled } from "@mui/material/styles";
 
+const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+    // transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+        duration: theme.transitions.duration.shortest,
+    }),
+}));
 function Post(props) {
+    const [expanded, setExpanded] = React.useState(false);
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
+    };
     // const onClick = () => {};
     return (
         <Card sx={{ width: "100%" }}>
@@ -60,11 +79,21 @@ function Post(props) {
                     <IconButton aria-label="share">
                         <SendButton journalId={props.journalId} />
                     </IconButton>
-                    <IconButton aria-label="share">
-                        <OpinionsModal journalId={props.journalId} />
-                    </IconButton>
+                    <ExpandMore
+                        expand={expanded}
+                        onClick={handleExpandClick}
+                        aria-expanded={expanded}
+                        aria-label="show more"
+                    >
+                        <OpinionButton />
+                    </ExpandMore>
                 </Grid>
             </CardActions>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <CardContent>
+                    <OpinionsContainer></OpinionsContainer>
+                </CardContent>
+            </Collapse>
         </Card>
     );
 }
