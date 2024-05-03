@@ -1,19 +1,17 @@
-import { Avatar, CardHeader, CardMedia, IconButton } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-
-import { red } from "@mui/material/colors";
-import { Image } from "react-bootstrap";
+import { Avatar, CardHeader } from "@mui/material";
+// import { Avatar } from "@nextui-org/react";
 
 const IconAndText = (props) => {
     return (
         <>
             <CardHeader
                 avatar={
-                    <Image
+                    <Avatar
+                        isBordered
                         style={{
                             width: "30px",
                             height: "30px",
-                            borderRadius: "100%",
+                            // borderRadius: "100%",
                         }}
                         src={props.iconSrc}
                     />
