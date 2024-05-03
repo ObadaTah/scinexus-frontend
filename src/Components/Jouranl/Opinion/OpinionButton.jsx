@@ -4,9 +4,9 @@ function OpinionButton() {
 
     const onClick = () => {};
     return (
-        <button onClick={onClick}>
+        <>
             <ForumIcon />
-        </button>
+        </>
     );
 }
 

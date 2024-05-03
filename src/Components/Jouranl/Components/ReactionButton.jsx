@@ -2,7 +2,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { motion } from "framer-motion";
 
 import { useState } from "react";
-import ASSETS from "../../assets/Assets";
+import ASSETS from "../../../assets/Assets";
 import { Container } from "@mui/material";
 import "./style.css";
 import { ReactionBarSelector } from "@charkour/react-reactions";
