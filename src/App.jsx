@@ -50,14 +50,12 @@ const router = createBrowserRouter(
 );
 function App() {
     return (
-        <>
-            <ThemeProvider theme={defaultTheme}>
-                <RouterProvider router={router} />
-                <BrowserRouter>
-                    <Footer />
-                </BrowserRouter>
-            </ThemeProvider>
-        </>
+        <ThemeProvider theme={defaultTheme}>
+            <RouterProvider router={router} />
+            <BrowserRouter>
+                <Footer />
+            </BrowserRouter>
+        </ThemeProvider>
     );
 }
 
