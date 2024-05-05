@@ -20,117 +20,124 @@ import OpinionsContainer from "../Opinion/OpinionsContainer";
 import IconAndText from "./IconAndText";
 
 const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  // transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
+    // transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+        duration: theme.transitions.duration.shortest,
+    }),
 }));
 function ResearchPaper(props) {
-  const [expanded, setExpanded] = React.useState(false);
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-  // const onClick = () => {};
-  return (
-    <Card sx={{ width: "100%" }}>
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
-      />
-      {props.image != null ? (
-        <CardMedia
-          // component="img"
-          children={
-            <img
-              style={{
-                width: "100%",
-                maxHeight: "500px",
-                objectFit: "cover",
-              }}
-              src={props.image}
-              alt="Paella dish"
+    const [expanded, setExpanded] = React.useState(false);
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
+    };
+    // const onClick = () => {};
+    return (
+        <Card sx={{ width: "100%" }}>
+            <CardHeader
+                avatar={
+                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                        R
+                    </Avatar>
+                }
+                action={
+                    <IconButton aria-label="settings">
+                        <MoreVertIcon />
+                    </IconButton>
+                }
+                title="Shrimp and Chorizo Paella"
+                subheader="September 14, 2016"
             />
-          }
-          // image={props.image}
-        />
-      ) : null}
-      <CardContent>
-        <Typography variant="h5">Validated By:</Typography>
-        <Grid container spacing={0.1} rowGap={-0.1}>
-          {props.organizations.map((organization, index) => {
-            return (
-              <Grid item xs={3} key={index}>
-                <IconAndText
-                  text={organization.name}
-                  iconSrc={organization.image}
+            {props.image != null ? (
+                <CardMedia
+                    // component="img"
+                    children={
+                        <img
+                            style={{
+                                width: "100%",
+                                maxHeight: "500px",
+                                objectFit: "cover",
+                            }}
+                            src={props.image}
+                            alt="Paella dish"
+                        />
+                    }
+                    // image={props.image}
                 />
-              </Grid>
-            );
-          })}
-        </Grid>
+            ) : null}
+            <CardContent>
+                <Typography variant="h4">{props.title}</Typography>
+                {/* <Typography variant="h5">Validated By:</Typography>
+                <Grid container spacing={0.1} rowGap={-0.1}>
+                    {props.organizations.map((organization, index) => {
+                        return (
+                            <Grid item xs={3} key={index}>
+                                <IconAndText
+                                    text={organization.name}
+                                    iconSrc={organization.image}
+                                />
+                            </Grid>
+                        );
+                    })}
+                </Grid> */}
 
-        <Typography variant="h5">Contributors</Typography>
-        <Grid container spacing={0.1} rowGap={-0.1}>
-          {props.contributors.map((contributor, index) => {
-            return (
-              <Grid item xs={3} key={index}>
-                <IconAndText
-                  text={contributor.name}
-                  iconSrc={contributor.image}
-                />
-              </Grid>
-            );
-          })}
-        </Grid>
-      </CardContent>
-      <CardActions disableSpacing>
-        <Grid container>
-          <Grid item xs={6}>
-            <IconButton aria-label="add to favorites">
-              <ReactionButton journalId={props.journalId} />
-            </IconButton>
-            <IconButton aria-label="share">
-              <SendButton journalId={props.journalId} />
-            </IconButton>
+                <Typography variant="body1">
+                    {props.contributors.length > 0 ? "Contributors:" : null}
+                </Typography>
+                <Grid container spacing={0.1} rowGap={-0.1}>
+                    {props.contributors.map((contributor, index) => {
+                        return (
+                            <Grid item xs={3} key={index}>
+                                <IconAndText
+                                    text={
+                                        contributor.firstName +
+                                        " " +
+                                        contributor.lastName
+                                    }
+                                    iconSrc={contributor.profilePicture}
+                                />
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+            </CardContent>
+            <CardActions disableSpacing>
+                <Grid container>
+                    <Grid item xs={6}>
+                        <IconButton aria-label="add to favorites">
+                            <ReactionButton journalId={props.journalId} />
+                        </IconButton>
+                        <IconButton aria-label="share">
+                            <SendButton journalId={props.journalId} />
+                        </IconButton>
 
-            <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more"
-            >
-              <OpinionButton />
-            </ExpandMore>
-          </Grid>
-          <Grid item xs={3}></Grid>
-          <Grid item xs={3}>
-            <Button color="primary" variant="contained">
-              Read Full Text
-            </Button>
-          </Grid>
-        </Grid>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <OpinionsContainer />
-        </CardContent>
-      </Collapse>
-    </Card>
-  );
+                        <ExpandMore
+                            expand={expanded}
+                            onClick={handleExpandClick}
+                            aria-expanded={expanded}
+                            aria-label="show more"
+                        >
+                            <OpinionButton />
+                        </ExpandMore>
+                    </Grid>
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={3}>
+                        <Button color="primary" variant="contained">
+                            Read Full Text
+                        </Button>
+                    </Grid>
+                </Grid>
+            </CardActions>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <CardContent>
+                    <OpinionsContainer />
+                </CardContent>
+            </Collapse>
+        </Card>
+    );
 }
 
 export default ResearchPaper;

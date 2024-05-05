@@ -7,7 +7,6 @@ const IconAndText = (props) => {
             <CardHeader
                 avatar={
                     <Avatar
-                        isBordered
                         style={{
                             width: "30px",
                             height: "30px",
