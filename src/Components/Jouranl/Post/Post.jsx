@@ -10,6 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
 import ForumIcon from "@mui/icons-material/Forum";
+import Moment from "moment";
 
 import { red } from "@mui/material/colors";
 import React from "react";
@@ -36,11 +37,11 @@ function Post(props) {
     };
     // const onClick = () => {};
     return (
-        <Card sx={{ width: "100%" }}>
+        <Card>
             <CardHeader
                 avatar={
                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        R
+                        {props.publisher.firstName[0]}
                     </Avatar>
                 }
                 action={
@@ -48,8 +49,17 @@ function Post(props) {
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title="Shrimp and Chorizo Paella"
-                subheader="September 14, 2016"
+                title={
+                    props.publisher.firstName + " " + props.publisher.lastName
+                }
+                subheader={new Date(props.publishDate).toLocaleDateString(
+                    "en-US",
+                    {
+                        month: "long",
+                        day: "2-digit",
+                        year: "numeric",
+                    }
+                )}
             />
             {props.image != null ? (
                 <CardMedia
@@ -68,6 +78,8 @@ function Post(props) {
             ) : null}
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
+                    {props.content}
+                    {props.content}
                     {props.content}
                 </Typography>
             </CardContent>
