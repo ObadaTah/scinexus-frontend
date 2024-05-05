@@ -103,7 +103,7 @@ function Post(props) {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <OpinionsContainer></OpinionsContainer>
+                    <OpinionsContainer journalId={props.journalId} />
                 </CardContent>
             </Collapse>
         </Card>

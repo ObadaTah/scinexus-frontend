@@ -123,11 +123,13 @@ function JournalsList() {
                     Authorization: `Bearer ${jwt}`,
                 },
             });
-
-            const data = await response.json();
-            setPosts(data["_embedded"].postList);
-
-            console.log(data["_embedded"].postList);
+            if (response.status === 200 || response.status === 201) {
+                const data = await response.json();
+                setPosts(data["_embedded"].postList);
+                console.log(data["_embedded"].postList);
+            } else {
+                setPosts(dummyPosts);
+            }
         }
 
         getAllPosts();
@@ -172,6 +174,7 @@ function JournalsList() {
                         return (
                             <ListItem key={index}>
                                 <Post
+                                    journalId={post.id}
                                     publisher={post.publisher}
                                     content={post.content}
                                     publishDate={post.createDateTime}
@@ -184,6 +187,7 @@ function JournalsList() {
                         return (
                             <ListItem key={index}>
                                 <ResearchPaper
+                                    journalId={researchPaper.id}
                                     publisher={researchPaper.publisher}
                                     title="dummyTitle"
                                     publishDate={researchPaper.createDateTime}
