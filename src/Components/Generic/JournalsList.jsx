@@ -2,6 +2,9 @@ import { List, ListItem, Container } from "@mui/material";
 import Post from "../Jouranl/Post/Post";
 import ResearchPaper from "../Jouranl/ResearchPaper/ResearchPaper";
 import { useEffect, useState } from "react";
+import { helix } from "ldrs";
+
+helix.register();
 
 const dummyOrgs = [
     { name: "Bethlehem University", image: "https://placehold.co/400x400" },
@@ -92,7 +95,7 @@ const dummyPosts = [
 function JournalsList() {
     const [posts, setPosts] = useState([]);
     const [researchpapers, setResearchpapers] = useState([]);
-
+    const [isLoading, setIsLoading] = useState("block");
     async function authenticate() {
         const response = await fetch(
             "http://localhost:8080/api/v1/auth/authenticate",
@@ -130,6 +133,7 @@ function JournalsList() {
             } else {
                 setPosts(dummyPosts);
             }
+            setIsLoading("none");
         }
 
         getAllPosts();
@@ -156,6 +160,7 @@ function JournalsList() {
             } else {
                 setResearchpapers(dummyResearchPapers);
             }
+            setIsLoading("none");
         }
 
         getAllResearchPapers();
@@ -169,6 +174,12 @@ function JournalsList() {
                 maxWidth="false"
                 style={{ wordWrap: "break-word" }}
             >
+                <l-helix
+                    size="45"
+                    speed="2.5"
+                    color="black"
+                    style={{ display: isLoading }}
+                />
                 <List>
                     {posts.map((post, index) => {
                         return (
