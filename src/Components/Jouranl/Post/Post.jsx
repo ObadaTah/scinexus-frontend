@@ -1,24 +1,20 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Grid } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
+import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Collapse from "@mui/material/Collapse";
-import ForumIcon from "@mui/icons-material/Forum";
-import Moment from "moment";
+import { Divider } from "@nextui-org/divider";
 
-import { red } from "@mui/material/colors";
+import { styled } from "@mui/material/styles";
 import React from "react";
-import OpinionButton from "../Opinion/OpinionButton";
-import OpinionsContainer from "../Opinion/OpinionsContainer";
+import JournalCardHeader from "../Components/JournalCardHeader";
 import ReactionButton from "../Components/ReactionButton";
 import SendButton from "../Components/SendButton";
-import { styled } from "@mui/material/styles";
+import OpinionButton from "../Opinion/OpinionButton";
+import OpinionsContainer from "../Opinion/OpinionsContainer";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -38,9 +34,21 @@ function Post(props) {
     // const onClick = () => {};
     return (
         <Card>
-            <CardHeader
+            <JournalCardHeader
+                publisher={props.publisher}
+                publishDate={props.publishDate}
+            />
+            {/* <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                    <Avatar
+                        sx={{ bgcolor: red[500] }}
+                        aria-label="recipe"
+                        src={
+                            props.publisher.profilePicture != null
+                                ? props.publisher.profilePicture.fileName
+                                : null
+                        }
+                    >
                         {props.publisher.firstName[0]}
                     </Avatar>
                 }
@@ -60,7 +68,7 @@ function Post(props) {
                         year: "numeric",
                     }
                 )}
-            />
+            /> */}
             {props.image != null ? (
                 <CardMedia
                     children={
@@ -83,6 +91,8 @@ function Post(props) {
                     {props.content}
                 </Typography>
             </CardContent>
+            <Divider />
+
             <CardActions disableSpacing>
                 <Grid>
                     <IconButton aria-label="add to favorites">

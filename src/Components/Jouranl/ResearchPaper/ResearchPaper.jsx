@@ -1,15 +1,12 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Button, Grid } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
+import JournalCardHeader from "../Components/JournalCardHeader";
 
 import { styled } from "@mui/material/styles";
 import React from "react";
@@ -37,19 +34,9 @@ function ResearchPaper(props) {
     // const onClick = () => {};
     return (
         <Card sx={{ width: "100%" }}>
-            <CardHeader
-                avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        R
-                    </Avatar>
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
-                }
-                title="Shrimp and Chorizo Paella"
-                subheader="September 14, 2016"
+            <JournalCardHeader
+                publisher={props.publisher}
+                publishDate={props.publishDate}
             />
             {props.image != null ? (
                 <CardMedia
@@ -97,14 +84,19 @@ function ResearchPaper(props) {
                                         " " +
                                         contributor.lastName
                                     }
-                                    iconSrc={contributor.profilePicture}
+                                    iconSrc={
+                                        contributor.profilePicture != null
+                                            ? contributor.profilePicture
+                                                  .fileName
+                                            : null
+                                    }
                                 />
                             </Grid>
                         );
                     })}
                 </Grid>
             </CardContent>
-            <CardActions disableSpacing>
+            <CardActions>
                 <Grid container>
                     <Grid item xs={6}>
                         <IconButton aria-label="add to favorites">
@@ -118,7 +110,6 @@ function ResearchPaper(props) {
                             expand={expanded}
                             onClick={handleExpandClick}
                             aria-expanded={expanded}
-                            aria-label="show more"
                         >
                             <OpinionButton />
                         </ExpandMore>
@@ -133,7 +124,7 @@ function ResearchPaper(props) {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <OpinionsContainer />
+                    <OpinionsContainer journalId={props.journalId} />
                 </CardContent>
             </Collapse>
         </Card>
