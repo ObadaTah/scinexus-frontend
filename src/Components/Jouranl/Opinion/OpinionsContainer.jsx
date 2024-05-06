@@ -1,8 +1,11 @@
 import { List, ListItem, Typography } from "@mui/material";
 
-import React, { useEffect } from "react";
-import { Container } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import Container from "@mui/material/Container";
 import Opinion from "./Opinion";
+import { helix } from "ldrs";
+
+helix.register();
 const dummyOpinions = [
     {
         publisher: {
@@ -46,6 +49,9 @@ const dummyOpinions = [
     },
 ];
 function OpinionsContainer(props) {
+    const [isLoading, setIsLoading] = useState("block");
+    const [finishedLoadingAndEmpty, setFinishedLoadingAndEmpty] =
+        useState("none");
     async function authenticate() {
         const response = await fetch(
             "http://localhost:8080/api/v1/auth/authenticate",
@@ -69,6 +75,7 @@ function OpinionsContainer(props) {
         async function getAllOpinions() {
             const jwt = await authenticate();
             // console.log(" this is jwt token ", jwt);
+            console.log("this is journal id", props.journalId);
             const response = await fetch(
                 "http://localhost:8080/journals/" +
                     props.journalId +
@@ -84,11 +91,19 @@ function OpinionsContainer(props) {
             if (response.status === 200 || response.status === 201) {
                 const data = await response.json();
                 console.log(data);
-                setOpinions(data["_embedded"].opinionList);
-                console.log(data["_embedded"].opinionList);
+                if (data["_embedded"] !== undefined) {
+                    setOpinions(data["_embedded"].opinionList);
+                    console.log(data["_embedded"].opinionList);
+                } else {
+                    setOpinions([]);
+                    setFinishedLoadingAndEmpty("block");
+                }
+                // setOpinions(data["_embedded"].opinionList);
+                // console.log(data["_embedded"].opinionList);
             } else {
                 setOpinions(dummyOpinions);
             }
+            setIsLoading("none");
         }
 
         getAllOpinions();
@@ -96,18 +111,40 @@ function OpinionsContainer(props) {
 
     return (
         <>
-            <Typography id="transition-modal-title" variant="h4" component="h2">
-                Opinions
-            </Typography>
+            <l-helix
+                size="45"
+                speed="2.5"
+                color="black"
+                style={{
+                    display: isLoading,
+                    position: "center",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                }}
+            />
+
             <Container>
                 <List>
+                    <Typography
+                        style={{
+                            display: finishedLoadingAndEmpty,
+                            position: "center",
+                            textAlign: "center",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                        }}
+                    >
+                        There are no opinions yet, be the first to share your
+                        Opinion
+                    </Typography>
                     {opinions.map((opinion, index) => {
                         return (
                             <ListItem key={index}>
                                 <Opinion
-                                    publisher={opinion.publisher}
+                                    papaOpinionId={opinion.papaOpinion}
+                                    publisher={opinion.opinionOwner}
                                     content={opinion.content}
-                                    publishDate={opinion.publishDate}
+                                    publishDate={opinion.createDateTime}
                                 />
                             </ListItem>
                         );
