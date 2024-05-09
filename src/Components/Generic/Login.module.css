@@ -1,0 +1,65 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Set a minimum height to fill the viewport */
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  padding: 20px;
+  max-width: 600px; /* Optional: limit the width of the main content */
+  width: 100%; /* Ensure the main content takes full width */
+}
+
+/* Add any additional styles here */
+.oauth {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10%;
+}
+.horizontalLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px; /* Adjust the height to your preference */
+  /* Adjust the background color to your preference */
+  color: #b5a4a0;
+}
+
+.text {
+  background-color: #fff; /* Adjust the background color to your preference */
+  padding: 0 42%; /* Adjust the padding to your preference */
+  position: relative;
+}
+
+.text::before,
+.text::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 50%;
+  height: 1px;
+  background-color: #e0e0e0; /* Adjust the line color to your preference */
+}
+
+.text::before {
+  left: -5%;
+}
+
+.text::after {
+  right: -5%;
+}
+
+.form label {
+  font-weight: 600;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,108 +1,255 @@
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+import AuthPagesHeader from "../../Components/Generic/AuthPagesHeader";
+import styles from "../../Components/Generic/Register.module.css";
+import GoogleLoginButton from "../Auth/GoogleLoginButton.jsx";
+import GitHubLoginButton from "./GithubLoginButton.jsx";
+import { useState } from "react";
+import Stack from "@mui/joy/Stack";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
+import LinearProgress from "@mui/joy/LinearProgress";
+import Typography from "@mui/joy/Typography";
+import Key from "@mui/icons-material/Key";
+import { Link } from "react-router-dom";
+function Register() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
-export default function Register() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
-    };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const minLength = 12;
 
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <Box
+  const inputStyle = {
+    "--Input-radius": "3px",
+    height: "50px",
+  };
+
+  const getPasswordColor = (passwordLength) => {
+    if (passwordLength < 3) {
+      return "hsl(0 80% 40%)"; // red
+    }
+    if (passwordLength >= 3 && passwordLength < 6) {
+      return "hsl(30 80% 40%)"; // orange
+    }
+    if (passwordLength >= 6 && passwordLength < 10) {
+      return "hsl(120 80% 40%)"; // green
+    }
+    if (passwordLength >= 10) {
+      return "hsl(180 80% 40%)"; // blue
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <main className={styles.main}>
+        <AuthPagesHeader />
+        <div className={styles.oauth}>
+          <GoogleLoginButton label="Sign up with Google" />
+          <GitHubLoginButton label="Sign up with Github" />
+        </div>
+        <div className={styles.horizontalLine}>
+          <span className={styles.text}>or</span>
+        </div>
+
+        <form className={styles.form}>
+          <Stack spacing={5} direction="row">
+            <Input
+              placeholder="First Name"
+              required
+              name="FirstName"
+              value={firstName}
+              onChange={(event) => setFirstName(event.target.value)}
+              sx={{
+                ...inputStyle,
+                width: "50%",
+                backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
+                transition: "background-color 0.2s ease-in-out",
+              }}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+            />
+            <Input
+              placeholder="Last Name"
+              required
+              name="LasttName"
+              value={firstName}
+              onChange={(event) => setFirstName(event.target.value)}
+              sx={{
+                ...inputStyle,
+                width: "50%",
+                backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
+                transition: "background-color 0.2s ease-in-out",
+              }}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+            />
+          </Stack>
+          <Stack spacing="35px">
+            <Input
+              placeholder="Email"
+              required
+              name="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              sx={{
+                ...inputStyle,
+                backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
+                transition: "background-color 0.2s ease-in-out",
+              }}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+            />
+            <Input
+              type="password"
+              placeholder="password"
+              startDecorator={<Key />}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              sx={{
+                ...inputStyle,
+                backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
+                transition: "background-color 0.2s ease-in-out",
+              }}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+            />
+
+            {password.length >= 1 && (
+              <LinearProgress
+                determinate
+                size="sm"
+                value={Math.min((password.length * 100) / minLength, 100)}
                 sx={{
-                    marginTop: 8,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
+                  bgcolor: "background.level3",
+                  color: getPasswordColor(password.length),
+                  flexGrow: 1,
+                  width: "150px",
+                  borderRadius: "3px",
                 }}
+              />
+            )}
+
+            <Typography
+              level="body-xs"
+              sx={{ alignSelf: "flex-start", color: "hsl(var(--hue) 80% 30%)" }}
             >
-                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign up
-                </Typography>
-                <Box
-                    component="form"
-                    noValidate
-                    onSubmit={handleSubmit}
-                    sx={{ mt: 3 }}
-                >
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                autoComplete="given-name"
-                                name="firstName"
-                                required
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                autoFocus
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="family-name"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="new-password"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        Sign Up
-                    </Button>
-                    <Grid container justifyContent="flex-end">
-                        <Grid item>
-                            <Link href="/login" variant="body2">
-                                Already have an account? Sign in
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Box>
-        </Container>
-    );
+              {password.length < 3 && password.length >= 1 && "Very weak"}
+              {password.length >= 3 && password.length < 6 && "Weak"}
+              {password.length >= 6 && password.length < 10 && "Strong"}
+              {password.length >= 10 && "Very strong"}
+            </Typography>
+          </Stack>
+
+          <div className={styles.footer}>
+            <Link to="/login" style={{ textDecoration: "underline" }}>
+              already have an account ?
+            </Link>
+            <Button sx={{ width: "100px", borderRadius: "3px" }}>
+              SIGN UP
+            </Button>
+          </div>
+        </form>
+      </main>
+    </div>
+  );
 }
+
+export default Register;
+
+// export default function Register() {
+//     const handleSubmit = (event) => {
+//         event.preventDefault();
+//         const data = new FormData(event.currentTarget);
+//         console.log({
+//             email: data.get("email"),
+//             password: data.get("password"),
+//         });
+//     };
+
+//     return (
+//         <Container component="main" maxWidth="xs">
+//             <CssBaseline />
+//             <Box
+//                 sx={{
+//                     marginTop: 8,
+//                     display: "flex",
+//                     flexDirection: "column",
+//                     alignItems: "center",
+//                 }}
+//             >
+//                 <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+//                     <LockOutlinedIcon />
+//                 </Avatar>
+//                 <Typography component="h1" variant="h5">
+//                     Sign up
+//                 </Typography>
+//                 <Box
+//                     component="form"
+//                     noValidate
+//                     onSubmit={handleSubmit}
+//                     sx={{ mt: 3 }}
+//                 >
+//                     <Grid container spacing={2}>
+//                         <Grid item xs={12} sm={6}>
+//                             <TextField
+//                                 autoComplete="given-name"
+//                                 name="firstName"
+//                                 required
+//                                 fullWidth
+//                                 id="firstName"
+//                                 label="First Name"
+//                                 autoFocus
+//                             />
+//                         </Grid>
+//                         <Grid item xs={12} sm={6}>
+//                             <TextField
+//                                 required
+//                                 fullWidth
+//                                 id="lastName"
+//                                 label="Last Name"
+//                                 name="lastName"
+//                                 autoComplete="family-name"
+//                             />
+//                         </Grid>
+//                         <Grid item xs={12}>
+//                             <TextField
+//                                 required
+//                                 fullWidth
+//                                 id="email"
+//                                 label="Email Address"
+//                                 name="email"
+//                                 autoComplete="email"
+//                             />
+//                         </Grid>
+//                         <Grid item xs={12}>
+//                             <TextField
+//                                 required
+//                                 fullWidth
+//                                 name="password"
+//                                 label="Password"
+//                                 type="password"
+//                                 id="password"
+//                                 autoComplete="new-password"
+//                             />
+//                         </Grid>
+//                     </Grid>
+//                     <Button
+//                         type="submit"
+//                         fullWidth
+//                         variant="contained"
+//                         sx={{ mt: 3, mb: 2 }}
+//                     >
+//                         Sign Up
+//                     </Button>
+//                     <Grid container justifyContent="flex-end">
+//                         <Grid item>
+//                             <Link href="/login" variant="body2">
+//                                 Already have an account? Sign in
+//                             </Link>
+//                         </Grid>
+//                     </Grid>
+//                 </Box>
+//             </Box>
+//         </Container>
+//     );
+// }
