@@ -1,4 +1,5 @@
 import AuthPagesHeader from "../../Components/Generic/AuthPagesHeader";
+import RegisterAcadenicStep2 from "../../Components/Generic/RegisterAcademicStep2.jsx";
 import styles from "../../Components/Generic/Register.module.css";
 import GoogleLoginButton from "../Auth/GoogleLoginButton.jsx";
 import GitHubLoginButton from "./GithubLoginButton.jsx";
@@ -13,7 +14,6 @@ import { Link } from "react-router-dom";
 function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -43,6 +43,7 @@ function Register() {
     <div className={styles.container}>
       <main className={styles.main}>
         <AuthPagesHeader />
+
         <div className={styles.oauth}>
           <GoogleLoginButton label="Sign up with Google" />
           <GitHubLoginButton label="Sign up with Github" />
@@ -72,8 +73,8 @@ function Register() {
               placeholder="Last Name"
               required
               name="LasttName"
-              value={firstName}
-              onChange={(event) => setFirstName(event.target.value)}
+              value={lastName}
+              onChange={(event) => setLastName(event.target.value)}
               sx={{
                 ...inputStyle,
                 width: "50%",

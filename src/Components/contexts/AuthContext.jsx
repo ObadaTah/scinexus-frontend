@@ -10,7 +10,12 @@ const initialState = {
 function reducer(state, action) {
   switch (action.type) {
     case "login":
-      return { ...state, user: action.payload, isAuthenticated: true };
+      return {
+        ...state,
+        user: action.payload,
+        isAuthenticated: true,
+        jwtToken: action.payload.jwtToken,
+      };
     case "logout":
       return { ...state, user: null, isAuthenticated: false };
     default:
@@ -26,22 +31,65 @@ const USER = {
 };
 
 function AuthProvider({ children }) {
-  const [{ user, isAuthenticated }, dispatch] = useReducer(
+  const [{ user, isAuthenticated, jwtToken }, dispatch] = useReducer(
     reducer,
     initialState
   );
 
-  function login(email, password) {
-    if (email === USER.email && password === USER.password)
-      dispatch({ type: "login", payload: USER });
+  async function login(email, password) {
+    try {
+      const jwtToken = await authenticate(email, password);
+
+      if (jwtToken) {
+        dispatch({ type: "login", payload: { USER, jwtToken } });
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   function logout() {
     dispatch({ type: "logout" });
   }
 
+  async function authenticate(email, password) {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/auth/authenticate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        }
+      );
+      if (!response.ok) {
+        // Check if the response status is not in the range 200-299 (success)
+        if (response.status === 404) {
+          // Handle user not found error
+          throw new Error("User not found.");
+        } else if (response.status === 401) {
+          throw new Error("Invalid credentials.");
+        } else {
+          // Handle other HTTP errors
+          throw new Error("Failed to authenticate. Server error.");
+        }
+      }
+      const data = await response.json();
+      return data["jwtToken"];
+    } catch (error) {
+      throw error;
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, login, jwtToken, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

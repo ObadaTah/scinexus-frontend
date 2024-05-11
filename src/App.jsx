@@ -19,6 +19,8 @@ import MyProfile from "./Pages/MyProfile";
 import NotFound from "./Pages/NotFound";
 import Settings from "./Pages/Settings";
 import { AuthProvider } from "./Components/contexts/AuthContext";
+import ProtectedRoute from "./Pages/ProtectedRoute";
+import RegisterAcademicStep2 from "./Components/Generic/RegisterAcademicStep2";
 
 const defaultTheme = createTheme({
   palette: {
@@ -68,6 +70,15 @@ function App() {
         <Routes>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="register2" element={<RegisterAcademicStep2 />} />
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
