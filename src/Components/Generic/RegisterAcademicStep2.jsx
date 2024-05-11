@@ -8,32 +8,44 @@ const occupationOptions = [
   {
     label: "Academic researcher",
     value: "ACADEMIC",
-    src: "/academic.png", // Corrected path
+    src: "/academic.png",
     alt: "Academic researcher",
   },
   {
     label: "Academic faculty member",
     value: "ACADEMIC",
-    src: "/book.png", // Corrected path
+    src: "/book.png",
     alt: "Academic faculty member",
   },
   {
     label: "Retired academic",
     value: "ACADEMIC",
-    src: "/knowledge.png", // Corrected path
+    src: "/knowledge.png",
     alt: "Retired academic",
   },
   {
     label: "Self-employed professional",
     value: "ACADEMIC",
-    src: "/research-paper.png", // Corrected path
+    src: "/research-paper.png",
     alt: "Self-employed professional",
   },
   {
     label: "Academic affiliated with an organization",
     value: "ORGANIZATION",
-    src: "/research.png", // Corrected path
+    src: "/research.png",
     alt: "Academic affiliated with an organization",
+  },
+  {
+    label: "Graduate student",
+    value: "STUDENT",
+    src: "/graduation-cap.png", // Assuming you have an image for graduate student
+    alt: "Graduate student",
+  },
+  {
+    label: "Undergraduate student",
+    value: "STUDENT",
+    src: "/undergraduate.png", // Assuming you have an image for undergraduate student
+    alt: "Undergraduate student",
   },
 ];
 

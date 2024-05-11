@@ -11,6 +11,22 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Typography from "@mui/joy/Typography";
 import Key from "@mui/icons-material/Key";
 import { Link } from "react-router-dom";
+
+const userInfo = {
+  firstName: null,
+  lastName: null,
+  username: null,
+  email: null,
+  password: null,
+  bio: null,
+  phoneNumber: null,
+  fieldOfWork: null,
+  role: null,
+  education: null,
+  badge: null,
+  position: null,
+};
+
 function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
