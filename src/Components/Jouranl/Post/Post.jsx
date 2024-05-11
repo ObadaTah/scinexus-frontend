@@ -78,7 +78,11 @@ function Post(props) {
                                 maxHeight: "500px",
                                 objectFit: "cover",
                             }}
-                            src={props.image}
+                            src={
+                                "http://localhost:8080/medias/" +
+                                props.image.id +
+                                "/files"
+                            }
                             alt="Paella dish"
                         />
                     }

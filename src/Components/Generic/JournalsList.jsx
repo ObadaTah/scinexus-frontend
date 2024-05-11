@@ -189,7 +189,7 @@ function JournalsList() {
                                     publisher={post.publisher}
                                     content={post.content}
                                     publishDate={post.createDateTime}
-                                    image={post.image}
+                                    image={post.medias[0]}
                                 />
                             </ListItem>
                         );

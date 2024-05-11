@@ -1,12 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "react-bootstrap";
 import {
-  BrowserRouter,
-  Route,
-  Routes,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
+    BrowserRouter,
+    Route,
+    Routes,
+    RouterProvider,
+    createBrowserRouter,
+    createRoutesFromElements,
 } from "react-router-dom";
 import Navbar from "./Components/Generic/Navbar";
 import Notifications from "./Components/Generic/Notifications";
@@ -21,57 +21,57 @@ import Settings from "./Pages/Settings";
 import { AuthProvider } from "./Components/contexts/AuthContext";
 
 const defaultTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#d2191c",
+    palette: {
+        mode: "dark",
+        primary: {
+            main: "#d2191c",
+        },
+        secondary: {
+            main: "#1c24de",
+        },
     },
-    secondary: {
-      main: "#1c24de",
-    },
-  },
 });
 const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route path="/" element={<Navbar />}>
-        <Route index element={<Home />} />
+    createRoutesFromElements(
+        <>
+            <Route path="/" element={<Navbar />}>
+                <Route index element={<Home />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
 
-        <Route path="/settings" element={<Settings />} />
-        {/* <Route path="/logout" element={<Logout />} /> */}
-        <Route path="/myLinks" element={<MyLinks />} />
-        <Route path="/myProfile" element={<MyProfile />} />
-        {/* <Route path="/myOrganization" element={<MyOrganization />} /> */}
-        <Route path="/*" element={<NotFound />} />
-      </Route>
-    </>
-  )
+                <Route path="/settings" element={<Settings />} />
+                {/* <Route path="/logout" element={<Logout />} /> */}
+                <Route path="/myLinks" element={<MyLinks />} />
+                <Route path="/myProfile" element={<MyProfile />} />
+                {/* <Route path="/myOrganization" element={<MyOrganization />} /> */}
+                <Route path="/*" element={<NotFound />} />
+            </Route>
+        </>
+    )
 );
+function App() {
+    return (
+        <ThemeProvider theme={defaultTheme}>
+            <RouterProvider router={router} />
+            <BrowserRouter>
+                <Footer />
+            </BrowserRouter>
+        </ThemeProvider>
+    );
+}
+
 // function App() {
 //   return (
-//     <ThemeProvider theme={defaultTheme}>
-//       <RouterProvider router={router} />
+//     <AuthProvider>
 //       <BrowserRouter>
-//         <Footer />
+//         <Routes>
+//           <Route path="login" element={<Login />} />
+//           <Route path="register" element={<Register />} />
+//         </Routes>
 //       </BrowserRouter>
-//     </ThemeProvider>
+//     </AuthProvider>
 //   );
 // }
-
-function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  );
-}
 
 export default App;
