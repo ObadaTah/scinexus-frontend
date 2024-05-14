@@ -1,4 +1,6 @@
 import SendIcon from "@mui/icons-material/Send";
+import Typography from "@mui/material/Typography";
+
 function SendButton(props) {
     const onClick = () => {
         console.log("Send button clicked " + props.postId);
@@ -30,6 +32,7 @@ function SendButton(props) {
                     strokeLinejoin="round"
                 />
             </svg>
+            {/* <Typography className="p-2">Send</Typography> */}
         </>
     );
 }
