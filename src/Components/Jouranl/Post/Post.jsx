@@ -1,13 +1,19 @@
 import { Grid } from "@mui/material";
-import Card from "@mui/material/Card";
+// import Card from "@mui/material/Card";
+import Card from "@mui/joy/Card";
+
+// import { Elevation } from "@blueprintjs/core";
+
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
+import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/material/Typography";
 import { Divider } from "@nextui-org/divider";
-
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import JournalCardHeader from "../Components/JournalCardHeader";
@@ -15,6 +21,7 @@ import ReactionButton from "../Components/ReactionButton";
 import SendButton from "../Components/SendButton";
 import OpinionButton from "../Opinion/OpinionButton";
 import OpinionsContainer from "../Opinion/OpinionsContainer";
+// import { Container } from "@mui/joy";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -33,42 +40,35 @@ function Post(props) {
     };
     // const onClick = () => {};
     return (
-        <Card>
+        <Card
+            sx={{
+                maxWidth: 600,
+                margin: "auto",
+                marginTop: "20px",
+                "&:hover": {
+                    boxShadow: "md",
+                    borderColor: "neutral.outlinedHoverBorder",
+                },
+                "--Card-radius": "15px",
+            }}
+            color="neutral"
+            invertedColors
+            orientation="ho"
+            size="sm"
+            variant="soft"
+        >
             <JournalCardHeader
                 publisher={props.publisher}
                 publishDate={props.publishDate}
             />
-            {/* <CardHeader
-                avatar={
-                    <Avatar
-                        sx={{ bgcolor: red[500] }}
-                        aria-label="recipe"
-                        src={
-                            props.publisher.profilePicture != null
-                                ? props.publisher.profilePicture.fileName
-                                : null
-                        }
-                    >
-                        {props.publisher.firstName[0]}
-                    </Avatar>
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
-                }
-                title={
-                    props.publisher.firstName + " " + props.publisher.lastName
-                }
-                subheader={new Date(props.publishDate).toLocaleDateString(
-                    "en-US",
-                    {
-                        month: "long",
-                        day: "2-digit",
-                        year: "numeric",
-                    }
-                )}
-            /> */}
+
+            <CardContent>
+                <Typography variant="body2" color="text.secondary">
+                    {props.content}
+                    {props.content}
+                    {props.content}
+                </Typography>
+            </CardContent>
             {props.image != null ? (
                 <CardMedia
                     children={
@@ -88,33 +88,51 @@ function Post(props) {
                     }
                 />
             ) : null}
-            <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                    {props.content}
-                    {props.content}
-                    {props.content}
-                </Typography>
-            </CardContent>
-            <Divider />
-
-            <CardActions disableSpacing>
-                <Grid>
-                    <IconButton aria-label="add to favorites">
-                        <ReactionButton journalId={props.journalId} />
-                    </IconButton>
-                    <IconButton aria-label="share">
-                        <SendButton journalId={props.journalId} />
-                    </IconButton>
-                    <ExpandMore
-                        expand={expanded}
-                        onClick={handleExpandClick}
-                        aria-expanded={expanded}
-                        aria-label="show more"
+            <Divider style={{ margin: "10px" }} />
+            <Container>
+                <Row>
+                    <Col
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            height: "40px",
+                        }}
                     >
-                        <OpinionButton />
-                    </ExpandMore>
-                </Grid>
-            </CardActions>
+                        <IconButton>
+                            <ReactionButton journalId={props.journalId} />
+                        </IconButton>
+                    </Col>
+                    <Col
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            height: "40px",
+                        }}
+                    >
+                        <IconButton aria-label="share">
+                            <SendButton journalId={props.journalId} />
+                        </IconButton>
+                    </Col>
+                    <Col
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            height: "40px",
+                        }}
+                    >
+                        <div>
+                            <ExpandMore
+                                expand={expanded}
+                                onClick={handleExpandClick}
+                                aria-expanded={expanded}
+                                aria-label="show more"
+                            >
+                                <OpinionButton />
+                            </ExpandMore>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     <OpinionsContainer journalId={props.journalId} />
