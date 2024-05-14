@@ -1,8 +1,11 @@
-import { List, ListItem, Container } from "@mui/material";
+import { List, ListItem } from "@mui/material";
+import Container from "react-bootstrap/Container";
+
 import Post from "../Jouranl/Post/Post";
 import ResearchPaper from "../Jouranl/ResearchPaper/ResearchPaper";
 import { useEffect, useState } from "react";
 import { helix } from "ldrs";
+import NewPost from "../Jouranl/Post/NewPost";
 
 helix.register();
 
@@ -170,9 +173,15 @@ function JournalsList() {
     return (
         <>
             <Container
-                fixed
-                maxWidth="false"
-                style={{ wordWrap: "break-word" }}
+                fluid
+                // fixed
+                // maxWidth="false"
+                style={{
+                    wordWrap: "break-word",
+                    marginTop: "20px",
+                    justifyContent: "center",
+                    display: "flex",
+                }}
             >
                 <l-helix
                     size="45"
@@ -183,13 +192,19 @@ function JournalsList() {
                 <List>
                     {posts.map((post, index) => {
                         return (
-                            <ListItem key={index}>
-                                <Post
+                            <ListItem
+                                key={index}
+                                style={{
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <NewPost
                                     journalId={post.id}
                                     publisher={post.publisher}
                                     content={post.content}
                                     publishDate={post.createDateTime}
                                     image={post.medias[0]}
+                                    interactionsCount={post.interactionsCount}
                                 />
                             </ListItem>
                         );
