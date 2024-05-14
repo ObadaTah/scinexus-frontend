@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import Opinion from "./Opinion";
 import { helix } from "ldrs";
-
+import { DialogContent, DialogTitle, Modal, ModalDialog } from "@mui/joy";
+// import * as React from "react";
+import { Transition } from "react-transition-group";
 helix.register();
 const dummyOpinions = [
     {
@@ -110,48 +112,103 @@ function OpinionsContainer(props) {
     }, []);
 
     return (
-        <>
-            <l-helix
-                size="45"
-                speed="2.5"
-                color="black"
-                style={{
-                    display: isLoading,
-                    position: "center",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                }}
-            />
-
-            <Container>
-                <List>
-                    <Typography
-                        style={{
-                            display: finishedLoadingAndEmpty,
-                            position: "center",
-                            textAlign: "center",
-                            marginLeft: "auto",
-                            marginRight: "auto",
+        <Transition in={props.open} timeout={400} unmountOnExit>
+            {(state) => (
+                <Modal
+                    keepMounted
+                    open={!["exited", "exiting"].includes(state)}
+                    onClose={() => props.setOpen(false)}
+                    slotProps={{
+                        backdrop: {
+                            sx: {
+                                opacity: 0,
+                                backdropFilter: "none",
+                                transition: `opacity 400ms, backdrop-filter 400ms`,
+                                ...{
+                                    entering: {
+                                        opacity: 1,
+                                        backdropFilter: "blur(8px)",
+                                    },
+                                    entered: {
+                                        opacity: 1,
+                                        backdropFilter: "blur(8px)",
+                                    },
+                                }[state],
+                            },
+                        },
+                    }}
+                    sx={{
+                        visibility: state === "exited" ? "hidden" : "visible",
+                    }}
+                >
+                    <ModalDialog
+                        sx={{
+                            opacity: 0,
+                            transition: `opacity 300ms`,
+                            ...{
+                                entering: { opacity: 1 },
+                                entered: { opacity: 1 },
+                            }[state],
                         }}
                     >
-                        There are no opinions yet, be the first to share your
-                        Opinion
-                    </Typography>
-                    {opinions.map((opinion, index) => {
-                        return (
-                            <ListItem key={index}>
-                                <Opinion
-                                    papaOpinionId={opinion.papaOpinion}
-                                    publisher={opinion.opinionOwner}
-                                    content={opinion.content}
-                                    publishDate={opinion.createDateTime}
+                        <DialogTitle>Opinions</DialogTitle>
+                        <DialogContent>
+                            <>
+                                <l-helix
+                                    size="45"
+                                    speed="2.5"
+                                    color="black"
+                                    style={{
+                                        display: isLoading,
+                                        position: "center",
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                    }}
                                 />
-                            </ListItem>
-                        );
-                    })}
-                </List>
-            </Container>
-        </>
+
+                                <Container fixed style={{ maxWidth: "50%" }}>
+                                    <List>
+                                        <Typography
+                                            style={{
+                                                display:
+                                                    finishedLoadingAndEmpty,
+                                                position: "center",
+                                                textAlign: "center",
+                                                marginLeft: "auto",
+                                                marginRight: "auto",
+                                            }}
+                                        >
+                                            There are no opinions yet, be the
+                                            first to share your Opinion
+                                        </Typography>
+                                        {opinions.map((opinion, index) => {
+                                            return (
+                                                <ListItem key={index}>
+                                                    <Opinion
+                                                        papaOpinionId={
+                                                            opinion.papaOpinion
+                                                        }
+                                                        publisher={
+                                                            opinion.opinionOwner
+                                                        }
+                                                        content={
+                                                            opinion.content
+                                                        }
+                                                        publishDate={
+                                                            opinion.createDateTime
+                                                        }
+                                                    />
+                                                </ListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </Container>
+                            </>
+                        </DialogContent>
+                    </ModalDialog>
+                </Modal>
+            )}
+        </Transition>
     );
 }
 export default OpinionsContainer;
