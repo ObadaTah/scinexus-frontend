@@ -4,60 +4,69 @@ import styles2 from "./Register.module.css";
 import Typography from "@mui/joy/Typography";
 import { useState } from "react";
 import Button from "@mui/joy/Button";
-const occupationOptions = [
+const organizationOptions = [
   {
-    label: "Academic researcher",
-    value: "ACADEMIC",
-    src: "/academic.png",
-    alt: "Academic researcher",
+    label: "Business",
+    value: "BUSINESS",
+    src: "/business.png", // Assuming you have an image for business
+    alt: "Business",
   },
   {
-    label: "Academic faculty member",
-    value: "ACADEMIC",
-    src: "/book.png",
-    alt: "Academic faculty member",
+    label: "Non Profit ",
+    value: "NON_PROFIT",
+    src: "/ngo.png", // Assuming you have an image for non-profit
+    alt: "Non-Profit",
   },
   {
-    label: "Retired academic",
-    value: "ACADEMIC",
-    src: "/knowledge.png",
-    alt: "Retired academic",
+    label: "Educational",
+    value: "EDUCATIONAL",
+    src: "/educational.png", // Assuming you have an image for educational
+    alt: "Educational",
   },
   {
-    label: "Self-employed professional",
-    value: "ACADEMIC",
-    src: "/research-paper.png",
-    alt: "Self-employed professional",
+    label: "Governmental",
+    value: "GOVERNMENT",
+    src: "/government.png", // Assuming you have an image for government
+    alt: "Government",
   },
   {
-    label: "Academic affiliated with an organization",
-    value: "ORGANIZATION",
-    src: "/research.png",
-    alt: "Academic affiliated with an organization",
+    label: "Professional Association",
+    value: "PROFESSIONAL_ASSOCIATION",
+    src: "/professional-association.png", // Assuming you have an image for professional association
+    alt: "Professional Association",
   },
   {
-    label: "Graduate student",
-    value: "STUDENT",
-    src: "/graduation-cap.png", // Assuming you have an image for graduate student
-    alt: "Graduate student",
+    label: "Community Group",
+    value: "COMMUNITY_GROUP",
+    src: "/community-group.png", // Assuming you have an image for community group
+    alt: "Community Group",
   },
   {
-    label: "Undergraduate student",
-    value: "STUDENT",
-    src: "/undergraduate.png", // Assuming you have an image for undergraduate student
-    alt: "Undergraduate student",
+    label: "Media",
+    value: "MEDIA",
+    src: "/media.png", // Assuming you have an image for media
+    alt: "Media",
+  },
+  {
+    label: "Religious",
+    value: "RELIGIOUS",
+    src: "/religious.png", // Assuming you have an image for religious
+    alt: "Religious",
+  },
+  {
+    label: "Sports",
+    value: "SPORTS",
+    src: "/sports.png", // Assuming you have an image for sports
+    alt: "Sports",
   },
 ];
 
-function RegisterAcademicStep2({ step, setStep }) {
+function RegisterOrganizationStep2({ step, setStep }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
   };
-
-  console.log(selectedOption);
-
   function incrementStep() {
     setStep((step) => 4);
   }
@@ -69,10 +78,10 @@ function RegisterAcademicStep2({ step, setStep }) {
         <div className={styles.container}>
           <Typography level="h2">Questions to Create your profile</Typography>
           <br />
-          <Typography level="h3">What is your occupation?</Typography>
+          <Typography level="h3">What is your organization Types?</Typography>
 
           <ul className={styles.optionContainer}>
-            {occupationOptions.map((option, index) => (
+            {organizationOptions.map((option, index) => (
               <OccupationOptionCard
                 key={index}
                 label={option.label}
@@ -109,4 +118,4 @@ function OccupationOptionCard({ label, isSelected, onSelect, img, alt }) {
   );
 }
 
-export default RegisterAcademicStep2;
+export default RegisterOrganizationStep2;

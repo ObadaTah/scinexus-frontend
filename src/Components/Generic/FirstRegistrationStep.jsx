@@ -7,13 +7,19 @@ import Button from "@mui/joy/Button";
 
 import RegistrationOptionCard from "./RegistrationOptionCard";
 
-function FirstRegistrationStep() {
-  const [selectedOption, setSelectedOption] = useState(null);
-
+function FirstRegistrationStep({
+  step,
+  setStep,
+  selectedOption,
+  setSelectedOption,
+}) {
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
   };
 
+  function incrementStep() {
+    setStep((step) => 2);
+  }
   console.log(selectedOption);
   return (
     <>
@@ -41,7 +47,7 @@ function FirstRegistrationStep() {
             img="/organization.png"
             alt="Academic researcher"
           />
-          <Button size="lg" disabled={!selectedOption}>
+          <Button size="lg" disabled={!selectedOption} onClick={incrementStep}>
             Next &rarr;
           </Button>
         </div>

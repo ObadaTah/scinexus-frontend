@@ -19,7 +19,8 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Autocomplete from "@mui/joy/Autocomplete";
 import CircularProgress from "@mui/joy/CircularProgress";
-import EmailConfirmation from "./EmailConfirmation";
+import EmailConfirmation from "../../Components/Generic/EmailConfirmation";
+
 const fieldOfWorkOptions = [
   "Accounting",
   "Aerospace Engineering",
@@ -136,7 +137,9 @@ const fieldOfWorkOptions = [
   "Zoology",
 ];
 
-function RegisterAcademicStep3({
+function RegisterOrganizationStep3({
+  fieldOfWork,
+  setFieldOfWork,
   email,
   isClicked,
   setIsClicked,
@@ -150,22 +153,13 @@ function RegisterAcademicStep3({
   setIsInputFocused,
   phoneNumber,
   setPhoneNumber,
-  education,
-  setEducation,
-  isEducationMenuLoading,
-  setIsEducationMenuLoading,
-  isEducationMenuOpen,
-  setEducationMenuOpen,
   isFieldOfWorkMenuOpen,
   setFieldOfWorkMenuOpen,
   isFieldOfWorkMenuLoading,
   setIsFieldOfWorkMenuLoading,
-  fieldOfWork,
-  setFieldOfWork,
 }) {
   const minLength = 12;
 
-  const [educationValue, setEducationValue] = useState("a");
   const handleChange = (newphoneNumber) => {
     setPhoneNumber(newphoneNumber);
   };
@@ -174,47 +168,22 @@ function RegisterAcademicStep3({
     height: "50px",
   };
 
-  // Example of countries to exclude
-  const url = `http://universities.hipolabs.com/search?name=${educationValue}&limit=10`;
-
-  useEffect(() => {
-    async function fetchEducation() {
-      setIsEducationMenuLoading(true);
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        console.log(data);
-        setEducation(data);
-        setIsEducationMenuLoading(false);
-      } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
-      }
-    }
-
-    fetchEducation(); // Call the fetchEducation function
-  }, [educationValue]); // Ensure the dependency array is closed properly
-  console.log(educationValue);
-
   function handleSubmit(event) {
     event.preventDefault();
     setUsername(username);
     setBadge(badge);
     setBio(bio);
     setPhoneNumber(phoneNumber);
-    setEducation(education);
     setFieldOfWork(fieldOfWork);
     setIsClicked(true);
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onSubmit={handleSubmit}>
       <main className={styles.main}>
         <AuthPagesHeader />
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form}>
           <Stack spacing={2} direction="column">
             <div>
               <label htmlFor="username">Username</label>
@@ -284,40 +253,6 @@ function RegisterAcademicStep3({
               onChange={handleChange}
             />
 
-            <FormControl id="asynchronous-demo" className={st.formControl}>
-              <div>
-                <FormLabel>Education</FormLabel>
-                <Autocomplete
-                  sx={{
-                    height: "50px",
-                    backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
-                  }}
-                  placeholder="Type To Search Education"
-                  open={isEducationMenuOpen}
-                  onOpen={() => {
-                    setEducationMenuOpen(true);
-                  }}
-                  onClose={() => {
-                    setEducationMenuOpen(false);
-                  }}
-                  isOptionEqualToValue={(option, value) =>
-                    option.name === value.name
-                  }
-                  getOptionLabel={(education) => education.name}
-                  options={education}
-                  loading={isEducationMenuLoading}
-                  onInputChange={(event, value) => setEducationValue(value)}
-                  endDecorator={
-                    isEducationMenuLoading ? (
-                      <CircularProgress
-                        size="sm"
-                        sx={{ bgcolor: "background.surface" }}
-                      />
-                    ) : null
-                  }
-                />
-              </div>
-            </FormControl>
             <FormControl id="asynchronous-demo1" className={st.formControl}>
               <div>
                 <FormLabel>Field Of Work</FormLabel>
@@ -337,10 +272,10 @@ function RegisterAcademicStep3({
                   isOptionEqualToValue={(option, value) =>
                     option.name === value.name
                   }
-                  getOptionLabel={(option) => option}
+                  getOptionLabel={(option) => option} // Fix this line
                   options={fieldOfWorkOptions}
                   loading={isFieldOfWorkMenuLoading}
-                  onInputChange={(event, value) => setFieldOfWork(value)}
+                  // onInputChange={(event, value) => }
                   endDecorator={
                     isFieldOfWorkMenuLoading ? (
                       <CircularProgress
@@ -371,4 +306,4 @@ function RegisterAcademicStep3({
   );
 }
 
-export default RegisterAcademicStep3;
+export default RegisterOrganizationStep3;

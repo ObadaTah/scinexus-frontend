@@ -8,6 +8,7 @@ function ProtectedRoute({ children }) {
 
   useEffect(
     function () {
+      console.log("isAuthenticated", isAuthenticated);
       if (!isAuthenticated) navigate("/login");
     },
     [isAuthenticated, navigate]

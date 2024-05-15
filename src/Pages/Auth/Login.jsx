@@ -38,7 +38,7 @@ export default function Login() {
 
   useEffect(
     function () {
-      if (isAuthenticated) navigate("/register", { replace: true });
+      if (isAuthenticated) navigate("/", { replace: true });
     },
     [isAuthenticated, navigate]
   );

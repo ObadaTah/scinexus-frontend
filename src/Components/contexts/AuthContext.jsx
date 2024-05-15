@@ -42,6 +42,7 @@ function AuthProvider({ children }) {
 
       if (jwtToken) {
         dispatch({ type: "login", payload: { USER, jwtToken } });
+        console.log("Logged in successfully.", isAuthenticated);
       }
     } catch (error) {
       throw error;

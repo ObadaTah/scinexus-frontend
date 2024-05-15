@@ -3,7 +3,7 @@ import RegisterAcadenicStep2 from "../../Components/Generic/RegisterAcademicStep
 import styles from "../../Components/Generic/Register.module.css";
 import GoogleLoginButton from "../Auth/GoogleLoginButton.jsx";
 import GitHubLoginButton from "./GithubLoginButton.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Stack from "@mui/joy/Stack";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
@@ -27,12 +27,22 @@ const userInfo = {
   position: null,
 };
 
-function Register() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isInputFocused, setIsInputFocused] = useState(false);
+function Register({
+  step,
+  setStep,
+  firstName,
+  setFirstName,
+  lastName,
+  setLastName,
+  email,
+  setEmail,
+  password,
+  setPassword,
+  isInputFocused,
+  setIsInputFocused,
+  isClicked,
+  setIsClicked,
+}) {
   const minLength = 12;
 
   const inputStyle = {
@@ -54,12 +64,48 @@ function Register() {
       return "hsl(180 80% 40%)"; // blue
     }
   };
+  useEffect(() => {
+    if (!isClicked) return;
+
+    async function sendUserData() {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            password,
+          }),
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+      }
+    }
+  }, [isClicked]);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    setFirstName(event.target.FirstName.value);
+    setLastName(event.target.LastName.value);
+    setEmail(event.target.email.value);
+    setPassword(event.target.password.value);
+    incrementStep();
+  }
+  function incrementStep() {
+    setStep((step) => 3);
+  }
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
         <AuthPagesHeader />
-
         <div className={styles.oauth}>
           <GoogleLoginButton label="Sign up with Google" />
           <GitHubLoginButton label="Sign up with Github" />
@@ -67,8 +113,7 @@ function Register() {
         <div className={styles.horizontalLine}>
           <span className={styles.text}>or</span>
         </div>
-
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <Stack spacing={5} direction="row">
             <Input
               placeholder="First Name"
@@ -88,7 +133,7 @@ function Register() {
             <Input
               placeholder="Last Name"
               required
-              name="LasttName"
+              name="LastName"
               value={lastName}
               onChange={(event) => setLastName(event.target.value)}
               sx={{
@@ -118,9 +163,12 @@ function Register() {
             />
             <Input
               type="password"
+              name="password"
+              required
               placeholder="password"
               startDecorator={<Key />}
               value={password}
+              autoComplete="current-password"
               onChange={(event) => setPassword(event.target.value)}
               sx={{
                 ...inputStyle,
@@ -161,7 +209,7 @@ function Register() {
             <Link to="/login" style={{ textDecoration: "underline" }}>
               already have an account ?
             </Link>
-            <Button sx={{ width: "100px", borderRadius: "3px" }}>
+            <Button type="submit" sx={{ width: "100px", borderRadius: "3px" }}>
               SIGN UP
             </Button>
           </div>

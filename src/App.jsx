@@ -23,6 +23,7 @@ import ProtectedRoute from "./Pages/ProtectedRoute";
 import RegisterAcademicStep2 from "./Components/Generic/RegisterAcademicStep2";
 import FirstRegistrationStep from "./Components/Generic/FirstRegistrationStep";
 import RegisterAcademicStep3 from "./Components/Generic/RegisterAcademicStep3";
+import RegistrationProcess from "./Pages/Auth/RegistrationProcess";
 
 const defaultTheme = createTheme({
   palette: {
@@ -71,11 +72,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+          {/* <Route path="register5" element={<Register />} />
           <Route path="register2" element={<RegisterAcademicStep2 />} />
           <Route path="register1" element={<FirstRegistrationStep />} />
-          <Route path="register3" element={<RegisterAcademicStep3 />} />
-
+          <Route path="register3" element={<RegisterAcademicStep3 />} /> */}
+          <Route path="settings" element={<Settings />} />
+          <Route path="register" element={<RegistrationProcess />} />
           <Route
             index
             element={
