@@ -20,9 +20,7 @@ import NotFound from "./Pages/NotFound";
 import Settings from "./Pages/Settings";
 import { AuthProvider } from "./Components/contexts/AuthContext";
 import ProtectedRoute from "./Pages/ProtectedRoute";
-import RegisterAcademicStep2 from "./Components/Generic/RegisterAcademicStep2";
-import FirstRegistrationStep from "./Components/Generic/FirstRegistrationStep";
-import RegisterAcademicStep3 from "./Components/Generic/RegisterAcademicStep3";
+
 import RegistrationProcess from "./Pages/Auth/RegistrationProcess";
 
 const defaultTheme = createTheme({
@@ -43,7 +41,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
 
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<RegistrationProcess />} />
 
         <Route path="/settings" element={<Settings />} />
         {/* <Route path="/logout" element={<Logout />} /> */}

@@ -65,7 +65,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  row-gap: 35px;
+  row-gap: 10px;
 }
 .form label {
   font-weight: 600;

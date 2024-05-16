@@ -1,5 +1,5 @@
 import AuthPagesHeader from "./AuthPagesHeader";
-import styles from "./RegisterAcademicStep2.module.css";
+import styles from "./RegisterStep2.module.css";
 import styles2 from "./Register.module.css";
 import Typography from "@mui/joy/Typography";
 import { useState } from "react";
@@ -20,7 +20,6 @@ function FirstRegistrationStep({
   function incrementStep() {
     setStep((step) => 2);
   }
-  console.log(selectedOption);
   return (
     <>
       <AuthPagesHeader />
@@ -47,9 +46,24 @@ function FirstRegistrationStep({
             img="/organization.png"
             alt="Academic researcher"
           />
-          <Button size="lg" disabled={!selectedOption} onClick={incrementStep}>
-            Next &rarr;
-          </Button>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button
+              sx={{ width: "100px", borderRadius: "3px" }}
+              disabled={!selectedOption}
+              onClick={() => {
+                setStep((step) => step + 1);
+              }}
+            >
+              Next &rarr;
+            </Button>
+          </div>
         </div>
       </main>
     </>

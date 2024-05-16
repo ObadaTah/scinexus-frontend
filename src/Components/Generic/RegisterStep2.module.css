@@ -16,6 +16,7 @@
   background-color: #ffffff;
   width: 40%;
   padding: 20px;
+  min-width: 300px;
 }
 
 .optionContainer {
@@ -46,4 +47,10 @@
   border-color: #999999; /* Change border color when selected */
   font-weight: bold; /* Example: Make text bold when selected */
   /* Add any other styles for selected state */
+}
+
+.footer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }

@@ -1,5 +1,4 @@
 import AuthPagesHeader from "../../Components/Generic/AuthPagesHeader";
-import RegisterAcadenicStep2 from "../../Components/Generic/RegisterAcademicStep2.jsx";
 import styles from "../../Components/Generic/Register.module.css";
 import st from "../../Components/Generic/RegisterAcademicStep3.module.css";
 import { useEffect, useState } from "react";
@@ -20,6 +19,12 @@ import FormLabel from "@mui/joy/FormLabel";
 import Autocomplete from "@mui/joy/Autocomplete";
 import CircularProgress from "@mui/joy/CircularProgress";
 import EmailConfirmation from "./EmailConfirmation";
+import Alert from "@mui/joy/Alert";
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckCricleIcon from "@mui/icons-material/CheckCircle";
+
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 const fieldOfWorkOptions = [
   "Accounting",
   "Aerospace Engineering",
@@ -136,7 +141,19 @@ const fieldOfWorkOptions = [
   "Zoology",
 ];
 
-function RegisterAcademicStep3({
+const schema = Yup.object().shape({
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .matches(
+      /^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/,
+      "Phone number is not valid"
+    ),
+  // ...other fields
+});
+function RegisterStep3({
+  step,
+  setStep,
+  role,
   email,
   isClicked,
   setIsClicked,
@@ -150,8 +167,7 @@ function RegisterAcademicStep3({
   setIsInputFocused,
   phoneNumber,
   setPhoneNumber,
-  education,
-  setEducation,
+
   isEducationMenuLoading,
   setIsEducationMenuLoading,
   isEducationMenuOpen,
@@ -162,10 +178,16 @@ function RegisterAcademicStep3({
   setIsFieldOfWorkMenuLoading,
   fieldOfWork,
   setFieldOfWork,
+  educationValue,
+  setEducationValue,
+  children,
 }) {
   const minLength = 12;
 
-  const [educationValue, setEducationValue] = useState("a");
+  const [education, setEducation] = useState("");
+
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
+
   const handleChange = (newphoneNumber) => {
     setPhoneNumber(newphoneNumber);
   };
@@ -176,7 +198,11 @@ function RegisterAcademicStep3({
 
   // Example of countries to exclude
   const url = `http://universities.hipolabs.com/search?name=${educationValue}&limit=10`;
+  useEffect(() => {
+    setIsPhoneValid(schema.isValidSync({ phoneNumber }));
+  }, [phoneNumber]);
 
+  console.log(isPhoneValid);
   useEffect(() => {
     async function fetchEducation() {
       setIsEducationMenuLoading(true);
@@ -186,7 +212,7 @@ function RegisterAcademicStep3({
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log(data);
+
         setEducation(data);
         setIsEducationMenuLoading(false);
       } catch (error) {
@@ -196,7 +222,6 @@ function RegisterAcademicStep3({
 
     fetchEducation(); // Call the fetchEducation function
   }, [educationValue]); // Ensure the dependency array is closed properly
-  console.log(educationValue);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -208,6 +233,8 @@ function RegisterAcademicStep3({
     setFieldOfWork(fieldOfWork);
     setIsClicked(true);
   }
+
+  console.log(step);
 
   return (
     <div className={styles.container}>
@@ -276,6 +303,7 @@ function RegisterAcademicStep3({
 
             <label htmlFor="PhoneNumber">Phone Number</label>
             <MuiTelInput
+              required
               name="PhnoneNumber"
               className={isInputFocused ? st.phoneInput : st.phoneInputFocused}
               excludedCountries={["IL"]}
@@ -283,45 +311,69 @@ function RegisterAcademicStep3({
               value={phoneNumber}
               onChange={handleChange}
             />
+            {phoneNumber.length >= 1 && !isPhoneValid && (
+              <Alert
+                sx={{ height: "40px", fontSize: "10px" }}
+                variant={"soft"}
+                color="warning"
+                startDecorator={<WarningIcon />}
+              >
+                Phone Number is not valid.
+              </Alert>
+            )}
+            {phoneNumber.length >= 1 && isPhoneValid && (
+              <Alert
+                sx={{ height: "40px", fontSize: "10px" }}
+                variant={"soft"}
+                color="success"
+                startDecorator={<CheckCricleIcon />}
+              >
+                Phone Number is valid.
+              </Alert>
+            )}
 
-            <FormControl id="asynchronous-demo" className={st.formControl}>
-              <div>
-                <FormLabel>Education</FormLabel>
-                <Autocomplete
-                  sx={{
-                    height: "50px",
-                    backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
-                  }}
-                  placeholder="Type To Search Education"
-                  open={isEducationMenuOpen}
-                  onOpen={() => {
-                    setEducationMenuOpen(true);
-                  }}
-                  onClose={() => {
-                    setEducationMenuOpen(false);
-                  }}
-                  isOptionEqualToValue={(option, value) =>
-                    option.name === value.name
-                  }
-                  getOptionLabel={(education) => education.name}
-                  options={education}
-                  loading={isEducationMenuLoading}
-                  onInputChange={(event, value) => setEducationValue(value)}
-                  endDecorator={
-                    isEducationMenuLoading ? (
-                      <CircularProgress
-                        size="sm"
-                        sx={{ bgcolor: "background.surface" }}
-                      />
-                    ) : null
-                  }
-                />
-              </div>
-            </FormControl>
+            {role === "ACADEMIC" && (
+              <FormControl id="asynchronous-demo" className={st.formControl}>
+                <div>
+                  <FormLabel>Education</FormLabel>
+                  <Autocomplete
+                    required
+                    sx={{
+                      height: "50px",
+                      backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
+                    }}
+                    placeholder="Type To Search Education"
+                    open={isEducationMenuOpen}
+                    onOpen={() => {
+                      setEducationMenuOpen(true);
+                    }}
+                    onClose={() => {
+                      setEducationMenuOpen(false);
+                    }}
+                    isOptionEqualToValue={(option, value) =>
+                      option.name === value.name
+                    }
+                    getOptionLabel={(education) => education.name}
+                    options={education}
+                    loading={isEducationMenuLoading}
+                    onInputChange={(event, value) => setEducationValue(value)}
+                    endDecorator={
+                      isEducationMenuLoading ? (
+                        <CircularProgress
+                          size="sm"
+                          sx={{ bgcolor: "background.surface" }}
+                        />
+                      ) : null
+                    }
+                  />
+                </div>
+              </FormControl>
+            )}
             <FormControl id="asynchronous-demo1" className={st.formControl}>
               <div>
                 <FormLabel>Field Of Work</FormLabel>
                 <Autocomplete
+                  required
                   sx={{
                     height: "50px",
                     backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
@@ -356,10 +408,34 @@ function RegisterAcademicStep3({
           <div></div>
 
           <div className={styles.footer}>
-            <Button type="submit" sx={{ width: "100px", borderRadius: "3px" }}>
-              SIGN UP
+            <Button
+              onClick={() => {
+                setStep((step) => step - 1);
+              }}
+              sx={{
+                width: "100px",
+                borderRadius: "3px",
+                backgroundColor: "white",
+                color: "#e60b2f",
+                border: "1px solid #e60b2f",
+                "&:hover": {
+                  backgroundColor: "white",
+                  color: "#e60b2f",
+                  border: "1px solid #e60b2f",
+                },
+              }}
+            >
+              &larr; Back
+            </Button>
+            <Button
+              type="submit"
+              sx={{ width: "100px", borderRadius: "3px" }}
+              disabled={!isPhoneValid}
+            >
+              Sign Up
             </Button>
           </div>
+          {children}
           <EmailConfirmation
             email={email}
             open={isClicked}
@@ -371,4 +447,4 @@ function RegisterAcademicStep3({
   );
 }
 
-export default RegisterAcademicStep3;
+export default RegisterStep3;

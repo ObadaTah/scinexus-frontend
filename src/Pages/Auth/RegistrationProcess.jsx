@@ -1,11 +1,113 @@
 import FirstRegistrationStep from "../../Components/Generic/FirstRegistrationStep";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Register from "./Register";
-import RegisterAcademicStep2 from "../../Components/Generic/RegisterAcademicStep2";
-import RegisterAcademicStep3 from "../../Components/Generic/RegisterAcademicStep3";
-import RegisterOrganizationStep2 from "../../Components/Generic/RegisterOrganizationStep2";
-import RegisterOrganizationStep3 from "../../Components/Generic/RegisterOrganizationStep3";
-import EmailConfirmation from "../../Components/Generic/EmailConfirmation";
+import { useNavigate } from "react-router-dom";
+
+import RegisterStep3 from "../../Components/Generic/RegisterStep3";
+import RegisterStep2 from "../../Components/Generic/RegisterStep2";
+import Alert from "@mui/joy/Alert";
+import WarningIcon from "@mui/icons-material/Warning";
+
+const academicOptions = [
+  {
+    label: "Academic researcher",
+    value: "RESEARCHER",
+    src: "/academic.png",
+    alt: "Academic researcher",
+  },
+  {
+    label: "Academic faculty member",
+    value: "PROFESSOR",
+    src: "/book.png",
+    alt: "Academic faculty member",
+  },
+  {
+    label: "Retired academic",
+    value: "POSTDOC",
+    src: "/knowledge.png",
+    alt: "Retired academic",
+  },
+  {
+    label: "Self-employed professional",
+    value: "LECTURER",
+    src: "/research-paper.png",
+    alt: "Self-employed professional",
+  },
+  {
+    label: "Academic affiliated with an organization",
+    value: "ASSOCIATE_PROFESSOR",
+    src: "/research.png",
+    alt: "Academic affiliated with an organization",
+  },
+  {
+    label: "Graduate student",
+    value: "GRADUATE_STUDENT",
+    src: "/graduation-cap.png", // Assuming you have an image for graduate student
+    alt: "Graduate student",
+  },
+  {
+    label: "Undergraduate student",
+    value: "UNDERGRADUATE_STUDENT",
+    src: "/undergraduate.png", // Assuming you have an image for undergraduate student
+    alt: "Undergraduate student",
+  },
+];
+const organizationOptions = [
+  {
+    label: "Business",
+    value: "BUSINESS",
+    src: "/business.png", // Assuming you have an image for business
+    alt: "Business",
+  },
+  {
+    label: "Non Profit ",
+    value: "NON_PROFIT",
+    src: "/ngo.png", // Assuming you have an image for non-profit
+    alt: "Non-Profit",
+  },
+  {
+    label: "Educational",
+    value: "EDUCATIONAL",
+    src: "/educational.png", // Assuming you have an image for educational
+    alt: "Educational",
+  },
+  {
+    label: "Governmental",
+    value: "GOVERNMENT",
+    src: "/government.png", // Assuming you have an image for government
+    alt: "Government",
+  },
+  {
+    label: "Professional Association",
+    value: "PROFESSIONAL_ASSOCIATION",
+    src: "/professional-association.png", // Assuming you have an image for professional association
+    alt: "Professional Association",
+  },
+  {
+    label: "Community Group",
+    value: "COMMUNITY_GROUP",
+    src: "/community-group.png", // Assuming you have an image for community group
+    alt: "Community Group",
+  },
+  {
+    label: "Media",
+    value: "MEDIA",
+    src: "/media.png", // Assuming you have an image for media
+    alt: "Media",
+  },
+  {
+    label: "Religious",
+    value: "RELIGIOUS",
+    src: "/religious.png", // Assuming you have an image for religious
+    alt: "Religious",
+  },
+  {
+    label: "Sports",
+    value: "SPORTS",
+    src: "/sports.png", // Assuming you have an image for sports
+    alt: "Sports",
+  },
+];
 function RegistrationProcess() {
   const [step, setStep] = useState(1);
   const [role, setRole] = useState("");
@@ -23,11 +125,17 @@ function RegistrationProcess() {
   const [isFieldOfWorkMenuLoading, setIsFieldOfWorkMenuLoading] =
     useState(false);
   const [fieldOfWork, setFieldOfWork] = useState("");
+  const [educationValue, setEducationValue] = useState("");
 
   const [education, setEducation] = useState([]);
   const [isEducationMenuLoading, setIsEducationMenuLoading] = useState(false);
   const [isEducationMenuOpen, setEducationMenuOpen] = useState(false);
   useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [position, setPosition] = useState(null);
+  const [responseMessage, setResponseMessage] = useState("");
+
+  const navigate = useNavigate();
 
   if (isClicked) {
     console.log("role:", role);
@@ -41,9 +149,65 @@ function RegistrationProcess() {
     console.log("phoneNumber:", phoneNumber);
     console.log("step:", step);
     console.log("fieldOfWork:", fieldOfWork);
-    console.log("education:", education);
-    console.log("isClicked:", isClicked);
+    console.log("education:", educationValue);
+    console.log("position:", position);
   }
+
+  useEffect(() => {
+    if (!isClicked) return;
+
+    async function registerUser() {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            username,
+            email,
+            password,
+            bio,
+            phoneNumber,
+            fieldOfWork,
+            role,
+            educationValue,
+            badge,
+            position,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        navigate("/login", { replace: true });
+      } else {
+        setIsClicked(false);
+
+        if (data.message == "Vaildation Constraint Violation") {
+          console.log("Hello");
+          const validationErrorMessages = Object.entries(data.validationError)
+            .map(
+              ([field, errors]) =>
+                `${field.charAt(0).toUpperCase() + field.slice(1)}: ${
+                  Array.isArray(errors) ? errors.join(". ") : errors
+                }.`
+            )
+            .join("\n");
+          console.log(validationErrorMessages);
+
+          setResponseMessage(`${data.message}:\n${validationErrorMessages}`);
+        } else {
+          setResponseMessage(data.message.substring(0, 100));
+        }
+      }
+    }
+    registerUser();
+  });
 
   return (
     <div>
@@ -73,14 +237,37 @@ function RegistrationProcess() {
           setIsClicked={setIsClicked}
         />
       )}
-      {step === 3 && role === "ACADEMIC" && (
-        <RegisterAcademicStep2 step={step} setStep={setStep} />
+
+      {step === 3 && (
+        <RegisterStep2
+          role={role}
+          academicOptions={academicOptions}
+          organizationOptions={organizationOptions}
+          step={step}
+          setStep={setStep}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          position={position}
+          setPosition={setPosition}
+        />
       )}
-      {step === 3 && role === "ORGANIZATION" && (
-        <RegisterOrganizationStep2 step={step} setStep={setStep} />
-      )}
-      {step === 4 && role === "ACADEMIC" && (
-        <RegisterAcademicStep3
+      {/* {step === 3 && role === "ORGANIZATION" && (
+        <RegisterStep2
+          occupationOptions={organizationOptions}
+          step={step}
+          setStep={setStep}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+      )} */}
+
+      {step === 4 && (
+        <RegisterStep3
+          educationValue={educationValue}
+          setEducationValue={setEducationValue}
+          step={step}
+          setStep={setStep}
+          role={role}
           fieldOfWork={fieldOfWork}
           setFieldOfWork={setFieldOfWork}
           isClicked={isClicked}
@@ -96,8 +283,6 @@ function RegistrationProcess() {
           setIsInputFocused={setIsInputFocused}
           phoneNumber={phoneNumber}
           setPhoneNumber={setPhoneNumber}
-          education={education}
-          setEducation={setEducation}
           isEducationMenuLoading={isEducationMenuLoading}
           setIsEducationMenuLoading={setIsEducationMenuLoading}
           isEducationMenuOpen={isEducationMenuOpen}
@@ -106,30 +291,18 @@ function RegistrationProcess() {
           setFieldOfWorkMenuOpen={setFieldOfWorkMenuOpen}
           isFieldOfWorkMenuLoading={isFieldOfWorkMenuLoading}
           setIsFieldOfWorkMenuLoading={setIsFieldOfWorkMenuLoading}
-        />
-      )}
-      {step === 4 && role === "ORGANIZATION" && (
-        <RegisterOrganizationStep3
-          fieldOfWork={fieldOfWork}
-          setFieldOfWork={setFieldOfWork}
-          isClicked={isClicked}
-          setIsClicked={setIsClicked}
-          email={email}
-          username={username}
-          setUsername={setUsername}
-          bio={bio}
-          setBio={setBio}
-          badge={badge}
-          setBadge={setBadge}
-          isInputFocused={isInputFocused}
-          setIsInputFocused={setIsInputFocused}
-          phoneNumber={phoneNumber}
-          setPhoneNumber={setPhoneNumber}
-          isFieldOfWorkMenuOpen={isFieldOfWorkMenuOpen}
-          setFieldOfWorkMenuOpen={setFieldOfWorkMenuOpen}
-          isFieldOfWorkMenuLoading={isFieldOfWorkMenuLoading}
-          setIsFieldOfWorkMenuLoading={setIsFieldOfWorkMenuLoading}
-        />
+        >
+          {responseMessage && (
+            <Alert
+              sx={{ minHeight: "40px", fontSize: "10px" }}
+              variant={"soft"}
+              color="danger"
+              startDecorator={<WarningIcon />}
+            >
+              {responseMessage}
+            </Alert>
+          )}
+        </RegisterStep3>
       )}
     </div>
   );

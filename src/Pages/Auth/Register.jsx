@@ -1,5 +1,4 @@
 import AuthPagesHeader from "../../Components/Generic/AuthPagesHeader";
-import RegisterAcadenicStep2 from "../../Components/Generic/RegisterAcademicStep2.jsx";
 import styles from "../../Components/Generic/Register.module.css";
 import GoogleLoginButton from "../Auth/GoogleLoginButton.jsx";
 import GitHubLoginButton from "./GithubLoginButton.jsx";
@@ -11,6 +10,14 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Typography from "@mui/joy/Typography";
 import Key from "@mui/icons-material/Key";
 import { Link } from "react-router-dom";
+import { object, string, number, date } from "yup";
+import Alert from "@mui/joy/Alert";
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckCricleIcon from "@mui/icons-material/CheckCircle";
+import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
+import IconButton from "@mui/joy/IconButton";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 const userInfo = {
   firstName: null,
@@ -43,6 +50,70 @@ function Register({
   isClicked,
   setIsClicked,
 }) {
+  let message = "";
+  // Schema for user information
+  const userSchema = object({
+    firstName: string().required(),
+    lastName: string().required(),
+  });
+
+  // Schema for password validation
+  const passwordSchema = string()
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/,
+      "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character"
+    )
+    .required();
+
+  // Schema for email validation
+  const emailSchema = string()
+    .matches(
+      /^[a-zA-Z0-9]+[._-]*[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/,
+      "Invalid email address"
+    )
+    .required();
+
+  const [isValid, setIsValid] = useState(false);
+  const [isFLNameValid, setIsFLNameValid] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isPasswordMatch, setIsPasswordMatch] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (password === confirmPassword) {
+      setIsPasswordMatch(true);
+    } else {
+      setIsPasswordMatch(false);
+    }
+  }, [password, confirmPassword]);
+  useEffect(() => {
+    setIsFLNameValid(userSchema.isValidSync({ firstName, lastName }));
+  }, [firstName, lastName]);
+
+  useEffect(() => {
+    setIsEmailValid(emailSchema.isValidSync(email));
+  }, [email]);
+
+  useEffect(() => {
+    setIsPasswordValid(passwordSchema.isValidSync(password));
+  }, [password]);
+
+  useEffect(() => {
+    if (isFLNameValid && isEmailValid && isPasswordValid && isPasswordMatch) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+  }, [isFLNameValid, isEmailValid, isPasswordValid, isPasswordMatch]);
+
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /\W|_/.test(password);
+  const strength = hasUpperCase + hasLowerCase + hasNumber + hasSpecialChar;
+
   const minLength = 12;
 
   const inputStyle = {
@@ -114,7 +185,13 @@ function Register({
           <span className={styles.text}>or</span>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <Stack spacing={5} direction="row">
+          <Stack
+            spacing={5}
+            direction="row"
+            sx={{
+              paddingBottom: "20px",
+            }}
+          >
             <Input
               placeholder="First Name"
               required
@@ -146,12 +223,13 @@ function Register({
               onBlur={() => setIsInputFocused(false)}
             />
           </Stack>
-          <Stack spacing="35px">
+          <Stack spacing="25px">
             <Input
               placeholder="Email"
               required
               name="email"
               value={email}
+              autoComplete="username"
               onChange={(event) => setEmail(event.target.value)}
               sx={{
                 ...inputStyle,
@@ -162,11 +240,20 @@ function Register({
               onBlur={() => setIsInputFocused(false)}
             />
             <Input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               required
               placeholder="password"
               startDecorator={<Key />}
+              endDecorator={
+                <IconButton onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? (
+                    <VisibilityOffOutlinedIcon />
+                  ) : (
+                    <RemoveRedEyeOutlinedIcon />
+                  )}
+                </IconButton>
+              }
               value={password}
               autoComplete="current-password"
               onChange={(event) => setPassword(event.target.value)}
@@ -178,41 +265,157 @@ function Register({
               onFocus={() => setIsInputFocused(true)}
               onBlur={() => setIsInputFocused(false)}
             />
-
-            {password.length >= 1 && (
-              <LinearProgress
-                determinate
-                size="sm"
-                value={Math.min((password.length * 100) / minLength, 100)}
-                sx={{
-                  bgcolor: "background.level3",
-                  color: getPasswordColor(password.length),
-                  flexGrow: 1,
-                  width: "150px",
-                  borderRadius: "3px",
-                }}
-              />
+            <Input
+              type="password"
+              name="confirmPassword"
+              required
+              placeholder="Confirm Password"
+              startDecorator={<ReplayRoundedIcon />}
+              value={confirmPassword}
+              autoComplete="current-password"
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              sx={{
+                ...inputStyle,
+                backgroundColor: isInputFocused ? "#fff" : "#f8f8f8",
+                transition: "background-color 0.2s ease-in-out",
+              }}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+            />
+          </Stack>
+          <Stack spacing={1}>
+            {email.length >= 1 && !isEmailValid && (
+              <Alert
+                sx={{ height: "40px", fontSize: "10px" }}
+                variant={"soft"}
+                color="warning"
+                startDecorator={<WarningIcon />}
+              >
+                Email is not valid.
+              </Alert>
+            )}
+            {email.length >= 1 && isEmailValid && (
+              <Alert
+                sx={{ height: "40px", fontSize: "10px" }}
+                variant={"soft"}
+                color="success"
+                startDecorator={<CheckCricleIcon />}
+              >
+                Email is valid.
+              </Alert>
+            )}
+            {password.length >= 1 && !isPasswordValid && (
+              <Alert
+                sx={{ height: "40px", fontSize: "10px" }}
+                variant={"soft"}
+                color="warning"
+                startDecorator={<WarningIcon />}
+              >
+                Password must contain at least 8 characters, one uppercase
+                letter, one lowercase letter, one number, and one special
+                character
+              </Alert>
+            )}
+            {password.length >= 1 && isPasswordValid && (
+              <Alert
+                sx={{ height: "40px", fontSize: "10px" }}
+                variant={"soft"}
+                color="success"
+                startDecorator={<CheckCricleIcon />}
+              >
+                Password is valid.
+              </Alert>
+            )}
+            {confirmPassword.length >= 1 && !isPasswordMatch && (
+              <Alert
+                sx={{ height: "40px", fontSize: "10px" }}
+                variant={"soft"}
+                color="warning"
+                startDecorator={<WarningIcon />}
+              >
+                Password is not confirmed
+              </Alert>
+            )}
+            {confirmPassword.length >= 1 && isPasswordMatch && (
+              <Alert
+                sx={{ height: "40px", fontSize: "10px" }}
+                variant={"soft"}
+                color="success"
+                startDecorator={<CheckCricleIcon />}
+              >
+                Password is Confirmed
+              </Alert>
             )}
 
-            <Typography
-              level="body-xs"
-              sx={{ alignSelf: "flex-start", color: "hsl(var(--hue) 80% 30%)" }}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                justifyContent: "flex-end",
+              }}
             >
-              {password.length < 3 && password.length >= 1 && "Very weak"}
-              {password.length >= 3 && password.length < 6 && "Weak"}
-              {password.length >= 6 && password.length < 10 && "Strong"}
-              {password.length >= 10 && "Very strong"}
-            </Typography>
+              {password.length >= 1 && (
+                <LinearProgress
+                  determinate
+                  size="sm"
+                  value={Math.min(strength * 25, 100)}
+                  sx={{
+                    bgcolor: "background.level3",
+                    color: getPasswordColor(strength * 1.5),
+                    flexGrow: 1,
+                    width: "150px",
+                    borderRadius: "3px",
+                  }}
+                />
+              )}
+
+              <Typography
+                level="body-xs"
+                sx={{
+                  alignSelf: "flex-end",
+                  color: "hsl(var(--hue) 80% 30%)",
+                }}
+              >
+                {strength === 1 && "Very weak"}
+                {strength === 2 && "Weak"}
+                {strength === 3 && "Strong"}
+                {strength === 4 && "Very strong"}
+              </Typography>
+            </div>
           </Stack>
 
           <div className={styles.footer}>
-            <Link to="/login" style={{ textDecoration: "underline" }}>
-              already have an account ?
-            </Link>
-            <Button type="submit" sx={{ width: "100px", borderRadius: "3px" }}>
-              SIGN UP
+            <Button
+              onClick={() => {
+                setStep((step) => step - 1);
+              }}
+              sx={{
+                width: "100px",
+                borderRadius: "3px",
+                backgroundColor: "white",
+                color: "#e60b2f",
+                border: "1px solid #e60b2f",
+                "&:hover": {
+                  backgroundColor: "white",
+                  color: "#e60b2f",
+                  border: "1px solid #e60b2f",
+                },
+              }}
+            >
+              &larr; Back
+            </Button>
+            <Button
+              type="submit"
+              sx={{ width: "100px", borderRadius: "3px" }}
+              disabled={!isValid}
+            >
+              Sign Up
             </Button>
           </div>
+          <Link to="/login" style={{ textDecoration: "underline" }}>
+            already have an account ?
+          </Link>
         </form>
       </main>
     </div>

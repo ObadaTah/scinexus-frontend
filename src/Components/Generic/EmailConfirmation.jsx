@@ -6,6 +6,8 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import Divider from "@mui/joy/Divider";
 import Grid from "@mui/joy/Grid";
+import { Link } from "react-router-dom";
+
 function EmailConfirmation({ email, open, setOpen }) {
   return (
     <div>
@@ -58,13 +60,16 @@ function EmailConfirmation({ email, open, setOpen }) {
             We've sent an email to {email} for you to confirm your email
             address. Just click the link in the email to complete your
             registration. Check your inbox{" "}
-            <a
-              href="http://localhost:1080/#/"
+            <Link
+              to="http://localhost:1080/#/"
               style={{ color: "#3aa0ed", textDecoration: "none" }}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               here!
-            </a>
+            </Link>
           </Typography>
+
           <Grid
             xs={2}
             container
@@ -82,12 +87,14 @@ function EmailConfirmation({ email, open, setOpen }) {
 
           <Typography sx={{ fontSize: "80%" }}>
             if you not get any mail{" "}
-            <a
-              href="http://localhost:1080/#/"
+            <Link
+              to="http://localhost:1080/#/"
               style={{ color: "#3aa0ed", textDecoration: "none" }}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Resend Email Verfication
-            </a>
+              Resend Email Verification
+            </Link>
           </Typography>
         </Sheet>
       </Modal>

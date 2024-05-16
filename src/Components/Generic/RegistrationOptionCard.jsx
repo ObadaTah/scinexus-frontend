@@ -1,4 +1,4 @@
-import styles from "./RegisterAcademicStep2.module.css";
+import styles from "./RegisterStep2.module.css";
 import Typography from "@mui/joy/Typography";
 
 function RegistrationOptionCard({ label, isSelected, onSelect, img, alt }) {
