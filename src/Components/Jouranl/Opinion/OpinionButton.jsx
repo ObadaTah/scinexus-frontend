@@ -1,7 +1,7 @@
 import { useState } from "react";
 import OpinionsModal from "./OpinionsModal";
 import OpinionsContainer from "./OpinionsContainer";
-
+import Container from "@mui/material/Container";
 function OpinionButton(props) {
     // TBI : To be implemented
     const [open, setOpen] = useState(false);
@@ -11,7 +11,6 @@ function OpinionButton(props) {
             <svg
                 onClick={() => {
                     setOpen(true);
-                    console.log("asdas");
                 }}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -35,7 +34,6 @@ function OpinionButton(props) {
                 />
             </svg>
             <OpinionsContainer
-                unmountOnExit
                 journalId={props.journalId}
                 open={open}
                 setOpen={setOpen}
