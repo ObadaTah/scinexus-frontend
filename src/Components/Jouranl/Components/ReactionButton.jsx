@@ -1,7 +1,6 @@
 import { ReactionBarSelector } from "@charkour/react-reactions";
 import { useState } from "react";
 import { Image } from "react-bootstrap";
-import Typography from "@mui/material/Typography";
 
 import ASSETS from "../../../assets/Assets";
 import "./style.css";
@@ -69,7 +68,6 @@ function ReactionButton(props) {
     const [selectedReaction, setSelectedReaction] = useState(null);
 
     const reaction = (key) => {
-        console.log(key);
         setShowReactionsHolder("none");
         reactions.map((reaction) => {
             if (selectedReaction != null && selectedReaction.label == key) {
@@ -98,11 +96,14 @@ function ReactionButton(props) {
             <div
                 className="reactionsHolder"
                 id="reactionsHolder"
-                style={{ display: showReactionsHolder }}
+                style={{
+                    display: showReactionsHolder,
+                }}
             >
                 <ReactionBarSelector
-                    key="reactionsHolder"
-                    iconSize={"24px"}
+                    // key="reactionsHolder"
+                    style={{ border: "1px solid rgb(0, 0, 0, 0.1" }}
+                    iconSize={"10px"}
                     reactions={reactions}
                     onSelect={(key) => reaction(key)}
                 />
@@ -127,20 +128,14 @@ function ReactionButton(props) {
                             strokeLinecap="round"
                         />
                     </svg>
-                    {/* <Typography className="p-2">Reaction</Typography> */}
                 </div>
             ) : (
-                <>
-                    <div
-                        className="reactionButton"
-                        onClick={() => toggleReactionsHolder()}
-                    >
-                        {selectedReaction.node}
-                        {/* <Typography className="p-2">
-                            {selectedReaction.label}
-                        </Typography> */}
-                    </div>
-                </>
+                <div
+                    className="reactionButton"
+                    onClick={() => toggleReactionsHolder()}
+                >
+                    {selectedReaction.node}
+                </div>
             )}
         </>
     );
