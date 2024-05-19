@@ -1,8 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
-import MoreHoriz from "@mui/icons-material/MoreHoriz";
-
-import OpinionsContainer from "../Opinion/OpinionsContainer";
 
 import {
     AspectRatio,
@@ -11,53 +8,50 @@ import {
     Card,
     CardContent,
     CardOverflow,
-    DialogContent,
-    DialogTitle,
     IconButton,
     Input,
     Link,
-    Modal,
-    ModalDialog,
     Typography,
 } from "@mui/joy";
 import * as React from "react";
-import { Transition } from "react-transition-group";
 import ReactionButton from "../Components/ReactionButton";
 import SendButton from "../Components/SendButton";
 
+import IconButtonMenu from "../Components/IconButtonMenu";
 import OpinionButton from "../Opinion/OpinionButton";
-import OpinionsModal from "../Opinion/OpinionsModal";
 
-export default function NewPost(props) {
-    function getTimeDifference(dateString) {
-        // Parse the string into a Date object
-        const date = new Date(dateString);
+function getTimeDifference(dateString) {
+    // Parse the string into a Date object
+    const date = new Date(dateString);
 
-        // Get the current date
-        const currentDate = new Date();
+    // Get the current date
+    const currentDate = new Date();
 
-        // Calculate the time difference in milliseconds
-        const timeDifference = currentDate - date;
-        // Calculate the time difference in days
-        const daysDifference = Math.floor(
-            timeDifference / (1000 * 60 * 60 * 24)
-        );
+    // Calculate the time difference in milliseconds
+    const timeDifference = currentDate - date;
+    // Calculate the time difference in days
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-        // Return the formatted time difference
-        if (daysDifference === 0) {
-            return "Today";
-        } else if (daysDifference === 1) {
-            return "Yesterday";
-        } else {
-            return `${daysDifference} Days Ago`;
-        }
+    // Return the formatted time difference
+    if (daysDifference === 0) {
+        return "Today";
+    } else if (daysDifference === 1) {
+        return "Yesterday";
+    } else {
+        return `${daysDifference} Days Ago`;
     }
+}
+export default function NewPost(props) {
     return (
         <Card
             variant="outlined"
             sx={{
                 maxWidth: "60%",
                 "--Card-radius": "10px",
+                "&:hover": {
+                    boxShadow: "md",
+                    borderColor: "neutral.outlinedHoverBorder",
+                },
             }}
         >
             <CardContent
@@ -103,7 +97,7 @@ export default function NewPost(props) {
                     size="sm"
                     sx={{ ml: "auto" }}
                 >
-                    <MoreHoriz />
+                    <IconButtonMenu />
                 </IconButton>
             </CardContent>
             {props.image != null ? (
