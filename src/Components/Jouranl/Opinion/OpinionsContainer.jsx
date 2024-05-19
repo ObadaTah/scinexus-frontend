@@ -1,8 +1,11 @@
-import { List, ListItem, Typography } from "@mui/material";
-
+import { Typography } from "@mui/material";
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
 import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
-import Opinion from "./Opinion";
+import ModalClose from "@mui/joy/ModalClose";
+
+import NewOpinion from "./NewOpinion";
 import { helix } from "ldrs";
 import { DialogContent, DialogTitle, Modal, ModalDialog } from "@mui/joy";
 // import * as React from "react";
@@ -73,87 +76,108 @@ function OpinionsContainer(props) {
         return data["jwtToken"];
     }
     const [opinions, setOpinions] = React.useState([]);
-    useEffect(function () {
-        async function getAllOpinions() {
-            const jwt = await authenticate();
-            // console.log(" this is jwt token ", jwt);
-            console.log("this is journal id", props.journalId);
-            const response = await fetch(
-                "http://localhost:8080/journals/" +
-                    props.journalId +
-                    "/opinions",
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${jwt}`,
-                    },
+    useEffect(
+        function () {
+            async function getAllOpinions() {
+                if (props.open != true) {
+                    return;
                 }
-            );
-            if (response.status === 200 || response.status === 201) {
-                const data = await response.json();
-                console.log(data);
-                if (data["_embedded"] !== undefined) {
-                    setOpinions(data["_embedded"].opinionList);
-                    console.log(data["_embedded"].opinionList);
+                const jwt = await authenticate();
+                // console.log(" this is jwt token ", jwt);
+                console.log("this is journal id", props.journalId);
+                const response = await fetch(
+                    "http://localhost:8080/journals/" +
+                        props.journalId +
+                        "/opinions",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${jwt}`,
+                        },
+                    }
+                );
+                if (response.status === 200 || response.status === 201) {
+                    const data = await response.json();
+                    console.log(data);
+                    if (data["_embedded"] !== undefined) {
+                        setOpinions(data["_embedded"].opinionList);
+                        console.log(data["_embedded"].opinionList);
+                    } else {
+                        setOpinions([]);
+                        setFinishedLoadingAndEmpty("block");
+                    }
+                    // setOpinions(data["_embedded"].opinionList);
+                    // console.log(data["_embedded"].opinionList);
                 } else {
-                    setOpinions([]);
-                    setFinishedLoadingAndEmpty("block");
+                    setOpinions(dummyOpinions);
                 }
-                // setOpinions(data["_embedded"].opinionList);
-                // console.log(data["_embedded"].opinionList);
-            } else {
-                setOpinions(dummyOpinions);
+                setIsLoading("none");
             }
-            setIsLoading("none");
-        }
 
-        getAllOpinions();
-    }, []);
+            getAllOpinions();
+        },
+        [props.open]
+    );
 
     return (
-        <Transition in={props.open} timeout={400} unmountOnExit>
-            {(state) => (
-                <Modal
-                    keepMounted
-                    open={!["exited", "exiting"].includes(state)}
-                    onClose={() => props.setOpen(false)}
-                    slotProps={{
-                        backdrop: {
-                            sx: {
-                                opacity: 0,
-                                backdropFilter: "none",
-                                transition: `opacity 400ms, backdrop-filter 400ms`,
-                                ...{
-                                    entering: {
-                                        opacity: 1,
-                                        backdropFilter: "blur(8px)",
-                                    },
-                                    entered: {
-                                        opacity: 1,
-                                        backdropFilter: "blur(8px)",
-                                    },
-                                }[state],
+        <div>
+            <Transition
+                in={props.open}
+                timeout={400}
+                style={{
+                    display: isLoading,
+                }}
+            >
+                {(state) => (
+                    <Modal
+                        open={!["exited", "exiting"].includes(state)}
+                        onClose={() => props.setOpen(false)}
+                        slotProps={{
+                            backdrop: {
+                                sx: {
+                                    opacity: 0,
+                                    backdropFilter: "none",
+                                    transition: `opacity 400ms, backdrop-filter 400ms`,
+                                    ...{
+                                        entering: {
+                                            opacity: 1,
+                                            backdropFilter: "blur(8px)",
+                                        },
+                                        entered: {
+                                            opacity: 0.8,
+                                            backdropFilter: "blur(8px)",
+                                        },
+                                    }[state],
+                                },
                             },
-                        },
-                    }}
-                    sx={{
-                        visibility: state === "exited" ? "hidden" : "visible",
-                    }}
-                >
-                    <ModalDialog
+                        }}
                         sx={{
-                            opacity: 0,
-                            transition: `opacity 300ms`,
-                            ...{
-                                entering: { opacity: 1 },
-                                entered: { opacity: 1 },
-                            }[state],
+                            visibility:
+                                state === "exited" ? "hidden" : "visible",
                         }}
                     >
-                        <DialogTitle>Opinions</DialogTitle>
-                        <DialogContent>
-                            <>
+                        <ModalDialog
+                            layout="center"
+                            size="sm"
+                            style={{ width: "50%" }}
+                            sx={{
+                                opacity: 0,
+                                transition: `opacity 300ms`,
+                                ...{
+                                    entering: { opacity: 0.7 },
+                                    entered: { opacity: 1 },
+                                }[state],
+                            }}
+                        >
+                            <ModalClose />
+
+                            <DialogTitle>Opinions</DialogTitle>
+                            <DialogContent
+                                style={{
+                                    alignItems: "center",
+                                }}
+                            >
                                 <l-helix
                                     size="45"
                                     speed="2.5"
@@ -166,25 +190,27 @@ function OpinionsContainer(props) {
                                     }}
                                 />
 
-                                <Container fixed style={{ maxWidth: "50%" }}>
+                                <Typography
+                                    style={{
+                                        display: finishedLoadingAndEmpty,
+                                        position: "center",
+                                        textAlign: "center",
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                    }}
+                                >
+                                    There are no opinions yet, be the first to
+                                    share your Opinion
+                                </Typography>
+                                <Container>
                                     <List>
-                                        <Typography
-                                            style={{
-                                                display:
-                                                    finishedLoadingAndEmpty,
-                                                position: "center",
-                                                textAlign: "center",
-                                                marginLeft: "auto",
-                                                marginRight: "auto",
-                                            }}
-                                        >
-                                            There are no opinions yet, be the
-                                            first to share your Opinion
-                                        </Typography>
                                         {opinions.map((opinion, index) => {
                                             return (
-                                                <ListItem key={index}>
-                                                    <Opinion
+                                                <ListItem
+                                                    key={index}
+                                                    style={{ maxWidth: "100%" }}
+                                                >
+                                                    <NewOpinion
                                                         papaOpinionId={
                                                             opinion.papaOpinion
                                                         }
@@ -203,12 +229,12 @@ function OpinionsContainer(props) {
                                         })}
                                     </List>
                                 </Container>
-                            </>
-                        </DialogContent>
-                    </ModalDialog>
-                </Modal>
-            )}
-        </Transition>
+                            </DialogContent>
+                        </ModalDialog>
+                    </Modal>
+                )}
+            </Transition>
+        </div>
     );
 }
 export default OpinionsContainer;
