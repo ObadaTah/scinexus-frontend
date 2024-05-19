@@ -1,8 +1,7 @@
 import { List, ListItem } from "@mui/material";
 import Container from "react-bootstrap/Container";
 
-import Post from "../Jouranl/Post/Post";
-import ResearchPaper from "../Jouranl/ResearchPaper/ResearchPaper";
+import NewResearchPaper from "../Jouranl/ResearchPaper/NewResearchPaper";
 import { useEffect, useState } from "react";
 import { helix } from "ldrs";
 import NewPost from "../Jouranl/Post/NewPost";
@@ -190,6 +189,27 @@ function JournalsList() {
                     style={{ display: isLoading }}
                 />
                 <List>
+                    {researchpapers.map((researchPaper, index) => {
+                        return (
+                            <ListItem
+                                key={index}
+                                style={{
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <NewResearchPaper
+                                    journalId={researchPaper.id}
+                                    publisher={researchPaper.publisher}
+                                    title={researchPaper.title}
+                                    publishDate={researchPaper.createDateTime}
+                                    // organizations={researchPaper.validatedBy}
+                                    image="https://placehold.co/3000x3000"
+                                    content={researchPaper.content}
+                                    contributors={researchPaper.contributors}
+                                />
+                            </ListItem>
+                        );
+                    })}
                     {posts.map((post, index) => {
                         return (
                             <ListItem
@@ -205,22 +225,6 @@ function JournalsList() {
                                     publishDate={post.createDateTime}
                                     image={post.medias[0]}
                                     interactionsCount={post.interactionsCount}
-                                />
-                            </ListItem>
-                        );
-                    })}
-                    {researchpapers.map((researchPaper, index) => {
-                        return (
-                            <ListItem key={index}>
-                                <ResearchPaper
-                                    journalId={researchPaper.id}
-                                    publisher={researchPaper.publisher}
-                                    title="dummyTitle"
-                                    publishDate={researchPaper.createDateTime}
-                                    // organizations={researchPaper.validatedBy}
-                                    image="https://placehold.co/3000x3000"
-                                    content={researchPaper.content}
-                                    contributors={researchPaper.contributors}
                                 />
                             </ListItem>
                         );
