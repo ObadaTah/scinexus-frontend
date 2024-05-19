@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../Components/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -42,13 +43,21 @@ export default function Login() {
     },
     [isAuthenticated, navigate]
   );
+  const onGoogleSignIn = async (res) => {
+    const { credential } = res;
+    const result = await postLoginToken(credential, setIsLogin);
+    setIsLogin(result);
+  };
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
         <AuthPagesHeader />
         <div className={styles.oauth}>
-          <GoogleLoginButton label="Login With Google" />
+          <GoogleLoginButton
+            label="Login With Google"
+            onGoogleSignIn={onGoogleSignIn}
+          />
           <GitHubLoginButton label="Login With Github" />
         </div>
         <div className={styles.horizontalLine}>

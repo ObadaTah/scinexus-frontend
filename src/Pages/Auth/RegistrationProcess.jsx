@@ -7,7 +7,7 @@ import RegisterStep3 from "../../Components/Generic/RegisterStep3";
 import RegisterStep2 from "../../Components/Generic/RegisterStep2";
 import Alert from "@mui/joy/Alert";
 import WarningIcon from "@mui/icons-material/Warning";
-
+import { useSearchParams } from "react-router-dom";
 const academicOptions = [
   {
     label: "Academic researcher",
@@ -108,6 +108,8 @@ const organizationOptions = [
     alt: "Sports",
   },
 ];
+
+const BACKEND_AUTHENTICATION_URL = "http://localhost:8080/api/v1/auth";
 function RegistrationProcess() {
   const [step, setStep] = useState(1);
   const [role, setRole] = useState("");
@@ -134,8 +136,28 @@ function RegistrationProcess() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [position, setPosition] = useState(null);
   const [responseMessage, setResponseMessage] = useState("");
+  const [oAuthProvider, setoAuthProvider] = useState("");
 
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+
+  useEffect(() => {
+    const nameParam = params.get("name");
+    if (nameParam) {
+      const combinedName = nameParam.split(" ");
+      setEmail(params.get("email") || "");
+      setFirstName(combinedName[0] || "");
+      setLastName(combinedName[1] || "");
+      setoAuthProvider(params.get("provider") || "");
+    }
+  }, []);
+
+  console.log(
+    "email " + email,
+    "first name " + firstName,
+    "lastName" + lastName,
+    "provider " + oAuthProvider
+  );
 
   if (isClicked) {
     console.log("role:", role);
@@ -156,30 +178,39 @@ function RegistrationProcess() {
   useEffect(() => {
     if (!isClicked) return;
 
+    let registerEndpoint = `${BACKEND_AUTHENTICATION_URL}`;
+    console.log(
+      "OAuth provider is " +
+        (oAuthProvider === "github" || oAuthProvider === "google")
+    );
+    if (oAuthProvider === "github" || oAuthProvider === "google") {
+      registerEndpoint = `${BACKEND_AUTHENTICATION_URL}/oauth2/register`;
+    } else {
+      registerEndpoint = `${BACKEND_AUTHENTICATION_URL}/register`;
+    }
+
+    console.log("this is register endp oint " + registerEndpoint);
     async function registerUser() {
-      const response = await fetch(
-        "http://localhost:8080/api/v1/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            username,
-            email,
-            password,
-            bio,
-            phoneNumber,
-            fieldOfWork,
-            role,
-            educationValue,
-            badge,
-            position,
-          }),
-        }
-      );
+      const response = await fetch(registerEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          username,
+          email,
+          password,
+          bio,
+          phoneNumber,
+          fieldOfWork,
+          role,
+          educationValue,
+          badge,
+          position,
+        }),
+      });
 
       const data = await response.json();
       console.log(data);
@@ -213,6 +244,7 @@ function RegistrationProcess() {
     <div>
       {step === 1 && (
         <FirstRegistrationStep
+          oAuthProvider={oAuthProvider}
           step={step}
           setStep={setStep}
           selectedOption={role}

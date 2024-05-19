@@ -4,5 +4,12 @@
   padding: 0;
   font: 10px;
   color: black;
-  background-color: white;
+  background-color: #f8f8f8;
+  height: fit-content;
+}
+.logo {
+  width: 100%;
+  max-width: 500px; /* Adjust this value to the maximum size you want the logo to be */
+  height: auto;
+  padding-top: 40px;
 }

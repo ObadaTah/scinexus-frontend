@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh; /* Set a minimum height to fill the viewport */
+  background-color: #f8f8f8;
 }
 
 .main {
@@ -39,7 +40,7 @@
 }
 
 .text {
-  background-color: #fff; /* Adjust the background color to your preference */
+  background-color: #f8f8f8; /* Adjust the background color to your preference */
   padding: 0 42%; /* Adjust the padding to your preference */
   position: relative;
 }

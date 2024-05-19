@@ -1,4 +1,5 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import Cookies from "js-cookie";
 
 const AuthContext = createContext();
 
@@ -35,6 +36,33 @@ function AuthProvider({ children }) {
     reducer,
     initialState
   );
+
+  useEffect(() => {
+    const token = Cookies.get("JWT_TOKEN");
+
+    console.log("Token: ", token);
+    if (!token) return;
+
+    async function verifiyToken() {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/auth/verify-token",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (data["isVerified"]) {
+        console.log("Token is valid.");
+        dispatch({ type: "login", payload: { USER, jwtToken: token } });
+      } else {
+        throw new Error("Token is not valid");
+        Cookies.remove("JWT_TOKEN");
+      }
+    }
+    verifiyToken();
+  }, []);
 
   async function login(email, password) {
     try {

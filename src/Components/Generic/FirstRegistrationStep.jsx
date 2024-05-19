@@ -12,18 +12,22 @@ function FirstRegistrationStep({
   setStep,
   selectedOption,
   setSelectedOption,
+  oAuthProvider,
 }) {
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
   };
 
   function incrementStep() {
-    setStep((step) => 2);
+    console.log("provider is " + oAuthProvider);
+    if (oAuthProvider === "google" || oAuthProvider === "github")
+      setStep((step) => 3);
+    else setStep((step) => 2);
   }
   return (
     <>
-      <AuthPagesHeader />
       <main className={styles.main}>
+        <AuthPagesHeader />
         <div className={styles.container}>
           <Typography level="h2">Create your profile</Typography>
           <br />
@@ -57,9 +61,7 @@ function FirstRegistrationStep({
             <Button
               sx={{ width: "100px", borderRadius: "3px" }}
               disabled={!selectedOption}
-              onClick={() => {
-                setStep((step) => step + 1);
-              }}
+              onClick={incrementStep}
             >
               Next &rarr;
             </Button>

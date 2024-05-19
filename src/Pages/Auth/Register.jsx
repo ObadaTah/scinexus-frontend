@@ -286,7 +286,7 @@ function Register({
           <Stack spacing={1}>
             {email.length >= 1 && !isEmailValid && (
               <Alert
-                sx={{ height: "40px", fontSize: "10px" }}
+                sx={{ height: "40px", fontSize: "15px" }}
                 variant={"soft"}
                 color="warning"
                 startDecorator={<WarningIcon />}
@@ -296,7 +296,7 @@ function Register({
             )}
             {email.length >= 1 && isEmailValid && (
               <Alert
-                sx={{ height: "40px", fontSize: "10px" }}
+                sx={{ height: "40px", fontSize: "15px" }}
                 variant={"soft"}
                 color="success"
                 startDecorator={<CheckCricleIcon />}
@@ -306,7 +306,7 @@ function Register({
             )}
             {password.length >= 1 && !isPasswordValid && (
               <Alert
-                sx={{ height: "40px", fontSize: "10px" }}
+                sx={{ height: "44px", fontSize: "13px" }}
                 variant={"soft"}
                 color="warning"
                 startDecorator={<WarningIcon />}
@@ -318,7 +318,7 @@ function Register({
             )}
             {password.length >= 1 && isPasswordValid && (
               <Alert
-                sx={{ height: "40px", fontSize: "10px" }}
+                sx={{ height: "40px", fontSize: "15px" }}
                 variant={"soft"}
                 color="success"
                 startDecorator={<CheckCricleIcon />}
@@ -328,7 +328,7 @@ function Register({
             )}
             {confirmPassword.length >= 1 && !isPasswordMatch && (
               <Alert
-                sx={{ height: "40px", fontSize: "10px" }}
+                sx={{ height: "40px", fontSize: "15px" }}
                 variant={"soft"}
                 color="warning"
                 startDecorator={<WarningIcon />}
@@ -338,7 +338,7 @@ function Register({
             )}
             {confirmPassword.length >= 1 && isPasswordMatch && (
               <Alert
-                sx={{ height: "40px", fontSize: "10px" }}
+                sx={{ height: "40px", fontSize: "15px" }}
                 variant={"soft"}
                 color="success"
                 startDecorator={<CheckCricleIcon />}
