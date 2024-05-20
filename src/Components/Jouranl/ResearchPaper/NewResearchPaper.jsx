@@ -1,19 +1,15 @@
-import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
-import { Box, Divider } from "@mui/joy";
+import { Box } from "@mui/joy";
 import AspectRatio from "@mui/joy/AspectRatio";
+import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import Chip from "@mui/joy/Chip";
-import Link from "@mui/joy/Link";
 import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
-import React from "react";
-import Button from "@mui/joy/Button";
+import React, { useState } from "react";
+import JournalCardHeader from "../Components/JournalCardHeader";
 import SendButton from "../Components/SendButton";
 import OpinionButton from "../Opinion/OpinionButton";
-import JournalCardHeader from "../Components/JournalCardHeader";
-import { Row } from "react-bootstrap";
-
+import VarifiedChip from "./VarifiedChip";
 function NewResearchPaper(props) {
     return (
         <>
@@ -55,14 +51,9 @@ function NewResearchPaper(props) {
                         >
                             {props.title}
                         </Typography>
-                        <Chip
-                            variant="solid"
-                            color="success"
-                            size="sm"
-                            sx={{ pointerEvents: "none" }}
-                        >
-                            Verified Research Paper
-                        </Chip>
+                        {props.validatedBy.length != 0 && (
+                            <VarifiedChip validatedBy={props.validatedBy} />
+                        )}
                     </CardContent>
 
                     <JournalCardHeader
@@ -98,6 +89,7 @@ function NewResearchPaper(props) {
                                     size="sm"
                                 >
                                     <OpinionButton
+                                        opinionsCount={props.opinionsCount}
                                         journalId={props.journalId}
                                     />
                                 </IconButton>
