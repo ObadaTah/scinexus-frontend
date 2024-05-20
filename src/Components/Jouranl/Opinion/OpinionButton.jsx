@@ -33,6 +33,25 @@ function OpinionButton(props) {
                     strokeLinecap="round"
                 />
             </svg>
+            <div
+                style={{
+                    backgroundColor: "red",
+                    borderRadius: "100%",
+                    aspectRatio: "1/1",
+                    width: "15px",
+                    height: "15px",
+                    position: "absolute",
+                    top: "-2px",
+                    right: "1px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "white",
+                    fontSize: "10px",
+                }}
+            >
+                {props.opinionsCount}
+            </div>
             <OpinionsContainer
                 journalId={props.journalId}
                 open={open}
