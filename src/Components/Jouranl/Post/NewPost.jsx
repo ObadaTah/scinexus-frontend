@@ -19,6 +19,7 @@ import SendButton from "../Components/SendButton";
 
 import IconButtonMenu from "../Components/IconButtonMenu";
 import OpinionButton from "../Opinion/OpinionButton";
+import { Padding } from "@mui/icons-material";
 
 function getTimeDifference(dateString) {
     // Parse the string into a Date object
@@ -42,6 +43,11 @@ function getTimeDifference(dateString) {
     }
 }
 export default function NewPost(props) {
+    const [disabledState, setDisabledState] = React.useState(true);
+    function submitOpinion(journalId) {
+        console.log(journalId);
+        // Call the API to submit the opinion
+    }
     return (
         <Card
             variant="outlined"
@@ -166,7 +172,10 @@ export default function NewPost(props) {
                         <ReactionButton journalId={props.journalId} />
                     </IconButton>
                     <IconButton variant="plain" color="neutral" size="sm">
-                        <OpinionButton journalId={props.journalId} />
+                        <OpinionButton
+                            journalId={props.journalId}
+                            opinionsCount={props.opinionsCount}
+                        />
                     </IconButton>
                     <IconButton variant="plain" color="neutral" size="sm">
                         <SendButton journalId={props.journalId} />
@@ -209,12 +218,26 @@ export default function NewPost(props) {
             </CardContent>
             <CardContent orientation="horizontal" sx={{ gap: 1 }}>
                 <Input
+                    onChange={(e) => {
+                        if (e.target.value.length > 0) {
+                            setDisabledState(false);
+                        } else {
+                            setDisabledState(true);
+                        }
+                    }}
                     variant="soft"
                     size="sm"
                     placeholder="Add a comment…"
                     sx={{ flex: 1, px: 2, "--Input-focusedThickness": "0px" }}
                 />
-                <Link disabled underline="none" role="button">
+                <Link
+                    style={{ borderRadius: "5px", padding: "5px" }}
+                    onClick={() => submitOpinion(props.journalId)}
+                    disabled={disabledState}
+                    underline="none"
+                    role="button"
+                    variant="soft"
+                >
                     Post
                 </Link>
             </CardContent>
