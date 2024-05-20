@@ -41,7 +41,7 @@ function JournalCardHeader(props) {
             </Box>
             <Row>
                 <Typography fontWeight="sm">
-                    🧑 {props.publisher.firstName} {props.publisher.lastName}
+                    🧑🏻‍🏫 {props.publisher.firstName} {props.publisher.lastName}
                 </Typography>
 
                 <Typography level="body-xs">
