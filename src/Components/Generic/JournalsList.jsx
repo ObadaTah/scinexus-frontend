@@ -198,6 +198,7 @@ function JournalsList() {
                                 }}
                             >
                                 <NewResearchPaper
+                                    opinionsCount={researchPaper.opinionsCount}
                                     journalId={researchPaper.id}
                                     publisher={researchPaper.publisher}
                                     title={researchPaper.title}
@@ -206,6 +207,7 @@ function JournalsList() {
                                     image="https://placehold.co/3000x3000"
                                     content={researchPaper.content}
                                     contributors={researchPaper.contributors}
+                                    validatedBy={researchPaper.validatedBy}
                                 />
                             </ListItem>
                         );
@@ -221,6 +223,7 @@ function JournalsList() {
                                 <NewPost
                                     journalId={post.id}
                                     publisher={post.publisher}
+                                    opinionsCount={post.opinionsCount}
                                     content={post.content}
                                     publishDate={post.createDateTime}
                                     image={post.medias[0]}
