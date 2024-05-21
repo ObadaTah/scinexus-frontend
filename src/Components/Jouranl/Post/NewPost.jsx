@@ -19,7 +19,7 @@ import SendButton from "../Components/SendButton";
 
 import IconButtonMenu from "../Components/IconButtonMenu";
 import OpinionButton from "../Opinion/OpinionButton";
-import { Padding } from "@mui/icons-material";
+import OpinionBar from "../Opinion/OpinionBar";
 
 function getTimeDifference(dateString) {
     // Parse the string into a Date object
@@ -42,12 +42,13 @@ function getTimeDifference(dateString) {
         return `${daysDifference} Days Ago`;
     }
 }
+
 export default function NewPost(props) {
-    const [disabledState, setDisabledState] = React.useState(true);
-    function submitOpinion(journalId) {
-        console.log(journalId);
-        // Call the API to submit the opinion
-    }
+    const [opinionCountState, setOpinionCountState] = React.useState(
+        props.opinionsCount
+    );
+    const [opinions, setOpinions] = React.useState([]);
+
     return (
         <Card
             variant="outlined"
@@ -167,14 +168,17 @@ export default function NewPost(props) {
                 orientation="horizontal"
                 sx={{ alignItems: "center", mx: -1 }}
             >
-                <Box sx={{ width: 0, display: "flex", gap: 0.5 }}>
+                <Box sx={{ display: "flex", gap: 0.5 }}>
                     <IconButton variant="plain" color="neutral" size="sm">
-                        <ReactionButton journalId={props.journalId} />
+                        <ReactionButton reactToId={props.journalId} />
                     </IconButton>
                     <IconButton variant="plain" color="neutral" size="sm">
                         <OpinionButton
+                            setOpinions={setOpinions}
+                            opinions={opinions}
+                            setOpinionCountState={setOpinionCountState}
+                            opinionCountState={opinionCountState}
                             journalId={props.journalId}
-                            opinionsCount={props.opinionsCount}
                         />
                     </IconButton>
                     <IconButton variant="plain" color="neutral" size="sm">
@@ -216,31 +220,14 @@ export default function NewPost(props) {
                     </IconButton>
                 </Box>
             </CardContent>
-            <CardContent orientation="horizontal" sx={{ gap: 1 }}>
-                <Input
-                    onChange={(e) => {
-                        if (e.target.value.length > 0) {
-                            setDisabledState(false);
-                        } else {
-                            setDisabledState(true);
-                        }
-                    }}
-                    variant="soft"
-                    size="sm"
-                    placeholder="Add a comment…"
-                    sx={{ flex: 1, px: 2, "--Input-focusedThickness": "0px" }}
-                />
-                <Link
-                    style={{ borderRadius: "5px", padding: "5px" }}
-                    onClick={() => submitOpinion(props.journalId)}
-                    disabled={disabledState}
-                    underline="none"
-                    role="button"
-                    variant="soft"
-                >
-                    Post
-                </Link>
-            </CardContent>
+            <OpinionBar
+                setOpinions={setOpinions}
+                opinions={opinions}
+                opinionTo={props.journalId}
+                opinionCountState={opinionCountState}
+                setOpinionCountState={setOpinionCountState}
+                type="post"
+            />
         </Card>
     );
 }

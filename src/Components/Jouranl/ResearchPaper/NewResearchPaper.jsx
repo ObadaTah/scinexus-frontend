@@ -11,6 +11,11 @@ import SendButton from "../Components/SendButton";
 import OpinionButton from "../Opinion/OpinionButton";
 import VarifiedChip from "./VarifiedChip";
 function NewResearchPaper(props) {
+    const [opinionCountState, setOpinionCountState] = React.useState(
+        props.opinionsCount
+    );
+    const [opinions, setOpinions] = React.useState([]);
+
     return (
         <>
             <Card
@@ -89,7 +94,12 @@ function NewResearchPaper(props) {
                                     size="sm"
                                 >
                                     <OpinionButton
-                                        opinionsCount={props.opinionsCount}
+                                        setOpinions={setOpinions}
+                                        opinions={opinions}
+                                        setOpinionCountState={
+                                            setOpinionCountState
+                                        }
+                                        opinionCountState={opinionCountState}
                                         journalId={props.journalId}
                                     />
                                 </IconButton>

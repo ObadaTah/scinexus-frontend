@@ -50,9 +50,13 @@ function OpinionButton(props) {
                     fontSize: "10px",
                 }}
             >
-                {props.opinionsCount}
+                {props.opinionCountState}
             </div>
             <OpinionsContainer
+                setOpinions={props.setOpinions}
+                opinions={props.opinions}
+                setOpinionCountState={props.setOpinionCountState}
+                opinionCountState={props.opinionCountState}
                 journalId={props.journalId}
                 open={open}
                 setOpen={setOpen}

@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'http://localhost:8080';
+const API_URL = "http://localhost:8080";
 
 // Function to get data from the API
 export const getData = async (endpoint) => {
@@ -8,7 +8,7 @@ export const getData = async (endpoint) => {
         const response = await axios.get(`${API_URL}/${endpoint}`);
         return response.data;
     } catch (error) {
-        console.error('Error while fetching data:', error);
+        console.error("Error while fetching data:", error);
         throw error;
     }
 };
@@ -19,7 +19,7 @@ export const postData = async (endpoint, data) => {
         const response = await axios.post(`${API_URL}/${endpoint}`, data);
         return response.data;
     } catch (error) {
-        console.error('Error while posting data:', error);
+        console.error("Error while posting data:", error);
         throw error;
     }
 };
@@ -30,7 +30,7 @@ export const putData = async (endpoint, data) => {
         const response = await axios.put(`${API_URL}/${endpoint}`, data);
         return response.data;
     } catch (error) {
-        console.error('Error while updating data:', error);
+        console.error("Error while updating data:", error);
         throw error;
     }
 };
@@ -41,7 +41,7 @@ export const patchData = async (endpoint, data) => {
         const response = await axios.patch(`${API_URL}/${endpoint}`, data);
         return response.data;
     } catch (error) {
-        console.error('Error while updating data:', error);
+        console.error("Error while updating data:", error);
         throw error;
     }
 };
@@ -52,7 +52,26 @@ export const deleteData = async (endpoint) => {
         const response = await axios.delete(`${API_URL}/${endpoint}`);
         return response.data;
     } catch (error) {
-        console.error('Error while deleting data:', error);
+        console.error("Error while deleting data:", error);
         throw error;
     }
 };
+
+async function authenticate() {
+    const response = await fetch(
+        "http://localhost:8080/api/v1/auth/authenticate",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: "obada@gmail.com",
+                password: "Mohammed1234!",
+            }),
+        }
+    );
+
+    const data = await response.json();
+    return data["jwtToken"];
+}

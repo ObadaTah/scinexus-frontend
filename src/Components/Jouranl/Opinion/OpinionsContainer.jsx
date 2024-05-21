@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import ModalClose from "@mui/joy/ModalClose";
 
-import NewOpinion from "./NewOpinion";
+import Opinion from "./Opinion";
 import { helix } from "ldrs";
 import { DialogContent, DialogTitle, Modal, ModalDialog } from "@mui/joy";
 // import * as React from "react";
@@ -55,8 +55,7 @@ const dummyOpinions = [
 ];
 function OpinionsContainer(props) {
     const [isLoading, setIsLoading] = useState("block");
-    const [finishedLoadingAndEmpty, setFinishedLoadingAndEmpty] =
-        useState("none");
+    useState("none");
     async function authenticate() {
         const response = await fetch(
             "http://localhost:8080/api/v1/auth/authenticate",
@@ -75,7 +74,6 @@ function OpinionsContainer(props) {
         const data = await response.json();
         return data["jwtToken"];
     }
-    const [opinions, setOpinions] = React.useState([]);
     useEffect(
         function () {
             async function getAllOpinions() {
@@ -83,8 +81,7 @@ function OpinionsContainer(props) {
                     return;
                 }
                 const jwt = await authenticate();
-                // console.log(" this is jwt token ", jwt);
-                console.log("this is journal id", props.journalId);
+
                 const response = await fetch(
                     "http://localhost:8080/journals/" +
                         props.journalId +
@@ -99,18 +96,13 @@ function OpinionsContainer(props) {
                 );
                 if (response.status === 200 || response.status === 201) {
                     const data = await response.json();
-                    console.log(data);
                     if (data["_embedded"] !== undefined) {
-                        setOpinions(data["_embedded"].opinionList);
-                        console.log(data["_embedded"].opinionList);
+                        props.setOpinions(data["_embedded"].opinionList);
                     } else {
-                        setOpinions([]);
-                        setFinishedLoadingAndEmpty("block");
+                        props.setOpinions([]);
                     }
-                    // setOpinions(data["_embedded"].opinionList);
-                    // console.log(data["_embedded"].opinionList);
                 } else {
-                    setOpinions(dummyOpinions);
+                    props.setOpinions(dummyOpinions);
                 }
                 setIsLoading("none");
             }
@@ -119,7 +111,25 @@ function OpinionsContainer(props) {
         },
         [props.open]
     );
-
+    useEffect(() => {
+        var newOpinions = [];
+        props.opinions.map((opinion) => {
+            if (opinion.papaOpinion == null) {
+                opinion.subOpinions = [];
+                newOpinions.push(opinion);
+            } else {
+                var papaOpinion = props.opinions.find(
+                    (op) => op.id == opinion.papaOpinion.id
+                );
+                if (papaOpinion != null) {
+                    if (papaOpinion.subOpinions == null) {
+                        papaOpinion.subOpinions = [];
+                    }
+                    papaOpinion.subOpinions.push(opinion);
+                }
+            }
+        });
+    }, [props.opinions]);
     return (
         <div>
             <Transition
@@ -192,7 +202,11 @@ function OpinionsContainer(props) {
 
                                 <Typography
                                     style={{
-                                        display: finishedLoadingAndEmpty,
+                                        paddingTop: "20px",
+                                        display:
+                                            props.opinions.length > 0
+                                                ? "none"
+                                                : "block",
                                         position: "center",
                                         textAlign: "center",
                                         marginLeft: "auto",
@@ -204,29 +218,39 @@ function OpinionsContainer(props) {
                                 </Typography>
                                 <Container>
                                     <List>
-                                        {opinions.map((opinion, index) => {
-                                            return (
-                                                <ListItem
-                                                    key={index}
-                                                    style={{ maxWidth: "100%" }}
-                                                >
-                                                    <NewOpinion
-                                                        papaOpinionId={
-                                                            opinion.papaOpinion
-                                                        }
-                                                        publisher={
-                                                            opinion.opinionOwner
-                                                        }
-                                                        content={
-                                                            opinion.content
-                                                        }
-                                                        publishDate={
-                                                            opinion.createDateTime
-                                                        }
-                                                    />
-                                                </ListItem>
-                                            );
-                                        })}
+                                        {props.opinions.map(
+                                            (opinion, index) => {
+                                                return opinion.papaOpinion ==
+                                                    null ? (
+                                                    <ListItem
+                                                        key={index}
+                                                        style={{
+                                                            width: "100%",
+                                                            display: "flex",
+                                                            justifyContent:
+                                                                "right",
+                                                            alignItems: "right",
+                                                        }}
+                                                    >
+                                                        <Opinion
+                                                            setOpinions={
+                                                                props.setOpinions
+                                                            }
+                                                            opinions={
+                                                                props.opinions
+                                                            }
+                                                            setOpinionCountState={
+                                                                props.setOpinionCountState
+                                                            }
+                                                            opinionCountState={
+                                                                props.opinionCountState
+                                                            }
+                                                            {...opinion}
+                                                        />
+                                                    </ListItem>
+                                                ) : null;
+                                            }
+                                        )}
                                     </List>
                                 </Container>
                             </DialogContent>

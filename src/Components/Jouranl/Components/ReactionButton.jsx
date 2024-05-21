@@ -71,10 +71,12 @@ function ReactionButton(props) {
         setShowReactionsHolder("none");
         reactions.map((reaction) => {
             if (selectedReaction != null && selectedReaction.label == key) {
+                // remove Reaction
                 setSelectedReaction(null);
                 return;
             }
             if (reaction.label === key) {
+                // add Reaction
                 setSelectedReaction(reaction);
             }
         });

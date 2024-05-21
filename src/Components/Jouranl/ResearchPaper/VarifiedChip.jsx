@@ -51,7 +51,7 @@ export default function VarifiedChip(props) {
                     <Menu modifiers={modifiers}>
                         {props.validatedBy.map((organization, index) => {
                             return (
-                                <Container>
+                                <Container key={index}>
                                     <Link
                                         underline="none"
                                         variant="plain"
