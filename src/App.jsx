@@ -19,7 +19,13 @@ import MyProfile from "./Pages/MyProfile";
 import NotFound from "./Pages/NotFound";
 import Settings from "./Pages/Settings";
 import { AuthProvider } from "./Components/contexts/AuthContext";
+import ProtectedRoute from "./Pages/ProtectedRoute";
+import RegistrationProcess from "./Pages/Auth/RegistrationProcess";
+import AuthPagesHeader from "./Components/Generic/AuthPagesHeader";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useEffect } from "react";
 
+import { gapi } from "gapi-script";
 const defaultTheme = createTheme({
     palette: {
         mode: "dark",
@@ -37,8 +43,8 @@ const router = createBrowserRouter(
             <Route path="/" element={<Navbar />}>
                 <Route index element={<Home />} />
 
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegistrationProcess />} />
 
                 <Route path="/settings" element={<Settings />} />
                 {/* <Route path="/logout" element={<Logout />} /> */}
@@ -73,5 +79,47 @@ function App() {
 //     </AuthProvider>
 //   );
 // }
+
+const GOOGLE_CLIENT_ID =
+  "967690221322-dsvnfd0q6b0o3tk6m3akq59nteidgaqd.apps.googleusercontent.com";
+function App() {
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: GOOGLE_CLIENT_ID,
+        scope: "",
+      });
+    }
+
+    gapi.load("client:auth2", start);
+  });
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="login" element={<Login />} />
+
+            {/* <Route path="register5" element={<Register />} />
+          <Route path="register2" element={<RegisterAcademicStep2 />} />
+          <Route path="register1" element={<FirstRegistrationStep />} />
+          <Route path="register3" element={<RegisterAcademicStep3 />} /> */}
+            <Route path="settings" element={<Settings />} />
+            <Route path="register" element={<RegistrationProcess />} />
+            <Route path="logo" element={<AuthPagesHeader />} />
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </GoogleOAuthProvider>
+  );
+}
 
 export default App;

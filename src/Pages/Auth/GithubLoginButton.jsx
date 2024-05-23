@@ -1,25 +1,25 @@
 import React from "react";
 import GitHubLogin from "react-github-login";
 import GithubButton from "react-github-login-button";
+import { useEffect, useState } from "react";
 
+const CLIENT_ID = "84659ae62c71d33f6e3f";
 function GitHubLoginButton({ clientId, onSuccess, onFailure, label }) {
-  function onSuccess(response) {
-    console.log(response);
-    // Handle successful login response here
-  }
+  const [isClicked, setIsClicked] = useState(false);
 
-  function onFailure(response) {
-    console.error(response);
-    // Handle failed login response here
+  function onClick() {
+    window.location.href = "http://localhost:8080/oauth2/authorization/github";
+    setIsClicked(true);
   }
 
   return (
     <div>
       <GithubButton
+        clientId={CLIENT_ID}
         type="dark"
         label={label}
-        onClick={() => console.log("Github button clicked")}
         disabled={false}
+        onClick={onClick}
       />
     </div>
   );

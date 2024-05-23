@@ -1,0 +1,11 @@
+.phoneInput {
+  background-color: #fff;
+}
+
+.phoneInputFocused {
+  background-color: #f8f8f8;
+}
+
+.formControl {
+  row-gap: 15px;
+}
