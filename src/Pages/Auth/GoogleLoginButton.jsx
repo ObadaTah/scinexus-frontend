@@ -21,22 +21,6 @@ export default function GoogleLoginButton({ label }) {
   }
   return (
     <div>
-      {/* <GoogleLogin
-        // theme="filled_blue"
-        // size="large"
-        // shape="rectangular"
-        // login_uri="http://localhost:5173/oauth2/authorization/google"
-        // contxt="signin"
-        // height={400}
-        onSuccess={responseGoogle}
-        onFailure={responseGoogle}
-        clientId={CLIENT_ID}
-        render={(renderProps) => (
-          <GoogleButton onClick={renderProps.onClick} label={label}>
-            Login with Google
-          </GoogleButton>
-        )}
-      /> */}
       <GoogleButton onClick={redirect}>Login with Google</GoogleButton>
     </div>
   );

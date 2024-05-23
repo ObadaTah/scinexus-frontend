@@ -57,8 +57,8 @@ function AuthProvider({ children }) {
         console.log("Token is valid.");
         dispatch({ type: "login", payload: { USER, jwtToken: token } });
       } else {
-        throw new Error("Token is not valid");
         Cookies.remove("JWT_TOKEN");
+        throw new Error("Token is not valid");
       }
     }
     verifiyToken();

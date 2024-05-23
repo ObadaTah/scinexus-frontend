@@ -144,13 +144,13 @@ function RegistrationProcess() {
   useEffect(() => {
     const nameParam = params.get("name");
     if (nameParam) {
-      const combinedName = nameParam.split(" ");
-      setEmail(params.get("email") || "");
+      const combinedName = decodeURIComponent(nameParam).split(" ");
+      setEmail(decodeURIComponent(params.get("email") || ""));
       setFirstName(combinedName[0] || "");
       setLastName(combinedName[1] || "");
-      setoAuthProvider(params.get("provider") || "");
+      setoAuthProvider(decodeURIComponent(params.get("provider") || ""));
     }
-  }, []);
+  }, [params]);
 
   console.log(
     "email " + email,
