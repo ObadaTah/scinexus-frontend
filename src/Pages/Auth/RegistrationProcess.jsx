@@ -8,6 +8,8 @@ import RegisterStep2 from "../../Components/Generic/RegisterStep2";
 import Alert from "@mui/joy/Alert";
 import WarningIcon from "@mui/icons-material/Warning";
 import { useSearchParams } from "react-router-dom";
+import Cookies from "js-cookie";
+
 const academicOptions = [
   {
     label: "Academic researcher",
@@ -183,7 +185,8 @@ function RegistrationProcess() {
       "OAuth provider is " +
         (oAuthProvider === "github" || oAuthProvider === "google")
     );
-    if (oAuthProvider === "github" || oAuthProvider === "google") {
+    let isOAuth = oAuthProvider === "github" || oAuthProvider === "google";
+    if (isOAuth) {
       registerEndpoint = `${BACKEND_AUTHENTICATION_URL}/oauth2/register`;
     } else {
       registerEndpoint = `${BACKEND_AUTHENTICATION_URL}/register`;
@@ -215,7 +218,19 @@ function RegistrationProcess() {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        navigate("/login", { replace: true });
+        setIsClicked(false);
+        if (isOAuth) {
+          const jwtToken = data.jwtToken;
+          Cookies.set("JWT_TOKEN", jwtToken);
+          window.location.href = "/";
+          // navigate("/", { replace: true }).catch((error) =>
+          //   console.error("Navigation error:", error)
+          // ); // Add error handling
+        } else {
+          navigate("/login", { replace: true }).catch((error) =>
+            console.error("Navigation error:", error)
+          ); // Add error handling
+        }
       } else {
         setIsClicked(false);
 

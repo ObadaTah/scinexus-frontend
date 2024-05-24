@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import Cookies from "js-cookie";
+// import { useLocation } from "react-router-dom";
 
 const AuthContext = createContext();
 
 const initialState = {
   user: null,
   isAuthenticated: false,
+  jwtToken: null,
 };
 
 function reducer(state, action) {
@@ -18,7 +20,8 @@ function reducer(state, action) {
         jwtToken: action.payload.jwtToken,
       };
     case "logout":
-      return { ...state, user: null, isAuthenticated: false };
+      Cookies.remove("JWT_TOKEN");
+      return { ...state, user: null, isAuthenticated: false, jwtToken: null };
     default:
       throw new Error("Unknown action");
   }
@@ -36,10 +39,9 @@ function AuthProvider({ children }) {
     reducer,
     initialState
   );
+  const token = Cookies.get("JWT_TOKEN");
 
   useEffect(() => {
-    const token = Cookies.get("JWT_TOKEN");
-
     console.log("Token: ", token);
     if (!token) return;
 
@@ -62,7 +64,7 @@ function AuthProvider({ children }) {
       }
     }
     verifiyToken();
-  }, []);
+  }, [token]);
 
   async function login(email, password) {
     try {

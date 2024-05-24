@@ -1,12 +1,13 @@
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "react-bootstrap";
 import {
-  BrowserRouter,
   Route,
   Routes,
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
+  BrowserRouter,
+  Router,
 } from "react-router-dom";
 import Navbar from "./Components/Generic/Navbar";
 import Notifications from "./Components/Generic/Notifications";
@@ -57,6 +58,17 @@ const router = createBrowserRouter(
   )
 );
 // function App() {
+//     return (
+//         <ThemeProvider theme={defaultTheme}>
+//             <RouterProvider router={router} />
+//             <BrowserRouter>
+//                 <Footer />
+//             </BrowserRouter>
+//         </ThemeProvider>
+//     );
+// }
+
+// function App() {
 //   return (
 //     <ThemeProvider theme={defaultTheme}>
 //       <RouterProvider router={router} />
@@ -67,45 +79,29 @@ const router = createBrowserRouter(
 //   );
 // }
 
-const GOOGLE_CLIENT_ID =
-  "967690221322-dsvnfd0q6b0o3tk6m3akq59nteidgaqd.apps.googleusercontent.com";
 function App() {
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: GOOGLE_CLIENT_ID,
-        scope: "",
-      });
-    }
-
-    gapi.load("client:auth2", start);
-  });
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="login" element={<Login />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="login" element={<Login />} />
 
-            {/* <Route path="register5" element={<Register />} />
-          <Route path="register2" element={<RegisterAcademicStep2 />} />
-          <Route path="register1" element={<FirstRegistrationStep />} />
-          <Route path="register3" element={<RegisterAcademicStep3 />} /> */}
-            <Route path="settings" element={<Settings />} />
-            <Route path="register" element={<RegistrationProcess />} />
-            <Route path="logo" element={<AuthPagesHeader />} />
-            <Route
-              index
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </GoogleOAuthProvider>
+          <Route path="settings" element={<Settings />} />
+          <Route path="register" element={<RegistrationProcess />} />
+          <Route path="logo" element={<AuthPagesHeader />} />
+          <Route index element={<Home />} />
+          <Route path="myLinks" element={<MyLinks />} />
+          {/* <Route
+            index
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          /> */}
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
