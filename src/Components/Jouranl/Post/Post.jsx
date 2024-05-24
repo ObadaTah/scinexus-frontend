@@ -17,28 +17,28 @@ import OpinionButton from "../Opinion/OpinionButton";
 import OpinionsContainer from "../Opinion/OpinionsContainer";
 
 const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-    // transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-        duration: theme.transitions.duration.shortest,
-    }),
+  // transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
 }));
 function Post(props) {
-    const [expanded, setExpanded] = React.useState(false);
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
-    // const onClick = () => {};
-    return (
-        <Card>
-            <JournalCardHeader
-                publisher={props.publisher}
-                publishDate={props.publishDate}
-            />
-            {/* <CardHeader
+  const [expanded, setExpanded] = React.useState(false);
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+  // const onClick = () => {};
+  return (
+    <Card>
+      <JournalCardHeader
+        publisher={props.publisher}
+        publishDate={props.publishDate}
+      />
+      {/* <CardHeader
                 avatar={
                     <Avatar
                         sx={{ bgcolor: red[500] }}
@@ -69,55 +69,55 @@ function Post(props) {
                     }
                 )}
             /> */}
-            {props.image != null ? (
-                <CardMedia
-                    children={
-                        <img
-                            style={{
-                                width: "100%",
-                                maxHeight: "500px",
-                                objectFit: "cover",
-                            }}
-                            src={props.image}
-                            alt="Paella dish"
-                        />
-                    }
-                />
-            ) : null}
-            <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                    {props.content}
-                    {props.content}
-                    {props.content}
-                </Typography>
-            </CardContent>
-            <Divider />
+      {props.image != null ? (
+        <CardMedia
+          children={
+            <img
+              style={{
+                width: "100%",
+                maxHeight: "500px",
+                objectFit: "cover",
+              }}
+              src={props.image}
+              alt="Paella dish"
+            />
+          }
+        />
+      ) : null}
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {props.content}
+          {props.content}
+          {props.content}
+        </Typography>
+      </CardContent>
+      <Divider />
 
-            <CardActions disableSpacing>
-                <Grid>
-                    <IconButton aria-label="add to favorites">
-                        <ReactionButton journalId={props.journalId} />
-                    </IconButton>
-                    <IconButton aria-label="share">
-                        <SendButton journalId={props.journalId} />
-                    </IconButton>
-                    <ExpandMore
-                        expand={expanded}
-                        onClick={handleExpandClick}
-                        aria-expanded={expanded}
-                        aria-label="show more"
-                    >
-                        <OpinionButton />
-                    </ExpandMore>
-                </Grid>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <OpinionsContainer journalId={props.journalId} />
-                </CardContent>
-            </Collapse>
-        </Card>
-    );
+      <CardActions disableSpacing>
+        <Grid>
+          <IconButton aria-label="add to favorites">
+            <ReactionButton journalId={props.journalId} />
+          </IconButton>
+          <IconButton aria-label="share">
+            <SendButton journalId={props.journalId} />
+          </IconButton>
+          <ExpandMore
+            expand={expanded}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <OpinionButton />
+          </ExpandMore>
+        </Grid>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <OpinionsContainer journalId={props.journalId} />
+        </CardContent>
+      </Collapse>
+    </Card>
+  );
 }
 
 export default Post;
