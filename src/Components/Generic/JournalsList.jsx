@@ -3,7 +3,7 @@ import Post from "../Jouranl/Post/Post";
 import ResearchPaper from "../Jouranl/ResearchPaper/ResearchPaper";
 import { useEffect, useState } from "react";
 import { helix } from "ldrs";
-import NewPost from "../Jouranl/Post/NewPost";
+import { NewPost } from "../Jouranl/Post/NewPost";
 import { useAuth } from "../contexts/AuthContext";
 
 helix.register();
