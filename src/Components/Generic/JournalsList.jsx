@@ -1,9 +1,10 @@
-import { List, ListItem, Container } from "@mui/material";
-import Post from "../Jouranl/Post/Post";
-import ResearchPaper from "../Jouranl/ResearchPaper/ResearchPaper";
+import { List, ListItem } from "@mui/material";
+import Container from "react-bootstrap/Container";
+
+import NewResearchPaper from "../Jouranl/ResearchPaper/NewResearchPaper";
 import { useEffect, useState } from "react";
 import { helix } from "ldrs";
-import { NewPost } from "../Jouranl/Post/NewPost";
+import NewPost from "../Jouranl/Post/NewPost";
 import { useAuth } from "../contexts/AuthContext";
 
 helix.register();

@@ -1,13 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "react-bootstrap";
 import {
+  BrowserRouter,
   Route,
   Routes,
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
-  BrowserRouter,
-  Router,
 } from "react-router-dom";
 import Navbar from "./Components/Generic/Navbar";
 import Notifications from "./Components/Generic/Notifications";
@@ -58,24 +57,15 @@ const router = createBrowserRouter(
   )
 );
 // function App() {
-//     return (
-//         <ThemeProvider theme={defaultTheme}>
-//             <RouterProvider router={router} />
-//             <BrowserRouter>
-//                 <Footer />
-//             </BrowserRouter>
-//         </ThemeProvider>
-//     );
-// }
-
-// function App() {
 //   return (
-//     <ThemeProvider theme={defaultTheme}>
-//       <RouterProvider router={router} />
+//     <AuthProvider>
 //       <BrowserRouter>
-//         <Footer />
+//         <Routes>
+//           <Route path="login" element={<Login />} />
+//           <Route path="register" element={<Register />} />
+//         </Routes>
 //       </BrowserRouter>
-//     </ThemeProvider>
+//     </AuthProvider>
 //   );
 // }
 

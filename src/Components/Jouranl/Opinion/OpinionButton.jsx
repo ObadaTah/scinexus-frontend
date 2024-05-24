@@ -1,11 +1,17 @@
-import ForumIcon from "@mui/icons-material/Forum";
-function OpinionButton() {
+import { useState } from "react";
+import OpinionsModal from "./OpinionsModal";
+import OpinionsContainer from "./OpinionsContainer";
+import Container from "@mui/material/Container";
+function OpinionButton(props) {
     // TBI : To be implemented
+    const [open, setOpen] = useState(false);
 
-    const onClick = () => {};
     return (
         <>
             <svg
+                onClick={() => {
+                    setOpen(true);
+                }}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width={24}
@@ -27,6 +33,34 @@ function OpinionButton() {
                     strokeLinecap="round"
                 />
             </svg>
+            <div
+                style={{
+                    backgroundColor: "red",
+                    borderRadius: "100%",
+                    aspectRatio: "1/1",
+                    width: "15px",
+                    height: "15px",
+                    position: "absolute",
+                    top: "-2px",
+                    right: "1px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "white",
+                    fontSize: "10px",
+                }}
+            >
+                {props.opinionCountState}
+            </div>
+            <OpinionsContainer
+                setOpinions={props.setOpinions}
+                opinions={props.opinions}
+                setOpinionCountState={props.setOpinionCountState}
+                opinionCountState={props.opinionCountState}
+                journalId={props.journalId}
+                open={open}
+                setOpen={setOpen}
+            />
         </>
     );
 }
