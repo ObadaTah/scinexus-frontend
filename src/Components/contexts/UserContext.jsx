@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
+import { useAuth } from "./AuthContext"; // Adjust the path according to your project structure
 
 // Define the initial state
 const initialState = {
@@ -29,6 +30,7 @@ const initialState = {
   contactPhoneNumber: null,
   authorities: [],
   accountNonLocked: true,
+  skills: [],
 };
 
 // Define action types
@@ -63,7 +65,30 @@ export const UserProvider = ({ children }) => {
     dispatch({ type: UPDATE_USER, payload: updatedData });
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/users/userinfo", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const userData = await response.json();
+        setUser(userData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (jwtToken) {
+      fetchUserData();
+    }
+  }, [jwtToken]);
 
   return (
     <UserContext.Provider value={{ user, setUser, updateUser }}>

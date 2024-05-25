@@ -27,6 +27,7 @@ import { useEffect } from "react";
 
 import { gapi } from "gapi-script";
 import AppLayout from "./Components/layouts/AppLayout";
+import { UserProvider } from "./Components/contexts/UserContext";
 const defaultTheme = createTheme({
   palette: {
     mode: "dark",
@@ -86,7 +87,9 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <AppLayout />
+                <UserProvider>
+                  <AppLayout />
+                </UserProvider>
               </ProtectedRoute>
             }
           >

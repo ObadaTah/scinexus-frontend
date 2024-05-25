@@ -209,7 +209,7 @@ function RegistrationProcess() {
           phoneNumber,
           fieldOfWork,
           role,
-          educationValue,
+          education: educationValue,
           badge,
           position,
         }),

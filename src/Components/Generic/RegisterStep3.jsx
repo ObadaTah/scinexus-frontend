@@ -196,13 +196,13 @@ function RegisterStep3({
     height: "50px",
   };
 
-  // Example of countries to exclude
-  const url = `http://universities.hipolabs.com/search?name=${educationValue}&limit=10`;
   useEffect(() => {
     setIsPhoneValid(schema.isValidSync({ phoneNumber }));
   }, [phoneNumber]);
-
   console.log(isPhoneValid);
+  // Example of countries to exclude
+  const url = `http://universities.hipolabs.com/search?name=${educationValue}&limit=10`;
+
   useEffect(() => {
     async function fetchEducation() {
       setIsEducationMenuLoading(true);

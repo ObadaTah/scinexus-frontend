@@ -18,22 +18,7 @@ import { styled } from "@mui/system";
 import ArticleIcon from "@mui/icons-material/Article";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-
-const user = {
-  firstName: "Mohammed",
-  lastName: "Sowaity",
-  profilePicture: {
-    url: "/path/to/profile-picture.jpg", // Replace with actual path
-  },
-  education: "Software Engineering",
-  position: "Researcher",
-  skills: [
-    "Machine Learning",
-    "Neural Networks",
-    "Artificial Intelligence",
-    "Classification",
-  ],
-};
+import { useUser } from "../Components/contexts/UserContext"; // Correct import path
 
 const StyledTabs = styled(Tabs)({
   "& .MuiTabs-indicator": {
@@ -99,46 +84,6 @@ const ActionButton = styled(Button)({
   },
 });
 
-const ActivitySection = styled(Box)({
-  padding: "var(--joy-spacing-3)",
-  backgroundColor: "var(--joy-palette-background-paper)",
-  borderRadius: "var(--joy-radius-md)",
-  boxShadow: "var(--joy-shadow-sm)",
-  marginBottom: "var(--joy-spacing-4)",
-  width: "100%",
-  "@media (max-width: 600px)": {
-    padding: "var(--joy-spacing-2)",
-  },
-});
-
-const ActivityItem = styled(Box)({
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  width: "100%",
-  "@media (max-width: 600px)": {
-    flexDirection: "column",
-    alignItems: "flex-start",
-  },
-  marginBottom: "var(--joy-spacing-2)",
-  "&:last-child": {
-    marginBottom: 0,
-  },
-});
-
-const ActivityIcon = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: 40,
-  height: 40,
-  marginRight: "var(--joy-spacing-2)",
-  backgroundColor: "var(--joy-palette-primary-main)",
-  color: "var(--joy-palette-primary-contrastText)",
-  borderRadius: "50%",
-});
-
 const StackedItems = styled(Box)({
   display: "flex",
   flexDirection: "column",
@@ -151,6 +96,8 @@ const StackedItems = styled(Box)({
 });
 
 function MyProfile() {
+  const { user } = useUser();
+
   return (
     <>
       <ProfileContainer
@@ -174,16 +121,20 @@ function MyProfile() {
             }}
           >
             <Avatar
-              src={user.profilePicture.url} // Replace with the actual image path
+              src={
+                user.profilePicture
+                  ? user.profilePicture.url
+                  : "/path/to/default-picture.jpg"
+              } // Replace with the actual image path
               alt="Profile Picture"
               sx={{ width: 80, height: 80, mr: 2 }}
             />
             <Box>
               <Typography level="h4" fontWeight="bold">
-                Mohammed Sowaity
+                {user.firstName} {user.lastName}
               </Typography>
               <Typography level="body2" color="neutral">
-                Software Engineering · Researcher · Bethlehem University
+                {user.education} · {user.position} · {user.fieldOfWork}
               </Typography>
               <Typography level="body2" color="neutral">
                 Palestinian Territory ·{" "}
