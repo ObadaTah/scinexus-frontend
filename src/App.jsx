@@ -26,6 +26,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect } from "react";
 
 import { gapi } from "gapi-script";
+import AppLayout from "./Components/layouts/AppLayout";
 const defaultTheme = createTheme({
   palette: {
     mode: "dark",
@@ -79,16 +80,21 @@ function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="register" element={<RegistrationProcess />} />
           <Route path="logo" element={<AuthPagesHeader />} />
-          <Route index element={<Home />} />
-          <Route path="myLinks" element={<MyLinks />} />
-          {/* <Route
-            index
+
+          <Route path="nav" element={<Navbar />} />
+          <Route
+            path="/"
             element={
               <ProtectedRoute>
-                <Home />
+                <AppLayout />
               </ProtectedRoute>
             }
-          /> */}
+          >
+            <Route index element={<Home />} />
+            <Route path="profile" element={<MyProfile />} />
+
+            <Route path="myLinks" element={<MyLinks />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

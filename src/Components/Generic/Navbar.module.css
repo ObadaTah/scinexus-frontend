@@ -1,0 +1,13 @@
+.logo {
+  width: 25%; /* Adjust the percentage as needed */
+  max-width: 600px; /* Set a maximum width to prevent logo from growing too large */
+  min-width: 150px;
+  height: auto; /* Maintain aspect ratio */
+  padding-bottom: 10px;
+}
+
+.paragraph {
+  font-size: 1.5rem; /* Adjust the font size as needed */
+  margin: 0;
+  padding: 0;
+}
