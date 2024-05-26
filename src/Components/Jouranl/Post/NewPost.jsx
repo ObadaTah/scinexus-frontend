@@ -1,6 +1,5 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState } from "react";
 import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
-
 import {
     AspectRatio,
     Avatar,
@@ -9,31 +8,25 @@ import {
     CardContent,
     CardOverflow,
     IconButton,
-    Input,
     Link,
     Typography,
 } from "@mui/joy";
-import * as React from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "../Components/custom-slick.css"; // Import your custom CSS file
 import ReactionButton from "../Components/ReactionButton";
 import SendButton from "../Components/SendButton";
-
-import IconButtonMenu from "../Components/IconButtonMenu";
+import BioCard from "./BioCard";
 import OpinionButton from "../Opinion/OpinionButton";
 import OpinionBar from "../Opinion/OpinionBar";
 
 function getTimeDifference(dateString) {
-    // Parse the string into a Date object
     const date = new Date(dateString);
-
-    // Get the current date
     const currentDate = new Date();
-
-    // Calculate the time difference in milliseconds
     const timeDifference = currentDate - date;
-    // Calculate the time difference in days
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-    // Return the formatted time difference
     if (daysDifference === 0) {
         return "Today";
     } else if (daysDifference === 1) {
@@ -44,21 +37,36 @@ function getTimeDifference(dateString) {
 }
 
 export default function NewPost(props) {
+    const [showBioCard, setShowBioCard] = React.useState(false);
     const [opinionCountState, setOpinionCountState] = React.useState(
         props.opinionsCount
     );
     const [opinions, setOpinions] = React.useState([]);
 
+    const handleMouseEnter = () => setShowBioCard(true);
+    const handleMouseLeave = () => setShowBioCard(false);
+
+    const settings = {
+        dots: true,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        nextArrow: <CustomArrow />,
+        prevArrow: <CustomArrow />,
+    };
+
     return (
         <Card
             variant="outlined"
             sx={{
-                maxWidth: "60%",
+                width: "100%",
                 "--Card-radius": "10px",
                 "&:hover": {
                     boxShadow: "md",
                     borderColor: "neutral.outlinedHoverBorder",
                 },
+                position: "relative", // Ensure the Card is positioned relatively
             }}
         >
             <CardContent
@@ -66,26 +74,18 @@ export default function NewPost(props) {
                 sx={{ alignItems: "center", gap: 1 }}
             >
                 <Box
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                     sx={{
                         position: "relative",
-                        "&::before": {
-                            content: '""',
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            bottom: 0,
-                            right: 0,
-                            m: "-2px",
-                            borderRadius: "50%",
-                            background:
-                                "linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)",
-                        },
+                        display: "flex",
+                        alignItems: "center",
                     }}
                 >
                     <Avatar
                         size="sm"
                         src={
-                            props.publisher.profilePicture != null
+                            props.publisher.profilePicture
                                 ? props.publisher.profilePicture.fileName
                                 : null
                         }
@@ -94,47 +94,52 @@ export default function NewPost(props) {
                             borderColor: "background.body",
                         }}
                     />
+                    <Typography fontWeight="lg" sx={{ marginLeft: 1 }}>
+                        {props.publisher.firstName}
+                    </Typography>
+                    {showBioCard && (
+                        <Box
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            sx={{
+                                position: "absolute",
+                                bottom: "calc(100% )", // Adjust this value to position the card correctly
+                                left: 0,
+                                zIndex: 10, // Ensure the BioCard is above other elements
+                                width: "320px", // Ensure the BioCard has enough width
+                            }}
+                        >
+                            <BioCard {...props} />
+                        </Box>
+                    )}
                 </Box>
-                <Typography fontWeight="lg">
-                    {props.publisher.firstName}
-                </Typography>
                 <IconButton
                     variant="plain"
                     color="neutral"
                     size="sm"
                     sx={{ ml: "auto" }}
                 >
-                    <IconButtonMenu />
+                    {/* <MoreHoriz /> */}
                 </IconButton>
             </CardContent>
-            {props.image != null ? (
-                <CardOverflow>
-                    <AspectRatio>
-                        <img
-                            src={
-                                props.image != null
-                                    ? "http://localhost:8080/medias/" +
-                                      props.image.id +
-                                      "/files"
-                                    : null
-                            }
-                            alt=""
-                            loading="lazy"
-                        />
-                    </AspectRatio>
-                </CardOverflow>
-            ) : null}
-
+            {props.images && props.images.length > 0 && (
+                <CardContent sx={{ mb: 2 }}>
+                    <CardOverflow>
+                        <Slider {...settings}>
+                            {props.images.map((image, index) => (
+                                <AspectRatio key={index}>
+                                    <img
+                                        src={`http://localhost:8080/medias/${image.id}/files`}
+                                        alt=""
+                                        loading="lazy"
+                                    />
+                                </AspectRatio>
+                            ))}
+                        </Slider>
+                    </CardOverflow>
+                </CardContent>
+            )}
             <CardContent>
-                <Link
-                    component="button"
-                    underline="none"
-                    fontSize="sm"
-                    fontWeight="lg"
-                    textColor="text.primary"
-                >
-                    {props.interactionsCount} Interactions
-                </Link>
                 <Typography fontSize="sm">
                     <Link
                         component="button"
@@ -146,15 +151,6 @@ export default function NewPost(props) {
                     </Link>{" "}
                     {props.content}
                 </Typography>
-                {/* <Link
-                    component="button"
-                    underline="none"
-                    fontSize="sm"
-                    startDecorator="…"
-                    sx={{ color: "text.tertiary" }}
-                >
-                    more
-                </Link> */}
                 <Link
                     component="button"
                     underline="none"
@@ -170,7 +166,10 @@ export default function NewPost(props) {
             >
                 <Box sx={{ display: "flex", gap: 0.5 }}>
                     <IconButton variant="plain" color="neutral" size="sm">
-                        <ReactionButton reactToId={props.journalId} />
+                        <ReactionButton
+                            reactToId={props.journalId}
+                            reactionFromType="journal"
+                        />
                     </IconButton>
                     <IconButton variant="plain" color="neutral" size="sm">
                         <OpinionButton
@@ -193,31 +192,7 @@ export default function NewPost(props) {
                         mx: "auto",
                     }}
                 >
-                    {/* {[...Array(5)].map((_, index) => (
-                        <Box
-                            key={index}
-                            sx={{
-                                borderRadius: "50%",
-                                width: `max(${6 - index}px, 3px)`,
-                                height: `max(${6 - index}px, 3px)`,
-                                bgcolor:
-                                    index === 0
-                                        ? "primary.solidBg"
-                                        : "background.level3",
-                            }}
-                        />
-                    ))} */}
-                </Box>
-                <Box
-                    sx={{
-                        width: 0,
-                        display: "flex",
-                        flexDirection: "row-reverse",
-                    }}
-                >
-                    <IconButton variant="plain" color="neutral" size="sm">
-                        <BookmarkBorderRoundedIcon />
-                    </IconButton>
+                    {/* Dots or any additional content */}
                 </Box>
             </CardContent>
             <OpinionBar
@@ -231,3 +206,15 @@ export default function NewPost(props) {
         </Card>
     );
 }
+
+// Custom Arrow component for the slider
+const CustomArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+        <div
+            className={className}
+            style={{ ...style, display: "block", color: "darkblue" }}
+            onClick={onClick}
+        />
+    );
+};

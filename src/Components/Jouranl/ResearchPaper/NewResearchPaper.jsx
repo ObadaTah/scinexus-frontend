@@ -23,8 +23,11 @@ function NewResearchPaper(props) {
                 orientation="horizontal"
                 size="lg"
                 sx={{
-                    // width: 320,
-                    minWidth: "60%",
+                    // maxWidth: "60%",
+
+                    // width: "60%",
+                    // minWidth: "60%",
+                    width: "100%",
                     "&:hover": {
                         boxShadow: "md",
                         borderColor: "neutral.outlinedHoverBorder",
@@ -113,7 +116,7 @@ function NewResearchPaper(props) {
                             </Box>
                             <Box>
                                 <Button
-                                    color="success"
+                                    color="primary"
                                     disabled={false}
                                     loading={false}
                                     onClick={function () {}}

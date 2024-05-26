@@ -8,128 +8,66 @@ import ModalClose from "@mui/joy/ModalClose";
 import Opinion from "./Opinion";
 import { helix } from "ldrs";
 import { DialogContent, DialogTitle, Modal, ModalDialog } from "@mui/joy";
-// import * as React from "react";
 import { Transition } from "react-transition-group";
+import { useAuth } from "../../contexts/AuthContext";
+
 helix.register();
+
 const dummyOpinions = [
-    {
-        publisher: {
-            username: "UserName",
-            image: "https://placehold.co/40x40",
-        },
-        content: "This is a dummy post",
-        publishDate: "2021-10-10",
-    },
-    {
-        publisher: {
-            username: "UserName",
-            image: "https://placehold.co/40x40",
-        },
-        content: "This is a dummy post",
-        publishDate: "2021-10-10",
-    },
-    {
-        publisher: {
-            username: "UserName",
-            image: "https://placehold.co/40x40",
-        },
-        content: "This is a dummy post",
-        publishDate: "2021-10-10",
-    },
-    {
-        publisher: {
-            username: "UserName",
-            image: "https://placehold.co/40x40",
-        },
-        content: "This is a dummy post",
-        publishDate: "2021-10-10",
-    },
-    {
-        publisher: {
-            username: "UserName",
-            image: "https://placehold.co/40x40",
-        },
-        content: "This is a dummy post",
-        publishDate: "2021-10-10",
-    },
+    // Your dummy opinions data
 ];
+
 function OpinionsContainer(props) {
     const [isLoading, setIsLoading] = useState("block");
-    useState("none");
-    async function authenticate() {
-        const response = await fetch(
-            "http://localhost:8080/api/v1/auth/authenticate",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: "obada@gmail.com",
-                    password: "Mohammed1234!",
-                }),
-            }
-        );
+    const { jwtToken } = useAuth();
 
-        const data = await response.json();
-        return data["jwtToken"];
-    }
-    useEffect(
-        function () {
-            async function getAllOpinions() {
-                if (props.open != true) {
-                    return;
-                }
-                const jwt = await authenticate();
-
-                const response = await fetch(
-                    "http://localhost:8080/journals/" +
-                        props.journalId +
-                        "/opinions",
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${jwt}`,
-                        },
-                    }
-                );
-                if (response.status === 200 || response.status === 201) {
-                    const data = await response.json();
-                    if (data["_embedded"] !== undefined) {
-                        props.setOpinions(data["_embedded"].opinionList);
-                    } else {
-                        props.setOpinions([]);
-                    }
-                } else {
-                    props.setOpinions(dummyOpinions);
-                }
-                setIsLoading("none");
-            }
-
-            getAllOpinions();
-        },
-        [props.open]
-    );
     useEffect(() => {
-        var newOpinions = [];
-        props.opinions.map((opinion) => {
-            if (opinion.papaOpinion == null) {
-                opinion.subOpinions = [];
-                newOpinions.push(opinion);
-            } else {
-                var papaOpinion = props.opinions.find(
-                    (op) => op.id == opinion.papaOpinion.id
-                );
-                if (papaOpinion != null) {
-                    if (papaOpinion.subOpinions == null) {
-                        papaOpinion.subOpinions = [];
-                    }
-                    papaOpinion.subOpinions.push(opinion);
+        async function getAllOpinions() {
+            if (!props.open) return;
+
+            const response = await fetch(
+                `http://localhost:8080/journals/${props.journalId}/opinions`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${jwtToken}`,
+                    },
                 }
+            );
+
+            if (response.status === 200 || response.status === 201) {
+                const data = await response.json();
+                if (data["_embedded"] !== undefined) {
+                    const opinions = data["_embedded"].opinionList;
+
+                    const nestedOpinions = opinions.reduce((acc, opinion) => {
+                        if (opinion.papaOpinion == null) {
+                            acc.push({ ...opinion, subOpinions: [] });
+                        } else {
+                            const parentOpinion = acc.find(
+                                (op) => op.id === opinion.papaOpinion.id
+                            );
+                            if (parentOpinion) {
+                                parentOpinion.subOpinions.push(opinion);
+                            }
+                        }
+                        return acc;
+                    }, []);
+
+                    props.setOpinions(nestedOpinions);
+                } else {
+                    props.setOpinions([]);
+                }
+            } else {
+                props.setOpinions(dummyOpinions);
             }
-        });
-    }, [props.opinions]);
+            setIsLoading("none");
+        }
+
+        getAllOpinions();
+    }, [props.open]);
+
     return (
         <div>
             <Transition
@@ -181,7 +119,6 @@ function OpinionsContainer(props) {
                             }}
                         >
                             <ModalClose />
-
                             <DialogTitle>Opinions</DialogTitle>
                             <DialogContent
                                 style={{
@@ -219,37 +156,33 @@ function OpinionsContainer(props) {
                                 <Container>
                                     <List>
                                         {props.opinions.map(
-                                            (opinion, index) => {
-                                                return opinion.papaOpinion ==
-                                                    null ? (
-                                                    <ListItem
-                                                        key={index}
-                                                        style={{
-                                                            width: "100%",
-                                                            display: "flex",
-                                                            justifyContent:
-                                                                "right",
-                                                            alignItems: "right",
-                                                        }}
-                                                    >
-                                                        <Opinion
-                                                            setOpinions={
-                                                                props.setOpinions
-                                                            }
-                                                            opinions={
-                                                                props.opinions
-                                                            }
-                                                            setOpinionCountState={
-                                                                props.setOpinionCountState
-                                                            }
-                                                            opinionCountState={
-                                                                props.opinionCountState
-                                                            }
-                                                            {...opinion}
-                                                        />
-                                                    </ListItem>
-                                                ) : null;
-                                            }
+                                            (opinion, index) => (
+                                                <ListItem
+                                                    key={index}
+                                                    style={{
+                                                        width: "100%",
+                                                        display: "flex",
+                                                        justifyContent: "right",
+                                                        alignItems: "right",
+                                                    }}
+                                                >
+                                                    <Opinion
+                                                        setOpinions={
+                                                            props.setOpinions
+                                                        }
+                                                        opinions={
+                                                            props.opinions
+                                                        }
+                                                        setOpinionCountState={
+                                                            props.setOpinionCountState
+                                                        }
+                                                        opinionCountState={
+                                                            props.opinionCountState
+                                                        }
+                                                        {...opinion}
+                                                    />
+                                                </ListItem>
+                                            )
                                         )}
                                     </List>
                                 </Container>
@@ -261,4 +194,5 @@ function OpinionsContainer(props) {
         </div>
     );
 }
+
 export default OpinionsContainer;

@@ -1,24 +1,70 @@
-import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import Input from "@mui/joy/Input";
-import Link from "@mui/joy/Link";
 import CardContent from "@mui/joy/CardContent";
 import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import * as React from "react";
-import OpinionBar from "./OpinionBar";
-import OpinionButton from "./OpinionButton";
 import ReactionButton from "../Components/ReactionButton";
+import OpinionBar from "./OpinionBar";
+import { useAuth } from "../../contexts/AuthContext";
+import EditIcon from "@mui/icons-material/Edit"; // Import edit icon
+import DeleteIcon from "@mui/icons-material/Delete"; // Import delete icon
+import { Textarea } from "@mui/joy";
 
 function Opinion(props) {
+    const { jwtToken } = useAuth();
+    async function updateOpinion(content, id) {
+        const response = await fetch(`http://localhost:8080/opinions/${id}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                content: content,
+                journalId: null,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwtToken}`,
+            },
+        });
+    }
+
+    async function deleteOpinion(id) {
+        const response = await fetch(`http://localhost:8080/opinions/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwtToken}`,
+            },
+        });
+        if (response.ok) {
+            // Remove the opinion from the state
+            props.setOpinions((prevOpinions) =>
+                prevOpinions.filter((opinion) => opinion.id !== id)
+            );
+        }
+    }
+
+    const { user } = useAuth();
+    const [isEditing, setIsEditing] = React.useState(false);
+    const [opinionContent, setOpinionContent] = React.useState(props.content);
+    // Function to handle edit click
+    const handleEdit = () => {
+        setIsEditing(!isEditing);
+        updateOpinion(opinionContent, props.id);
+        setOpinionContent(opinionContent);
+        console.log("Edit button clicked for opinion ID:", props.id);
+    };
+
+    const handleDelete = () => {
+        deleteOpinion(props.id);
+        console.log("Delete button clicked for opinion ID:", props.id);
+    };
+
     return (
         <>
             <Card
                 sx={{
                     width: props.papaOpinion == null ? "100%" : "90%",
-
                     "--Card-radius": (theme) => "15px",
                 }}
             >
@@ -51,7 +97,6 @@ function Opinion(props) {
                                     : null
                             }
                             sx={{
-                                // p: 0.5,
                                 border: "2px solid",
                                 borderColor: "background.body",
                             }}
@@ -62,40 +107,57 @@ function Opinion(props) {
                             " " +
                             props.opinionOwner.lastName}
                     </Typography>
-                    {/* <IconButton
-                        variant="plain"
-                        color="neutral"
-                        size="sm"
-                        sx={{ ml: "auto" }}
-                    >
-                        <MoreHoriz />
-                    </IconButton> */}
+                    {props.opinionOwner.email === user.USER.email && (
+                        <>
+                            <IconButton
+                                variant="plain"
+                                color="neutral"
+                                size="sm"
+                                onClick={handleEdit}
+                                sx={{ ml: "auto" }}
+                            >
+                                <EditIcon />
+                            </IconButton>
+                            <IconButton
+                                variant="plain"
+                                color="neutral"
+                                size="sm"
+                                onClick={handleDelete}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </>
+                    )}
                 </CardContent>
-                <Typography
-                    style={{
-                        flexWrap: "wrap",
-                        wordWrap: "break-word",
-                    }}
-                >
-                    {props.content}
-                </Typography>
+                {isEditing ? (
+                    <Textarea
+                        onChange={(e) => setOpinionContent(e.target.value)}
+                        value={opinionContent}
+                        required
+                        sx={{ mb: 1 }}
+                    />
+                ) : (
+                    <Typography
+                        style={{
+                            flexWrap: "wrap",
+                            wordWrap: "break-word",
+                        }}
+                    >
+                        {opinionContent}
+                    </Typography>
+                )}
                 <CardContent
                     orientation="horizontal"
                     sx={{ alignItems: "center", mx: -1 }}
                 >
                     <Box sx={{ display: "flex", gap: 0.5 }}>
                         <IconButton variant="plain" color="neutral" size="md">
-                            <ReactionButton journalId={props.journalId} />
+                            <ReactionButton
+                                reactToId={props.id}
+                                reactionFromType="opinion"
+                            />
                         </IconButton>
                     </Box>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 0.5,
-                            mx: "auto",
-                        }}
-                    ></Box>
                 </CardContent>
                 {props.papaOpinion == null ? (
                     <OpinionBar
@@ -107,13 +169,9 @@ function Opinion(props) {
                         type="opinion"
                     />
                 ) : null}
-            </Card>
-
-            {props.subOpinions != null
-                ? props.subOpinions.map((opinion, index) => {
-                      //   if (opinion.papaOpinion == props.id) {
-                      return (
-                          <CardContent key={index}>
+                <CardContent style={{ alignItems: "center" }}>
+                    {props.subOpinions != null
+                        ? props.subOpinions.map((opinion, index) => (
                               <Opinion
                                   key={opinion.id}
                                   {...opinion}
@@ -123,15 +181,14 @@ function Opinion(props) {
                                   setOpinionCountState={
                                       props.setOpinionCountState
                                   }
-                                  papaOpinion={null}
+                                  papaOpinion={props.id}
                               />
-                          </CardContent>
-                      );
-                      //   }
-                      return null;
-                  })
-                : null}
+                          ))
+                        : null}
+                </CardContent>
+            </Card>
         </>
     );
 }
+
 export default Opinion;
