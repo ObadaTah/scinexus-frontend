@@ -8,6 +8,7 @@ import CardContent from "@mui/joy/CardContent";
 import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import * as React from "react";
+import { Snackbar } from "@mui/joy";
 
 async function authenticate() {
     const response = await fetch(
@@ -52,6 +53,7 @@ function OpinionBar(props) {
     }
     const [disabledState, setDisabledState] = React.useState(true);
     const [opinionValue, setOpinionValue] = React.useState("");
+    const [open, setOpen] = React.useState(false);
     function submitOpinion() {
         setOpinionValue("");
         setDisabledState(true);
@@ -60,8 +62,18 @@ function OpinionBar(props) {
             journalId: props.opinionTo,
         }).then((result) => {
             if (result !== null) {
-                // add alert
-                props.setOpinions([...props.opinions, result]);
+                if (props.type != "opinion") {
+                    props.setOpinions([...props.opinions, result]);
+                } else {
+                    for (let i = 0; i < props.opinions.length; i++) {
+                        if (props.opinions[i].id == result.papaOpinion.id) {
+                            props.opinions[i].subOpinions.push(result);
+                            props.setOpinions([...props.opinions]);
+                            break;
+                        }
+                    }
+                }
+                setOpen(true);
                 props.setOpinionCountState(props.opinionCountState + 1);
             }
         });
@@ -103,6 +115,17 @@ function OpinionBar(props) {
                     Post
                 </Link>
             </CardContent>
+            <Snackbar
+                autoHideDuration={3000}
+                open={open}
+                variant={"solid"}
+                color="success"
+                onClose={(event) => {
+                    setOpen(false);
+                }}
+            >
+                Your Opinion Has Been Submited
+            </Snackbar>
         </>
     );
 }
