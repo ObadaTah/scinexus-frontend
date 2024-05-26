@@ -262,7 +262,6 @@ function MyProfile() {
               <StyledTab>ARTICLES</StyledTab>
               <StyledTab>Researches</StyledTab>
               <StyledTab>POSTS</StyledTab>
-              <StyledTab>CONNECTIONS</StyledTab>
             </TabList>
           </StyledTabs>
 
