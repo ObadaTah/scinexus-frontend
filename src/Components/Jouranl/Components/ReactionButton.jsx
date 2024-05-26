@@ -1,120 +1,179 @@
 import { ReactionBarSelector } from "@charkour/react-reactions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
+import { useAuth } from "../../../Components/contexts/AuthContext";
 
 import ASSETS from "../../../assets/Assets";
 import "./style.css";
+
 const reactions = [
     {
         label: "Like",
-        node: (
-            <>
-                <Image src={ASSETS.emojis.like} alt="like" width="30" />
-            </>
-        ),
+        serverKey: "LIKE",
+        node: <Image src={ASSETS.emojis.like} alt="like" width="30" />,
     },
     {
         label: "Smart",
-        node: (
-            <>
-                <Image src={ASSETS.emojis.smart} alt="smart" width="30" />
-            </>
-        ),
+        serverKey: "SMART",
+        node: <Image src={ASSETS.emojis.smart} alt="smart" width="30" />,
     },
     {
         label: "Angry",
-        node: (
-            <>
-                <Image src={ASSETS.emojis.angry} alt="angry" width="30" />
-            </>
-        ),
+        serverKey: "ANGRY",
+        node: <Image src={ASSETS.emojis.angry} alt="angry" width="30" />,
     },
     {
-        label: "Intrested",
-        node: (
-            <>
-                <Image src={ASSETS.emojis.looking} alt="looking" width="30" />
-            </>
-        ),
+        label: "Interested",
+        serverKey: "INTERESTED",
+        node: <Image src={ASSETS.emojis.looking} alt="looking" width="30" />,
     },
     {
         label: "Mind Blowing",
+        serverKey: "MIND_BLOWING",
         node: (
-            <>
-                <Image
-                    src={ASSETS.emojis.mindBlowing}
-                    alt="mindBlowing"
-                    width="30"
-                />
-            </>
+            <Image
+                src={ASSETS.emojis.mindBlowing}
+                alt="mindBlowing"
+                width="30"
+            />
         ),
     },
     {
         label: "Taking Notes",
+        serverKey: "TAKING_NOTES",
         node: (
-            <>
-                <Image
-                    src={ASSETS.emojis.takingNotes}
-                    alt="takingNotes"
-                    width="30"
-                />
-            </>
+            <Image
+                src={ASSETS.emojis.takingNotes}
+                alt="takingNotes"
+                width="30"
+            />
         ),
     },
 ];
 
-function ReactionButton(props) {
-    const [showReactionsHolder, setShowReactionsHolder] = useState("none");
+function ReactionButton({ reactionFromType, reactToId }) {
+    const [showReactionsHolder, setShowReactionsHolder] = useState(false);
     const [selectedReaction, setSelectedReaction] = useState(null);
-
-    const reaction = (key) => {
-        setShowReactionsHolder("none");
-        reactions.map((reaction) => {
-            if (selectedReaction != null && selectedReaction.label == key) {
-                // remove Reaction
-                setSelectedReaction(null);
-                return;
+    const { jwtToken, user } = useAuth();
+    const [reaction, setReaction] = useState(null);
+    const addInteraction = async (type, data, id) => {
+        const response = await fetch(
+            `http://localhost:8080/interactions/${
+                type === "journal" ? "journal" : "opinion"
+            }/${id}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwtToken}`,
+                },
+                body: JSON.stringify(data),
             }
-            if (reaction.label === key) {
-                // add Reaction
-                setSelectedReaction(reaction);
-            }
-        });
-        // setSelectedReaction(key);
+        );
+        if (response.ok) return response.json();
+        return null;
     };
-    const toggleReactionsHolder = () => {
-        const reactionsHolder = document.getElementById("reactionsHolder");
-        console.log(reactionsHolder);
-        if (showReactionsHolder === "none") {
-            setShowReactionsHolder("block");
-            // showReactionsHolder = "block";
-        } else {
-            setShowReactionsHolder("none");
-            // showReactionsHolder = "none";
+
+    const removeInteraction = async (id) => {
+        const response = await fetch(
+            `http://localhost:8080/interactions/${id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwtToken}`,
+                },
+            }
+        );
+        // console.log(response);
+        // if (response.ok) return response.json();
+        return null;
+    };
+
+    const getInteraction = async (type, reactionToId) => {
+        const response = await fetch(
+            `http://localhost:8080/${
+                type === "journal" ? "journals" : "opinions"
+            }/${reactionToId}/interactions`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwtToken}`,
+                },
+            }
+        );
+
+        if (response.ok) return response.json();
+        return null;
+    };
+
+    const reactioner = (key) => {
+        setShowReactionsHolder(false);
+        if (selectedReaction?.label === key) {
+            removeInteraction(reaction.id).then(() => {
+                setSelectedReaction(null);
+                setReaction(null);
+            });
+            return;
+        }
+
+        const newReaction = reactions.find(
+            (reaction) => reaction.label === key
+        );
+        if (newReaction) {
+            setSelectedReaction(newReaction);
+            addInteraction(
+                reactionFromType,
+                { type: newReaction.serverKey },
+                reactToId
+            ).then((result) => {
+                setReaction(result);
+            });
         }
     };
+
+    const toggleReactionsHolder = () => {
+        setShowReactionsHolder((prev) => !prev);
+    };
+
+    useEffect(() => {
+        getInteraction(reactionFromType, reactToId).then((result) => {
+            if (
+                result._embedded &&
+                result._embedded.interactionList.length > 0
+            ) {
+                result._embedded.interactionList.map((interaction) => {
+                    var existingReaction = null;
+                    if (interaction.interactorUser.email == user.USER.email) {
+                        existingReaction = reactions.find(
+                            (reaction) =>
+                                reaction.serverKey === interaction.type
+                        );
+                        setSelectedReaction(existingReaction);
+                        setReaction(interaction);
+                    }
+                });
+            }
+        });
+    }, [reactionFromType, reactToId]);
+
     return (
         <>
-            <div
-                className="reactionsHolder"
-                id="reactionsHolder"
-                style={{
-                    display: showReactionsHolder,
-                }}
-            >
-                <ReactionBarSelector
-                    // key="reactionsHolder"
-                    style={{ border: "1px solid rgb(0, 0, 0, 0.1" }}
-                    iconSize={"10px"}
-                    reactions={reactions}
-                    onSelect={(key) => reaction(key)}
-                />
-            </div>
-            {selectedReaction == null ? (
-                <div
-                    className="reactionButton"
-                    onClick={() => toggleReactionsHolder()}
-                >
+            {showReactionsHolder && (
+                <div className="reactionsHolder" id="reactionsHolder">
+                    <ReactionBarSelector
+                        style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }}
+                        iconSize={"30px"}
+                        reactions={reactions}
+                        onSelect={(key) => reactioner(key)}
+                    />
+                </div>
+            )}
+            <div className="reactionButton" onClick={toggleReactionsHolder}>
+                {selectedReaction ? (
+                    selectedReaction.node
+                ) : (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -130,15 +189,8 @@ function ReactionButton(props) {
                             strokeLinecap="round"
                         />
                     </svg>
-                </div>
-            ) : (
-                <div
-                    className="reactionButton"
-                    onClick={() => toggleReactionsHolder()}
-                >
-                    {selectedReaction.node}
-                </div>
-            )}
+                )}
+            </div>
         </>
     );
 }
