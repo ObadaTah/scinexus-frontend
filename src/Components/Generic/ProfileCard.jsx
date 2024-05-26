@@ -813,9 +813,9 @@ function ProfileCard() {
               onChange={handleSkillChange}
               renderValue={(selected) => (
                 <Box sx={{ display: "flex", gap: "0.25rem" }}>
-                  {selected.map((selectedOption) => (
-                    <Chip key={selectedOption} variant="soft" color="primary">
-                      {selectedOption}
+                  {selected.map((selectedOption, index) => (
+                    <Chip key={index} variant="soft" color="primary">
+                      {selectedOption.label}
                     </Chip>
                   ))}
                 </Box>

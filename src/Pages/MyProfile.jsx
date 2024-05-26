@@ -1,5 +1,5 @@
 // MyProfile.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileCard from "../Components/Generic/ProfileCard";
 import AboutMeCard from "../Components/Generic/AboutMeCard";
 import { Box, Container } from "@mui/joy";
@@ -7,6 +7,7 @@ import { styled } from "@mui/system";
 import { useUser } from "../Components/contexts/UserContext"; // Correct import path
 import ProfileHead from "../Components/Generic/ProfileHead";
 import SimilarItemsCard from "../Components/Generic/SimilarItemsCard"; // Import the new component
+import { useAuth } from "../Components/contexts/AuthContext";
 
 const ProfileContainer = styled(Container)({
   backgroundColor: "#f9f9f9",
@@ -79,11 +80,20 @@ function MyProfile() {
           throw new Error("Failed to fetch user data");
         }
         const data = await response.json();
-        setPeopleYouMayKnow(data);
+        const transformedData = data.map((user) => ({
+          name: user.name,
+          sharedSkills: user.sharedSkills,
+          imgSrc: user.profilePicture.fileName,
+          linked: user.accepted,
+        }));
+
+        console.log("transformedData", transformedData);
+        setPeopleYouMayKnow(transformedData);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     }
+    fetchUserData();
   }, []);
   // const peopleYouMayKnow = [
   //   { name: "Yareli Aburto", sharedSkills: 3, imgSrc: "path/to/image1.jpg" },
@@ -122,10 +132,12 @@ function MyProfile() {
           <SimilarItemsCard
             title="People You May Know"
             items={peopleYouMayKnow}
+            type="people"
           />
           <SimilarItemsCard
             title="Organizations You May Follow"
             items={organizationsYouMayFollow}
+            type="organizations"
           />
         </RightContainer>
       </MainContentContainer>

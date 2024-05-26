@@ -9,7 +9,7 @@ const StyledCard = styled(Card)({
   boxShadow: "var(--joy-shadow-sm)",
 });
 
-const SimilarItem = ({ name, sharedSkills, imgSrc }) => (
+const SimilarItem = ({ name, sharedSkills, imgSrc, type, linked }) => (
   <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
     <Box display="flex" alignItems="center">
       <Avatar src={imgSrc} alt={name} sx={{ mr: 2 }} />
@@ -17,14 +17,18 @@ const SimilarItem = ({ name, sharedSkills, imgSrc }) => (
         <Typography level="body1" fontWeight="bold">
           {name}
         </Typography>
-        <Typography level="body2" color="neutral">
-          {sharedSkills} shared skills
-        </Typography>
+        {type === "people" ? (
+          <Typography level="body3" color="neutral">
+            {sharedSkills} shared skills
+          </Typography>
+        ) : null}
       </Box>
     </Box>
-    <Button variant="outlined" color="primary" size="sm">
-      Follow
-    </Button>
+    {type === "people" && linked ? null : (
+      <Button variant="outlined" color="primary" size="sm">
+        Follow
+      </Button>
+    )}
   </Box>
 );
 
@@ -34,19 +38,23 @@ const ViewMoreButton = styled(Button)({
   width: "100%",
 });
 
-const SimilarItemsCard = ({ title, items }) => (
+const SimilarItemsCard = ({ title, items, type }) => (
   <StyledCard variant="outlined">
     <CardContent>
       <Typography level="h6" fontWeight="bold" mb={2}>
         {title}
       </Typography>
       {items.map((item, index) => (
-        <SimilarItem
-          key={index}
-          name={item.name}
-          sharedSkills={item.sharedSkills}
-          imgSrc={item.imgSrc}
-        />
+        <div>
+          <SimilarItem
+            key={index}
+            name={item.name}
+            sharedSkills={item.sharedSkills}
+            linked={item.linked}
+            imgSrc={item.imgSrc}
+            type={type}
+          />
+        </div>
       ))}
       <ViewMoreButton variant="soft" color="primary">
         View more
