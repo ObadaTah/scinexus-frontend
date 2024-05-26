@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -10,22 +10,59 @@ import {
   Textarea,
   Select,
   Option,
+  Alert,
 } from "@mui/joy";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import LanguageIcon from "@mui/icons-material/Language";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
+import CheckCricleIcon from "@mui/icons-material/CheckCircle";
+import WarningIcon from "@mui/icons-material/Warning";
+import { useUser } from "../contexts/UserContext";
+import { string } from "yup"; // Import Yup for schema validation
+import { useAuth } from "../contexts/AuthContext";
+
+const emailSchema = string()
+  .matches(
+    /^[a-zA-Z0-9]+[._-]*[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/,
+    "Invalid email address"
+  )
+  .required();
+
+const phoneSchema = string()
+  .matches(
+    /^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/,
+    "Phone number is not valid"
+  )
+  .required();
 
 function AboutMeCard() {
+  const { user, updateUser } = useUser();
+  const { jwtToken } = useAuth();
   const [editMode, setEditMode] = useState(false);
+  const [emailValid, setEmailValid] = useState(false); // State for email validation
+  const [phoneValid, setPhoneValid] = useState(false); // State for phone validation
+  const [onSave, setOnSave] = useState(false); // State for save button
   const [aboutMeData, setAboutMeData] = useState({
     introduction:
+      user.bio ||
       "Add an introduction with your research focus and interests to help others understand your work.",
-    languages: [],
-    email: "",
-    phoneNumber: "",
+    languages: user.languages || [],
+    email: user.contactEmail || "",
+    phoneNumber: user.contactPhoneNumber || "",
   });
+
+  useEffect(() => {
+    setAboutMeData({
+      introduction:
+        user.bio ||
+        "Add an introduction with your research focus and interests to help others understand your work.",
+      languages: user.languages || [],
+      email: user.contactEmail || "",
+      phoneNumber: user.contactPhoneNumber || "",
+    });
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,6 +70,11 @@ function AboutMeCard() {
       ...aboutMeData,
       [name]: value,
     });
+    if (name === "email") {
+      setEmailValid(emailSchema.isValidSync(value));
+    } else if (name === "phoneNumber") {
+      setPhoneValid(phoneSchema.isValidSync(value));
+    }
   };
 
   const handleLanguageChange = (event, newValue) => {
@@ -47,17 +89,64 @@ function AboutMeCard() {
   };
 
   const handleSave = () => {
-    // Implement save functionality here, e.g., make an API call to save the data
+    console.log(emailValid, phoneValid);
+    if (!emailValid || !phoneValid) {
+      return;
+    }
+    updateUser({
+      ...user,
+      bio: aboutMeData.introduction,
+      languages: aboutMeData.languages,
+      contactEmail: aboutMeData.email,
+      contactPhoneNumber: aboutMeData.phoneNumber,
+    });
     toggleEditMode();
+    setOnSave(true);
   };
+
+  useEffect(() => {
+    if (!onSave) return;
+
+    async function saveData() {
+      try {
+        const response = await fetch(`http://localhost:8080/users`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify({
+            bio: aboutMeData.introduction,
+            languages: aboutMeData.languages,
+            contactEmail: aboutMeData.email,
+            contactPhoneNumber: aboutMeData.phoneNumber,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log("User updated successfully:", data);
+        updateUser(data);
+        setEditMode(false);
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
+      } finally {
+        setOnSave(false);
+      }
+    }
+
+    saveData();
+  }, [onSave, jwtToken, updateUser]);
 
   return (
     <Card
       variant="outlined"
       sx={{
-        maxWidth: "62%",
-        minWidth: "350px",
-
+        width: "100%",
+        maxWidth: "800px",
         margin: "20px auto",
         mt: 4,
         textAlign: "left",
@@ -78,13 +167,12 @@ function AboutMeCard() {
           >
             About Me
           </Typography>
-          <IconButton
-            variant="outlined"
-            color="primary"
-            size="sm"
-            onClick={toggleEditMode}
-          >
-            {editMode ? <SaveIcon /> : <EditIcon />}
+          <IconButton variant="outlined" color="primary" size="sm">
+            {editMode ? (
+              <SaveIcon onClick={handleSave} />
+            ) : (
+              <EditIcon onClick={toggleEditMode} />
+            )}
           </IconButton>
         </Box>
 
@@ -134,6 +222,49 @@ function AboutMeCard() {
           contact
         />
 
+        {editMode && !emailValid && (
+          <Alert
+            sx={{ height: "40px", fontSize: "15px" }}
+            variant="soft"
+            color="warning"
+            startDecorator={<WarningIcon />}
+          >
+            Email is not valid.
+          </Alert>
+        )}
+
+        {editMode && emailValid && (
+          <Alert
+            sx={{ height: "40px", fontSize: "15px" }}
+            variant="soft"
+            color="success"
+            startDecorator={<CheckCricleIcon />}
+          >
+            Email is valid.
+          </Alert>
+        )}
+        {editMode && !phoneValid && (
+          <Alert
+            sx={{ height: "40px", fontSize: "15px" }}
+            variant="soft"
+            color="warning"
+            startDecorator={<WarningIcon />}
+          >
+            Phone Number is not valid.
+          </Alert>
+        )}
+
+        {editMode && phoneValid && (
+          <Alert
+            sx={{ height: "40px", fontSize: "15px" }}
+            variant="soft"
+            color="success"
+            startDecorator={<CheckCricleIcon />}
+          >
+            Phone Number is valid.
+          </Alert>
+        )}
+
         <Divider sx={{ my: 2, backgroundColor: "primary.main" }} />
       </CardContent>
     </Card>
@@ -156,6 +287,10 @@ function Section({
   select,
   contact,
 }) {
+  const isContentEmpty = contact
+    ? !content.email && !content.phoneNumber
+    : !content.length; // Check for array length for languages
+
   return (
     <Box mb={2}>
       <Box display="flex" alignItems="center">
@@ -233,26 +368,7 @@ function Section({
             />
           )}
         </>
-      ) : content && content.length > 0 ? (
-        Array.isArray(content) ? (
-          <Typography level="body2" sx={{ mt: 1 }}>
-            {content.join(" · ")}
-          </Typography>
-        ) : (
-          <>
-            {content.email && (
-              <Typography level="body2" sx={{ mt: 1 }}>
-                {content.email}
-              </Typography>
-            )}
-            {content.phoneNumber && (
-              <Typography level="body2" sx={{ mt: 1 }}>
-                {content.phoneNumber}
-              </Typography>
-            )}
-          </>
-        )
-      ) : (
+      ) : isContentEmpty ? (
         <Box
           display="flex"
           justifyContent="space-between"
@@ -275,6 +391,33 @@ function Section({
             )}
           </Box>
         </Box>
+      ) : (
+        <>
+          {typeof content === "string" ? (
+            <Typography level="body2" sx={{ mt: 1 }}>
+              {content}
+            </Typography>
+          ) : (
+            <>
+              {content.email && (
+                <Typography level="body2" sx={{ mt: 1 }}>
+                  {content.email}
+                </Typography>
+              )}
+              {content.phoneNumber && (
+                <Typography level="body2" sx={{ mt: 1 }}>
+                  {content.phoneNumber}
+                </Typography>
+              )}
+              {Array.isArray(content) &&
+                content.map((item, index) => (
+                  <Typography key={index} level="body2" sx={{ mt: 1 }}>
+                    {item}
+                  </Typography>
+                ))}
+            </>
+          )}
+        </>
       )}
     </Box>
   );

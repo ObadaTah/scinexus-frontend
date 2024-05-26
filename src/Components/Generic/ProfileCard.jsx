@@ -1,3 +1,63 @@
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Box,
+  IconButton,
+  Chip,
+  Input,
+  Button,
+  Select,
+  Option,
+  Autocomplete,
+  CircularProgress,
+} from "@mui/joy";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import SchoolIcon from "@mui/icons-material/School";
+import BuildIcon from "@mui/icons-material/Build";
+import { useUser } from "../contexts/UserContext"; // Adjust the import path as needed
+import { useAuth } from "../contexts/AuthContext"; // Import the useAuth context
+
+const academicOptions = [
+  { label: "Academic researcher", value: "RESEARCHER" },
+  { label: "Academic faculty member", value: "PROFESSOR" },
+  { label: "Retired academic", value: "POSTDOC" },
+  { label: "Self-employed professional", value: "LECTURER" },
+  {
+    label: "Academic affiliated with an organization",
+    value: "ASSOCIATE_PROFESSOR",
+  },
+  { label: "Graduate student", value: "GRADUATE_STUDENT" },
+  { label: "Undergraduate student", value: "UNDERGRADUATE_STUDENT" },
+];
+
+const organizationOptions = [
+  { label: "Business", value: "BUSINESS" },
+  { label: "Non Profit", value: "NON_PROFIT" },
+  { label: "Educational", value: "EDUCATIONAL" },
+  { label: "Governmental", value: "GOVERNMENT" },
+  { label: "Professional Association", value: "PROFESSIONAL_ASSOCIATION" },
+  { label: "Community Group", value: "COMMUNITY_GROUP" },
+  { label: "Media", value: "MEDIA" },
+  { label: "Religious", value: "RELIGIOUS" },
+  { label: "Sports", value: "SPORTS" },
+];
+
+const getPositionValue = (label, role) => {
+  const options = role === "ACADEMIC" ? academicOptions : organizationOptions;
+  const option = options.find((opt) => opt.label === label);
+  return option ? option.value : label;
+};
+
+const getPositionLabel = (value, role) => {
+  const options = role === "ACADEMIC" ? academicOptions : organizationOptions;
+  const option = options.find((opt) => opt.value === value);
+  return option ? option.label : value;
+};
+
 const skillOptions = [
   "JavaScript",
   "React",
@@ -93,6 +153,7 @@ const skillOptions = [
   "Network Security",
   "Ethical Hacking",
   "Internet of Things (IoT)",
+  "Researcher",
   "Augmented Reality (AR)",
   "Virtual Reality (VR)",
   "Game Development",
@@ -453,65 +514,6 @@ const skillOptions = [
   "Humanitarian Health",
   "Health Diplomacy",
 ];
-import Autocomplete from "@mui/joy/Autocomplete";
-import CircularProgress from "@mui/joy/CircularProgress";
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Avatar,
-  Box,
-  IconButton,
-  Chip,
-  Input,
-  Button,
-  Select,
-  Option,
-} from "@mui/joy";
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
-import SchoolIcon from "@mui/icons-material/School";
-import BuildIcon from "@mui/icons-material/Build";
-import { useUser } from "../contexts/UserContext"; // Adjust the import path as needed
-import { useAuth } from "../contexts/AuthContext"; // Import the useAuth context
-
-const academicOptions = [
-  { label: "Academic researcher", value: "RESEARCHER" },
-  { label: "Academic faculty member", value: "PROFESSOR" },
-  { label: "Retired academic", value: "POSTDOC" },
-  { label: "Self-employed professional", value: "LECTURER" },
-  {
-    label: "Academic affiliated with an organization",
-    value: "ASSOCIATE_PROFESSOR",
-  },
-  { label: "Graduate student", value: "GRADUATE_STUDENT" },
-  { label: "Undergraduate student", value: "UNDERGRADUATE_STUDENT" },
-];
-
-const organizationOptions = [
-  { label: "Business", value: "BUSINESS" },
-  { label: "Non Profit", value: "NON_PROFIT" },
-  { label: "Educational", value: "EDUCATIONAL" },
-  { label: "Governmental", value: "GOVERNMENT" },
-  { label: "Professional Association", value: "PROFESSIONAL_ASSOCIATION" },
-  { label: "Community Group", value: "COMMUNITY_GROUP" },
-  { label: "Media", value: "MEDIA" },
-  { label: "Religious", value: "RELIGIOUS" },
-  { label: "Sports", value: "SPORTS" },
-];
-
-const getPositionValue = (label, role) => {
-  const options = role === "ACADEMIC" ? academicOptions : organizationOptions;
-  const option = options.find((opt) => opt.label === label);
-  return option ? option.value : label;
-};
-
-const getPositionLabel = (value, role) => {
-  const options = role === "ACADEMIC" ? academicOptions : organizationOptions;
-  const option = options.find((opt) => opt.value === value);
-  return option ? option.label : value;
-};
 
 function ProfileCard() {
   const { jwtToken } = useAuth();
@@ -564,7 +566,7 @@ function ProfileCard() {
       (skill) => skill.trim() !== ""
     );
     const [firstName, lastName] = profileData.name.split(" ");
-    const positionValue = getPositionValue(profileData.position, "ACADEMIC"); // Use appropriate role
+    const positionValue = getPositionValue(profileData.position, user.role); // Use appropriate role
 
     console.log("Saving profile data:", profileData);
 
@@ -644,8 +646,8 @@ function ProfileCard() {
     <Card
       variant="outlined"
       sx={{
-        maxWidth: "62%",
-        minWidth: "350px",
+        width: "100%",
+        maxWidth: "800px",
         margin: "20px auto",
         mt: 4,
         textAlign: "left",
@@ -679,7 +681,7 @@ function ProfileCard() {
             alt="Profile Picture"
             sx={{ width: 80, height: 80, mr: 2 }}
           />
-          <Box>
+          <Box sx={{ width: "100%" }}>
             {editMode ? (
               <>
                 <Input
@@ -809,12 +811,11 @@ function ProfileCard() {
               multiple
               value={profileData.skills}
               onChange={handleSkillChange}
-              defaultValue={["dog", "cat"]}
               renderValue={(selected) => (
                 <Box sx={{ display: "flex", gap: "0.25rem" }}>
                   {selected.map((selectedOption) => (
-                    <Chip variant="soft" color="primary">
-                      {selectedOption.label}
+                    <Chip key={selectedOption} variant="soft" color="primary">
+                      {selectedOption}
                     </Chip>
                   ))}
                 </Box>
