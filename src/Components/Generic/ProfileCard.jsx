@@ -1,63 +1,3 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Avatar,
-  Box,
-  IconButton,
-  Chip,
-  Input,
-  Button,
-  Select,
-  Option,
-  Autocomplete,
-  CircularProgress,
-} from "@mui/joy";
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
-import SchoolIcon from "@mui/icons-material/School";
-import BuildIcon from "@mui/icons-material/Build";
-import { useUser } from "../contexts/UserContext"; // Adjust the import path as needed
-import { useAuth } from "../contexts/AuthContext"; // Import the useAuth context
-
-const academicOptions = [
-  { label: "Academic researcher", value: "RESEARCHER" },
-  { label: "Academic faculty member", value: "PROFESSOR" },
-  { label: "Retired academic", value: "POSTDOC" },
-  { label: "Self-employed professional", value: "LECTURER" },
-  {
-    label: "Academic affiliated with an organization",
-    value: "ASSOCIATE_PROFESSOR",
-  },
-  { label: "Graduate student", value: "GRADUATE_STUDENT" },
-  { label: "Undergraduate student", value: "UNDERGRADUATE_STUDENT" },
-];
-
-const organizationOptions = [
-  { label: "Business", value: "BUSINESS" },
-  { label: "Non Profit", value: "NON_PROFIT" },
-  { label: "Educational", value: "EDUCATIONAL" },
-  { label: "Governmental", value: "GOVERNMENT" },
-  { label: "Professional Association", value: "PROFESSIONAL_ASSOCIATION" },
-  { label: "Community Group", value: "COMMUNITY_GROUP" },
-  { label: "Media", value: "MEDIA" },
-  { label: "Religious", value: "RELIGIOUS" },
-  { label: "Sports", value: "SPORTS" },
-];
-
-const getPositionValue = (label, role) => {
-  const options = role === "ACADEMIC" ? academicOptions : organizationOptions;
-  const option = options.find((opt) => opt.label === label);
-  return option ? option.value : label;
-};
-
-const getPositionLabel = (value, role) => {
-  const options = role === "ACADEMIC" ? academicOptions : organizationOptions;
-  const option = options.find((opt) => opt.value === value);
-  return option ? option.label : value;
-};
-
 const skillOptions = [
   "JavaScript",
   "React",
@@ -514,10 +454,191 @@ const skillOptions = [
   "Humanitarian Health",
   "Health Diplomacy",
 ];
+const fieldOfWorkOptions = [
+  "Accounting",
+  "Aerospace Engineering",
+  "Agriculture",
+  "Anthropology",
+  "Architecture",
+  "Artificial Intelligence",
+  "Astrophysics",
+  "Biochemistry",
+  "Biology",
+  "Biomedical Engineering",
+  "Chemical Engineering",
+  "Chemistry",
+  "Civil Engineering",
+  "Computer Science",
+  "Cybersecurity",
+  "Dentistry",
+  "Economics",
+  "Education",
+  "Electrical Engineering",
+  "Environmental Science",
+  "Finance",
+  "Genetics",
+  "Geology",
+  "Graphic Design",
+  "History",
+  "Human Resources",
+  "Information Technology",
+  "International Relations",
+  "Journalism",
+  "Law",
+  "Linguistics",
+  "Management",
+  "Marketing",
+  "Mathematics",
+  "Mechanical Engineering",
+  "Medicine",
+  "Neuroscience",
+  "Nursing",
+  "Occupational Therapy",
+  "Pharmacy",
+  "Philosophy",
+  "Physics",
+  "Political Science",
+  "Psychology",
+  "Public Health",
+  "Robotics",
+  "Social Work",
+  "Sociology",
+  "Software Engineering",
+  "Statistics",
+  "Supply Chain Management",
+  "Telecommunications",
+  "Urban Planning",
+  "Veterinary Medicine",
+  "Web Development",
+  "Actuarial Science",
+  "Advertising",
+  "Agronomy",
+  "Anatomy",
+  "Animal Science",
+  "Anthropometry",
+  "Aquaculture",
+  "Arboriculture",
+  "Archaeology",
+  "Art",
+  "Astronomy",
+  "Astrobiology",
+  "Astrogeology",
+  "Astrology",
+  "Bioinformatics",
+  "Biomechanics",
+  "Biophysics",
+  "Botany",
+  "Cartography",
+  "Ceramics",
+  "Climatology",
+  "Cognitive Science",
+  "Criminology",
+  "Cryptography",
+  "Dermatology",
+  "Ecology",
+  "Embryology",
+  "Entomology",
+  "Epidemiology",
+  "Ethnography",
+  "Ethology",
+  "Forensic Science",
+  "Genomics",
+  "Gerontology",
+  "Horticulture",
+  "Hydrology",
+  "Immunology",
+  "Kinesiology",
+  "Lepidopterology",
+  "Meteorology",
+  "Microbiology",
+  "Mycology",
+  "Nanotechnology",
+  "Oceanography",
+  "Ornithology",
+  "Paleontology",
+  "Parapsychology",
+  "Pharmacology",
+  "Photography",
+  "Radiology",
+  "Semiotics",
+  "Sociobiology",
+  "Speleology",
+  "Taxonomy",
+  "Toxicology",
+  "Urology",
+  "Virology",
+  "Zoology",
+];
 
-function ProfileCard() {
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Box,
+  IconButton,
+  Chip,
+  Input,
+  Button,
+  Select,
+  Option,
+  Autocomplete,
+  CircularProgress,
+} from "@mui/joy";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import SchoolIcon from "@mui/icons-material/School";
+import BuildIcon from "@mui/icons-material/Build";
+import { useUser } from "../contexts/UserContext"; // Adjust the import path as needed
+import { useAuth } from "../contexts/AuthContext"; // Import the useAuth context
+import AutocompleteOption from "@mui/joy/AutocompleteOption";
+const academicOptions = [
+  { label: "Academic researcher", value: "RESEARCHER" },
+  { label: "Academic faculty member", value: "PROFESSOR" },
+  { label: "Retired academic", value: "POSTDOC" },
+  { label: "Self-employed professional", value: "LECTURER" },
+  {
+    label: "Academic affiliated with an organization",
+    value: "ASSOCIATE_PROFESSOR",
+  },
+  { label: "Graduate student", value: "GRADUATE_STUDENT" },
+  { label: "Undergraduate student", value: "UNDERGRADUATE_STUDENT" },
+];
+
+const organizationOptions = [
+  { label: "Business", value: "BUSINESS" },
+  { label: "Non Profit", value: "NON_PROFIT" },
+  { label: "Educational", value: "EDUCATIONAL" },
+  { label: "Governmental", value: "GOVERNMENT" },
+  { label: "Professional Association", value: "PROFESSIONAL_ASSOCIATION" },
+  { label: "Community Group", value: "COMMUNITY_GROUP" },
+  { label: "Media", value: "MEDIA" },
+  { label: "Religious", value: "RELIGIOUS" },
+  { label: "Sports", value: "SPORTS" },
+];
+
+const getPositionValue = (label, role) => {
+  const options = role === "ACADEMIC" ? academicOptions : organizationOptions;
+  const option = options.find((opt) => opt.label === label);
+  return option ? option.value : label;
+};
+
+const getPositionLabel = (value, role) => {
+  const options =
+    role === "ACADEMIC" || role === "ADMIN"
+      ? academicOptions
+      : organizationOptions;
+  const option = options.find((opt) => opt.value === value);
+  return option ? option.label : value;
+};
+
+function ProfileCard({ userProfile }) {
   const { jwtToken } = useAuth();
-  const { user, updateUser } = useUser();
+  const { updateUser } = useUser();
+
+  const user = userProfile || useUser().user;
+
   const [isSaved, setIsSaved] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -527,13 +648,14 @@ function ProfileCard() {
     position: user.position || "",
     skills: user.skills || [],
   });
+
   const [educationValue, setEducationValue] = useState("");
   const [education, setEducation] = useState([]);
   const [isEducationMenuLoading, setIsEducationMenuLoading] = useState(false);
   const [isEducationMenuOpen, setEducationMenuOpen] = useState(false);
   const [isPostitionMenuOpen, setIsPositionMenuOpen] = useState(false);
   const [isPostitionMenuLoading, setIsPositionMenuLoading] = useState(false);
-
+  const [isFieldOfWorkMenuOpen, setIsFieldOfWorkMenuOpen] = useState(false);
   useEffect(() => {
     setProfileData({
       name: `${user.firstName} ${user.lastName}`,
@@ -557,6 +679,7 @@ function ProfileCard() {
   };
 
   const toggleEditMode = () => {
+    if (userProfile) return;
     console.log("Toggling edit mode:", !editMode);
     setEditMode(!editMode);
   };
@@ -566,7 +689,6 @@ function ProfileCard() {
       (skill) => skill.trim() !== ""
     );
     const [firstName, lastName] = profileData.name.split(" ");
-    const positionValue = getPositionValue(profileData.position, user.role); // Use appropriate role
 
     console.log("Saving profile data:", profileData);
 
@@ -575,7 +697,7 @@ function ProfileCard() {
       lastName,
       fieldOfWork: profileData.fieldOfWork,
       education: profileData.education,
-      position: positionValue, // Save the value instead of the label
+      position: getPositionValue(profileData.position, user.role), // Save the value instead of the label
       skills: filteredSkills,
     });
     setIsSaved(true);
@@ -662,14 +784,16 @@ function ProfileCard() {
           mb={2}
         >
           <div></div>
-          <IconButton
-            variant="outlined"
-            color="primary"
-            size="sm"
-            onClick={toggleEditMode}
-          >
-            {editMode ? <SaveIcon /> : <EditIcon />}
-          </IconButton>
+          {!userProfile && (
+            <IconButton
+              variant="outlined"
+              color="primary"
+              size="sm"
+              onClick={toggleEditMode}
+            >
+              {editMode ? <SaveIcon /> : <EditIcon />}
+            </IconButton>
+          )}
         </Box>
         <Box display="flex" alignItems="center" mb={2}>
           <Avatar
@@ -694,53 +818,76 @@ function ProfileCard() {
                   fullWidth
                   sx={{ mb: 1 }}
                 />
-                <Input
-                  variant="outlined"
-                  label="Field of Work"
-                  name="fieldOfWork"
-                  placeholder="Enter your field of work"
-                  value={profileData.fieldOfWork}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 1 }}
-                />
                 <Autocomplete
-                  name="education"
-                  placeholder="Enter your institution and department"
-                  open={isEducationMenuOpen}
-                  sx={{ mb: 1 }}
-                  onOpen={() => {
-                    setEducationMenuOpen(true);
-                  }}
-                  onClose={() => {
-                    setEducationMenuOpen(false);
-                  }}
-                  isOptionEqualToValue={(option, value) =>
-                    option.name === value.name
-                  }
-                  getOptionLabel={(education) => education.name}
-                  options={education}
-                  loading={isEducationMenuLoading}
-                  onInputChange={(event, value) => {
-                    setProfileData({
-                      ...profileData,
-                      education: value,
-                    });
-                    setEducationValue(value);
-                  }}
-                  endDecorator={
-                    isEducationMenuLoading ? (
-                      <CircularProgress
-                        size="sm"
-                        sx={{ bgcolor: "background.surface" }}
-                      />
-                    ) : null
-                  }
-                />
-                <Autocomplete
-                  required
                   sx={{ mb: 1 }}
                   placeholder="Type To Search Field Of Work"
+                  open={isFieldOfWorkMenuOpen}
+                  onOpen={() => {
+                    setIsFieldOfWorkMenuOpen(true);
+                  }}
+                  onClose={() => {
+                    setIsFieldOfWorkMenuOpen(false);
+                  }}
+                  isOptionEqualToValue={(option, value) => option === value}
+                  getOptionLabel={(option) => option}
+                  options={fieldOfWorkOptions}
+                  renderOption={(props, option) => (
+                    <AutocompleteOption key={option} {...props}>
+                      {option}
+                    </AutocompleteOption>
+                  )}
+                  onInputChange={(event, value) => {
+                    console.log("Field of work:", value);
+                    setProfileData({
+                      ...profileData,
+                      fieldOfWork: value,
+                    });
+                  }}
+                />
+
+                {user.role === "ACADEMIC" || user.role === "ADMIN" ? (
+                  <Autocomplete
+                    name="education"
+                    placeholder="Enter your institution and department"
+                    open={isEducationMenuOpen}
+                    sx={{ mb: 1 }}
+                    onOpen={() => {
+                      setEducationMenuOpen(true);
+                    }}
+                    onClose={() => {
+                      setEducationMenuOpen(false);
+                    }}
+                    isOptionEqualToValue={(option, value) =>
+                      option.name === value.name
+                    }
+                    getOptionLabel={(education) => education.name}
+                    options={education}
+                    loading={isEducationMenuLoading}
+                    onInputChange={(event, value) => {
+                      setProfileData({
+                        ...profileData,
+                        education: value,
+                      });
+                      setEducationValue(value);
+                    }}
+                    renderOption={(props, option) => (
+                      <AutocompleteOption key={option.name} {...props}>
+                        {option.name}
+                      </AutocompleteOption>
+                    )}
+                    endDecorator={
+                      isEducationMenuLoading ? (
+                        <CircularProgress
+                          size="sm"
+                          sx={{ bgcolor: "background.surface" }}
+                        />
+                      ) : null
+                    }
+                  />
+                ) : null}
+                <Autocomplete
+                  sx={{ mb: 1 }}
+                  placeholder="Type To Search Position"
                   open={isPostitionMenuOpen}
                   onOpen={() => {
                     setIsPositionMenuOpen(true);
@@ -748,17 +895,27 @@ function ProfileCard() {
                   onClose={() => {
                     setIsPositionMenuOpen(false);
                   }}
-                  isOptionEqualToValue={(option, value) =>
-                    option.name === value.name
+                  isOptionEqualToValue={(option, value) => option === value}
+                  getOptionLabel={(option) => option}
+                  options={
+                    user.role === "ACADEMIC" || user.role === "ADMIN"
+                      ? academicOptions.map((option) => option.label)
+                      : organizationOptions.map((option) => option.label)
                   }
-                  getOptionLabel={(option) => option.label}
-                  options={academicOptions}
                   loading={isPostitionMenuLoading}
                   onInputChange={(event, value) => {
                     setProfileData({
                       ...profileData,
                       position: value,
                     });
+                  }}
+                  renderOption={(props, option) => {
+                    const { key, ...otherProps } = props;
+                    return (
+                      <AutocompleteOption key={option} {...otherProps}>
+                        {option}
+                      </AutocompleteOption>
+                    );
                   }}
                   endDecorator={
                     isPostitionMenuLoading ? (

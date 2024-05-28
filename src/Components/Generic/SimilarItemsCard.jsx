@@ -1,7 +1,15 @@
-// SimilarItemsCard.js
 import React from "react";
-import { Box, Card, CardContent, Typography, Avatar, Button } from "@mui/joy";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Button,
+  CircularProgress,
+} from "@mui/joy";
 import { styled } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 const StyledCard = styled(Card)({
   marginTop: "32px",
@@ -9,8 +17,20 @@ const StyledCard = styled(Card)({
   boxShadow: "var(--joy-shadow-sm)",
 });
 
-const SimilarItem = ({ name, sharedSkills, imgSrc, type, linked }) => (
-  <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+const SimilarItemContainer = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginBottom: "16px",
+  cursor: "pointer",
+  "&:hover": {
+    backgroundColor: "#f0f0f0",
+    borderRadius: "8px",
+  },
+});
+
+const SimilarItem = ({ name, sharedSkills, imgSrc, type, linked, onClick }) => (
+  <SimilarItemContainer onClick={onClick}>
     <Box display="flex" alignItems="center">
       <Avatar src={imgSrc} alt={name} sx={{ mr: 2 }} />
       <Box>
@@ -29,38 +49,54 @@ const SimilarItem = ({ name, sharedSkills, imgSrc, type, linked }) => (
         Follow
       </Button>
     )}
-  </Box>
+  </SimilarItemContainer>
 );
 
-const ViewMoreButton = styled(Button)({
-  marginTop: "10px",
-  display: "block",
-  width: "100%",
-});
+function SimilarItemsCard({ title, items, type, isLoading }) {
+  const navigate = useNavigate();
 
-const SimilarItemsCard = ({ title, items, type }) => (
-  <StyledCard variant="outlined">
-    <CardContent>
-      <Typography level="h6" fontWeight="bold" mb={2}>
-        {title}
-      </Typography>
-      {items.map((item, index) => (
-        <div>
-          <SimilarItem
-            key={index}
-            name={item.name}
-            sharedSkills={item.sharedSkills}
-            linked={item.linked}
-            imgSrc={item.imgSrc}
-            type={type}
-          />
-        </div>
-      ))}
-      <ViewMoreButton variant="soft" color="primary">
-        View more
-      </ViewMoreButton>
-    </CardContent>
-  </StyledCard>
-);
+  function onClick(id) {
+    if (!id) return;
+    console.log("Clicked on item with id:", id);
+    if (type === "people") {
+      navigate(`/profile/${id}`);
+    } else {
+      navigate(`/organization/${id}`);
+    }
+  }
+
+  return (
+    <StyledCard variant="outlined">
+      <CardContent>
+        <Typography level="h6" fontWeight="bold" mb={2}>
+          {title}
+        </Typography>
+        {isLoading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="200px"
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          items.map((item, index) => (
+            <div key={index}>
+              <SimilarItem
+                name={item.name}
+                sharedSkills={item.sharedSkills}
+                linked={item.linked}
+                imgSrc={item.imgSrc}
+                type={type}
+                onClick={() => onClick(item.id)}
+              />
+            </div>
+          ))
+        )}
+      </CardContent>
+    </StyledCard>
+  );
+}
 
 export default SimilarItemsCard;

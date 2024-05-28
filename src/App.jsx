@@ -27,7 +27,12 @@ import { useEffect } from "react";
 
 import { gapi } from "gapi-script";
 import AppLayout from "./Components/layouts/AppLayout";
+import AdminAppLayout from "./Components/layouts/AdminAppLayout";
+
 import { UserProvider } from "./Components/contexts/UserContext";
+import UserProfile from "./Pages/UserProfile";
+import AdminLogin from "./Pages/Auth/AdminLogin";
+import AdminDashboard from "./Components/Generic/AdminDashboard";
 const defaultTheme = createTheme({
   palette: {
     mode: "dark",
@@ -52,7 +57,7 @@ const router = createBrowserRouter(
         {/* <Route path="/logout" element={<Logout />} /> */}
         <Route path="/myLinks" element={<MyLinks />} />
         <Route path="/myProfile" element={<MyProfile />} />
-        {/* <Route path="/myOrganization" element={<MyOrganization />} /> */}
+
         <Route path="/*" element={<NotFound />} />
       </Route>
     </>
@@ -82,7 +87,18 @@ function App() {
           <Route path="register" element={<RegistrationProcess />} />
           <Route path="logo" element={<AuthPagesHeader />} />
 
-          <Route path="nav" element={<Navbar />} />
+          <Route
+            path="admin"
+            element={
+              <ProtectedRoute>
+                <UserProvider>
+                  <AdminAppLayout />
+                </UserProvider>
+              </ProtectedRoute>
+            }
+          >
+            <Route path="dashboard" element={<AdminDashboard />} />
+          </Route>
           <Route
             path="/"
             element={
@@ -95,7 +111,7 @@ function App() {
           >
             <Route index element={<Home />} />
             <Route path="profile" element={<MyProfile />} />
-
+            <Route path="profile/:userId" element={<UserProfile />} />{" "}
             <Route path="myLinks" element={<MyLinks />} />
           </Route>
         </Routes>

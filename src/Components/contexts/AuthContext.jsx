@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import Cookies from "js-cookie";
-// import { useLocation } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -8,6 +7,7 @@ const initialState = {
   user: null,
   isAuthenticated: false,
   jwtToken: null,
+  isLoading: true, // Add loading state
 };
 
 function reducer(state, action) {
@@ -15,13 +15,25 @@ function reducer(state, action) {
     case "login":
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
+        role: action.payload.role,
         isAuthenticated: true,
         jwtToken: action.payload.jwtToken,
+        isLoading: false, // Set loading to false on login
       };
     case "logout":
       Cookies.remove("JWT_TOKEN");
-      return { ...state, user: null, isAuthenticated: false, jwtToken: null };
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        jwtToken: null,
+        isLoading: false,
+      }; // Set loading to false on logout
+    case "loading":
+      return { ...state, isLoading: true }; // Handle loading state
+    case "stop-loading":
+      return { ...state, isLoading: false }; // Stop loading state
     default:
       throw new Error("Unknown action");
   }
@@ -35,45 +47,54 @@ const USER = {
 };
 
 function AuthProvider({ children }) {
-  const [{ user, isAuthenticated, jwtToken }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ user, isAuthenticated, role, jwtToken, isLoading }, dispatch] =
+    useReducer(reducer, initialState);
   const token = Cookies.get("JWT_TOKEN");
 
   useEffect(() => {
-    console.log("Token: ", token);
-    if (!token) return;
+    if (!token) {
+      dispatch({ type: "stop-loading" }); // Stop loading if no token
+      return;
+    }
 
-    async function verifiyToken() {
-      const response = await fetch(
-        "http://localhost:8080/api/v1/auth/verify-token",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    async function verifyToken() {
+      dispatch({ type: "loading" }); // Start loading
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/v1/auth/verify-token",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = await response.json();
+        if (data["isVerified"]) {
+          dispatch({
+            type: "login",
+            payload: { user: USER, jwtToken: token, role: data["role"] },
+          });
+        } else {
+          Cookies.remove("JWT_TOKEN");
+          dispatch({ type: "logout" });
         }
-      );
-      const data = await response.json();
-      if (data["isVerified"]) {
-        console.log("Token is valid.");
-        dispatch({ type: "login", payload: { USER, jwtToken: token } });
-      } else {
+      } catch (error) {
+        console.error("Token verification failed:", error);
         Cookies.remove("JWT_TOKEN");
-        throw new Error("Token is not valid");
+        dispatch({ type: "logout" });
+      } finally {
+        dispatch({ type: "stop-loading" }); // Stop loading after verification
       }
     }
-    verifiyToken();
+    verifyToken();
   }, [token]);
 
   async function login(email, password) {
     try {
-      const jwtToken = await authenticate(email, password);
-
+      const { jwtToken, role } = await authenticate(email, password);
       if (jwtToken) {
-        dispatch({ type: "login", payload: { USER, jwtToken } });
+        dispatch({ type: "login", payload: { user: USER, jwtToken, role } });
         Cookies.set("JWT_TOKEN", jwtToken);
-        console.log("Logged in successfully.", isAuthenticated);
       }
     } catch (error) {
       throw error;
@@ -94,25 +115,22 @@ function AuthProvider({ children }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: email,
-            password: password,
+            email,
+            password,
           }),
         }
       );
       if (!response.ok) {
-        // Check if the response status is not in the range 200-299 (success)
         if (response.status === 404) {
-          // Handle user not found error
           throw new Error("User not found.");
         } else if (response.status === 401) {
           throw new Error("Invalid credentials.");
         } else {
-          // Handle other HTTP errors
           throw new Error("Failed to authenticate. Server error.");
         }
       }
       const data = await response.json();
-      return data["jwtToken"];
+      return { jwtToken: data["jwtToken"], role: data["role"] };
     } catch (error) {
       throw error;
     }
@@ -120,7 +138,15 @@ function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, login, jwtToken, logout }}
+      value={{
+        user,
+        isAuthenticated,
+        role,
+        login,
+        jwtToken,
+        logout,
+        isLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

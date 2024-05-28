@@ -29,6 +29,15 @@ const getPositionValue = (label, role) => {
   return option ? option.label : label;
 };
 
+const getPositionLabel = (value, role) => {
+  const options =
+    role === "ACADEMIC" || role === "ADMING "
+      ? academicOptions
+      : organizationOptions;
+  const option = options.find((opt) => opt.value === value);
+  return option ? option.label : value;
+};
+
 import React from "react";
 import ProfileCard from "./ProfileCard";
 import AboutMeCard from "./AboutMeCard";
@@ -50,7 +59,9 @@ import ArticleIcon from "@mui/icons-material/Article";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useUser } from "../contexts/UserContext"; // Correct import path
-
+import { useState } from "react";
+import { useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
 const StyledTabs = styled(Tabs)({
   "& .MuiTabs-indicator": {
     backgroundColor: "var(--joy-palette-primary-main)",
@@ -115,8 +126,91 @@ const StackedItems = styled(Box)({
   },
 });
 
-function ProfileHead() {
-  const { user } = useUser();
+function ProfileHead({ userProfile }) {
+  let user = userProfile;
+
+  if (userProfile === undefined) {
+    user = useUser().user;
+  }
+  const { jwtToken } = useAuth();
+  const [researchPaperCount, setResearchPaperCount] = useState(0);
+  const [articlesCount, setArticlesCount] = useState(0);
+  const [postsCount, setPostsCount] = useState(0);
+
+  useEffect(() => {
+    async function fetchResearchPaperCount() {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/researchpapers/count/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setResearchPaperCount(data.count);
+      } catch (error) {
+        console.error("Error fetching research paper count", error);
+      }
+    }
+    fetchResearchPaperCount();
+  }, [user.id, jwtToken]);
+
+  useEffect(() => {
+    async function fetchArticlesCount() {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/articles/count/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setArticlesCount(data.count);
+      } catch (error) {
+        console.error("Error fetching research paper count", error);
+      }
+    }
+    fetchArticlesCount();
+  }, [user.id, jwtToken]);
+
+  useEffect(() => {
+    async function fetchPostsCount() {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/posts/count/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setPostsCount(data.count);
+      } catch (error) {
+        console.error("Error fetching research paper count", error);
+      }
+    }
+    fetchPostsCount();
+  }, [user.id, jwtToken]);
 
   return (
     <div>
@@ -147,8 +241,14 @@ function ProfileHead() {
               {user.firstName} {user.lastName}
             </Typography>
             <Typography level="body2" color="neutral">
-              {user.education} · {getPositionValue(user.position, user.role)} ·{" "}
-              {user.fieldOfWork}
+              {user.role === "ACADEMIC" || user.role === "ADMIN"
+                ? `${user.education} · ${getPositionLabel(
+                    user.position,
+                    user.role
+                  )} · ${user.fieldOfWork}`
+                : `${getPositionLabel(user.type, user.role)} · ${
+                    user.fieldOfWork
+                  }`}
             </Typography>
             <Typography level="body2" color="neutral">
               Palestinian Territory ·{" "}
@@ -192,7 +292,7 @@ function ProfileHead() {
               },
             }}
           >
-            <Typography>Research Items</Typography>
+            <Typography>Research Papers</Typography>
             <Box
               sx={{
                 mx: 1,
@@ -201,7 +301,7 @@ function ProfileHead() {
                 backgroundColor: "#d1d1d2",
               }}
             />
-            <Typography>0</Typography>
+            <Typography>{researchPaperCount}</Typography>
           </Box>
           <Box
             sx={{
@@ -225,7 +325,7 @@ function ProfileHead() {
                 backgroundColor: "#d1d1d2",
               }}
             />
-            <Typography>0</Typography>
+            <Typography>{articlesCount}</Typography>
           </Box>
           <Box
             sx={{
@@ -249,7 +349,7 @@ function ProfileHead() {
                 backgroundColor: "#d1d1d2",
               }}
             />
-            <Typography>0</Typography>
+            <Typography>{postsCount}</Typography>
           </Box>
         </StackedItems>
       </ProfileHeader>
@@ -272,20 +372,22 @@ function ProfileHead() {
               flexDirection: { xs: "column", sm: "row" },
             }}
           >
-            <StyledTab>PROFILE</StyledTab>
-            <StyledTab>ARTICLES</StyledTab>
+            <StyledTab>Profile</StyledTab>
+            <StyledTab>Articles</StyledTab>
             <StyledTab>Researches</StyledTab>
-            <StyledTab>POSTS</StyledTab>
+            <StyledTab>Posts</StyledTab>
           </TabList>
         </StyledTabs>
 
-        <ActionButtons
-          sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
-        >
-          <ActionButton variant="outlined" color="primary">
-            + Add Journal
-          </ActionButton>
-        </ActionButtons>
+        {!userProfile && (
+          <ActionButtons
+            sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
+          >
+            <ActionButton variant="outlined" color="primary">
+              + Add Journal
+            </ActionButton>
+          </ActionButtons>
+        )}
       </Box>
     </div>
   );

@@ -22,6 +22,7 @@ import MarkunreadOutlinedIcon from "@mui/icons-material/MarkunreadOutlined";
 import DraftsOutlinedIcon from "@mui/icons-material/DraftsOutlined";
 import { useState } from "react";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import {
   SearchRounded as SearchRoundedIcon,
   DarkModeRounded as DarkModeRoundedIcon,
@@ -38,18 +39,14 @@ import {
 import Logo from "/src/assets/svg/logo.svg";
 import styles from "./Navbar.module.css";
 import TeamNav from "./Navigation";
-
-export default function Navbar({
-  email = "switi.2003@gmail.com",
-  notifications,
-  name = "Mohamemd Sowiaty",
-  messages,
-}) {
+import { useUser } from "../contexts/UserContext";
+export default function Navbar() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const { logout } = useAuth();
+  const { user } = useUser();
 
   const handleHomeClick = () => {
     navigate("/");
@@ -139,7 +136,7 @@ export default function Navbar({
           onClose={() => setOpen(false)}
         >
           <ModalClose />
-          <DialogTitle>Acme Co.</DialogTitle>
+          <DialogTitle>Sci Nexus</DialogTitle>
           <Box sx={{ px: 1 }}>
             <TeamNav />
           </Box>
@@ -324,10 +321,10 @@ export default function Navbar({
                 />
                 <Box sx={{ ml: 1.5 }}>
                   <Typography level="title-sm" textColor="text.primary">
-                    {name}
+                    {user.firstName} {user.lastName}
                   </Typography>
                   <Typography level="body-xs" textColor="text.tertiary">
-                    {email}
+                    {user.email}
                   </Typography>
                 </Box>
               </Box>
@@ -337,6 +334,14 @@ export default function Navbar({
               <PersonOutlinedIcon />
               My Profile
             </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate(`/profile/${user.id}`);
+              }}
+            >
+              <RemoveRedEyeOutlinedIcon />
+              View as Visitor
+            </MenuItem>
             <MenuItem>
               <HelpRoundedIcon />
               Help
@@ -345,18 +350,7 @@ export default function Navbar({
               <SettingsRoundedIcon />
               Settings
             </MenuItem>
-            <ListDivider />
-            <MenuItem component="a" href="/blog/first-look-at-joy/">
-              First look at Joy UI
-              <OpenInNewRoundedIcon />
-            </MenuItem>
-            <MenuItem
-              component="a"
-              href="https://github.com/mui/material-ui/tree/master/docs/data/joy/getting-started/templates/email"
-            >
-              Sourcecode
-              <OpenInNewRoundedIcon />
-            </MenuItem>
+
             <ListDivider />
             <MenuItem onClick={logout}>
               <LogoutRoundedIcon />

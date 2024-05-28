@@ -193,26 +193,30 @@ function RegistrationProcess() {
     }
 
     console.log("this is register endp oint " + registerEndpoint);
+    let payload = {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      bio,
+      phoneNumber,
+      fieldOfWork,
+      role,
+      badge,
+    };
+    if (role === "ORGANIZATION") {
+      payload = { ...payload, type: position };
+    } else {
+      payload = { ...payload, education: educationValue, position };
+    }
     async function registerUser() {
       const response = await fetch(registerEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          username,
-          email,
-          password,
-          bio,
-          phoneNumber,
-          fieldOfWork,
-          role,
-          education: educationValue,
-          badge,
-          position,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();

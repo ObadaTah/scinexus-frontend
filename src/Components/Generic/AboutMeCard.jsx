@@ -37,8 +37,10 @@ const phoneSchema = string()
   )
   .required();
 
-function AboutMeCard() {
-  const { user, updateUser } = useUser();
+function AboutMeCard({ userProfile }) {
+  const { updateUser } = useUser();
+
+  const user = userProfile || useUser().user;
   const { jwtToken } = useAuth();
   const [editMode, setEditMode] = useState(false);
   const [emailValid, setEmailValid] = useState(false); // State for email validation
@@ -85,6 +87,8 @@ function AboutMeCard() {
   };
 
   const toggleEditMode = () => {
+    if (userProfile) return;
+
     setEditMode(!editMode);
   };
 
@@ -167,13 +171,15 @@ function AboutMeCard() {
           >
             About Me
           </Typography>
-          <IconButton variant="outlined" color="primary" size="sm">
-            {editMode ? (
-              <SaveIcon onClick={handleSave} />
-            ) : (
-              <EditIcon onClick={toggleEditMode} />
-            )}
-          </IconButton>
+          {!userProfile && (
+            <IconButton variant="outlined" color="primary" size="sm">
+              {editMode ? (
+                <SaveIcon onClick={handleSave} />
+              ) : (
+                <EditIcon onClick={toggleEditMode} />
+              )}
+            </IconButton>
+          )}
         </Box>
 
         <Section
@@ -187,6 +193,7 @@ function AboutMeCard() {
           handleInputChange={handleInputChange}
           icon={<AddCircleIcon />}
           multiline
+          userProfile={userProfile}
         />
 
         <Section
@@ -200,6 +207,7 @@ function AboutMeCard() {
           handleLanguageChange={handleLanguageChange}
           icon={<LanguageIcon />}
           select
+          userProfile={userProfile}
         />
 
         <Section
@@ -220,6 +228,7 @@ function AboutMeCard() {
           handleInputChange={handleInputChange}
           icon={<ContactMailIcon />}
           contact
+          userProfile={userProfile}
         />
 
         {editMode && !emailValid && (
@@ -286,6 +295,7 @@ function Section({
   multiline,
   select,
   contact,
+  userProfile,
 }) {
   const isContentEmpty = contact
     ? !content.email && !content.phoneNumber
@@ -309,7 +319,6 @@ function Section({
               value={content}
               onChange={handleInputChange}
               minRows={4}
-              fullWidth
               sx={{ mt: 1 }}
             />
           ) : select ? (
@@ -368,7 +377,7 @@ function Section({
             />
           )}
         </>
-      ) : isContentEmpty ? (
+      ) : isContentEmpty && userProfile == undefined ? (
         <Box
           display="flex"
           justifyContent="space-between"
