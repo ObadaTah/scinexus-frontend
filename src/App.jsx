@@ -9,10 +9,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import Navbar from "./Components/Generic/Navbar";
-import Notifications from "./Components/Generic/Notifications";
-import Footer from "./Components/Generic/Footer";
 import Login from "./Pages/Auth/Login";
-import Register from "./Pages/Auth/Register";
 import Home from "./Pages/Home";
 import MyLinks from "./Pages/MyLinks";
 import MyProfile from "./Pages/MyProfile";
@@ -22,17 +19,18 @@ import { AuthProvider } from "./Components/contexts/AuthContext";
 import ProtectedRoute from "./Pages/ProtectedRoute";
 import RegistrationProcess from "./Pages/Auth/RegistrationProcess";
 import AuthPagesHeader from "./Components/Generic/AuthPagesHeader";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useEffect } from "react";
-
-import { gapi } from "gapi-script";
+import { Box } from "@mui/system";
 import AppLayout from "./Components/layouts/AppLayout";
 import AdminAppLayout from "./Components/layouts/AdminAppLayout";
-
+import Sidebar from "./Components/Chatting/Components/Sidebar";
+import Header from "./Components/Chatting/Components/Header";
 import { UserProvider } from "./Components/contexts/UserContext";
 import UserProfile from "./Pages/UserProfile";
-import AdminLogin from "./Pages/Auth/AdminLogin";
 import AdminDashboard from "./Components/Generic/AdminDashboard";
+import MyMessages from "./Components/Chatting/Components/MyMessages";
+import { CssVarsProvider } from "@mui/joy/styles";
+import CssBaseline from "@mui/joy/CssBaseline";
+import ChatLayout from "./Components/layouts/ChatLayout";
 const defaultTheme = createTheme({
   palette: {
     mode: "dark",
@@ -87,6 +85,36 @@ function App() {
           <Route path="register" element={<RegistrationProcess />} />
           <Route path="logo" element={<AuthPagesHeader />} />
 
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <UserProvider>
+                  <ChatLayout />
+                </UserProvider>
+              </ProtectedRoute>
+            }
+          >
+            <Route
+              path="chatting"
+              element={
+                <CssVarsProvider disableTransitionOnChange>
+                  <CssBaseline />
+                  <Box sx={{ display: "flex", minHeight: "100dvh" }}>
+                    <Sidebar />
+                    <Header />
+                    <Box
+                      component="main"
+                      className="MainContent"
+                      sx={{ flex: 1 }}
+                    >
+                      <MyMessages />
+                    </Box>
+                  </Box>
+                </CssVarsProvider>
+              }
+            />
+          </Route>
           <Route
             path="admin"
             element={

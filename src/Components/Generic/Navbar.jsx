@@ -36,11 +36,11 @@ import {
   MenuRounded as MenuRoundedIcon,
 } from "@mui/icons-material";
 
-import Logo from "/src/assets/svg/logo.svg";
+import Logo from "/src/assets/svg/logoText.svg";
 import styles from "./Navbar.module.css";
 import TeamNav from "./Navigation";
 import { useUser } from "../contexts/UserContext";
-export default function Navbar() {
+export default function Navbar({ bgColor }) {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -75,6 +75,7 @@ export default function Navbar() {
         justifyContent: "center",
         paddingTop: 2,
         paddingBottom: 3,
+        backgroundColor: bgColor ? bgColor : "white",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)", // Add bottom box shadow
         "@media (max-width: 1280px)": {
           justifyContent: "space-between", // Apply space-between for wider screens
@@ -136,7 +137,9 @@ export default function Navbar() {
           onClose={() => setOpen(false)}
         >
           <ModalClose />
-          <DialogTitle>Sci Nexus</DialogTitle>
+          <DialogTitle>
+            <img src={Logo} alt="logo" className={styles.logo} />
+          </DialogTitle>
           <Box sx={{ px: 1 }}>
             <TeamNav />
           </Box>

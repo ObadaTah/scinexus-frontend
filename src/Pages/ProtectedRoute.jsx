@@ -5,6 +5,7 @@ import { CircularProgress } from "@mui/joy";
 function ProtectedRoute({ children }) {
   const { isAuthenticated, role, isLoading } = useAuth();
   const navigate = useNavigate();
+
   if (isLoading) {
     return (
       <div

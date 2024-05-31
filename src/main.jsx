@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import { NextUIProvider } from "@nextui-org/react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-
+import { StyledEngineProvider } from "@mui/joy/styles";
 import "bootstrap/dist/css/bootstrap.min.css";
+window.global = window;
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <StyledEngineProvider injectFirst>
+      <App />
+    </StyledEngineProvider>
   </React.StrictMode>
 );
