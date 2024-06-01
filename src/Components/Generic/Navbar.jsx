@@ -175,7 +175,7 @@ export default function Navbar({
           sx={{ alignSelf: "center" }}
           onClick={() => setJournalModalOpen(true)}
         >
-          + Add Journal
+          UPLOAD
         </Button>
         <NewJournalModal
           open={journalModalOpen}
