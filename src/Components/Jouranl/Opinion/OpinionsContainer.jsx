@@ -10,6 +10,7 @@ import { helix } from "ldrs";
 import { DialogContent, DialogTitle, Modal, ModalDialog } from "@mui/joy";
 import { Transition } from "react-transition-group";
 import { useAuth } from "../../contexts/AuthContext";
+import SkeletonLoader from "../Post/SkeletonLoader";
 
 helix.register();
 
@@ -125,7 +126,10 @@ function OpinionsContainer(props) {
                                     alignItems: "center",
                                 }}
                             >
-                                <l-helix
+                                <SkeletonLoader
+                                    isLoading={isLoading}
+                                ></SkeletonLoader>
+                                {/* <l-helix
                                     size="45"
                                     speed="2.5"
                                     color="black"
@@ -135,7 +139,7 @@ function OpinionsContainer(props) {
                                         marginLeft: "auto",
                                         marginRight: "auto",
                                     }}
-                                />
+                                /> */}
 
                                 <Typography
                                     style={{
