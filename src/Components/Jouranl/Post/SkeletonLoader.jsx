@@ -21,6 +21,9 @@ function SkeletonLoader(props) {
                     graphic, print, and publishing industries.
                 </Skeleton>
             </Typography>
+            <Typography>
+                <Skeleton>Lorem ipsum is placeholder text commonl</Skeleton>
+            </Typography>
         </Card>
     ));
 
