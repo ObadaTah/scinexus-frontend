@@ -1,0 +1,42 @@
+.article-page {
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.article-image {
+    width: 100%;
+    height: auto;
+}
+
+.article-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.article-content {
+    font-size: 1rem;
+    margin-top: 20px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .article-title {
+        font-size: 1.5rem;
+    }
+
+    .article-content {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .article-title {
+        font-size: 1.2rem;
+    }
+
+    .article-content {
+        font-size: 0.8rem;
+    }
+}
