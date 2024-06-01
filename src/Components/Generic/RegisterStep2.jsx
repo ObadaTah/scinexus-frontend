@@ -1,6 +1,5 @@
 import AuthPagesHeader from "./AuthPagesHeader";
 import styles from "./RegisterStep2.module.css";
-import styles2 from "./Register.module.css";
 import Typography from "@mui/joy/Typography";
 import { useEffect, useState } from "react";
 import Button from "@mui/joy/Button";
@@ -15,6 +14,7 @@ function RegisterStep2({
   setSelectedOption,
   position,
   setPosition,
+  oAuthProvider,
 }) {
   const [occupationOptions, setOccupationOptions] = useState([]);
 
@@ -24,7 +24,7 @@ function RegisterStep2({
     } else if (role === "ORGANIZATION") {
       setOccupationOptions(organizationOptions);
     }
-  }, [role]);
+  }, [role, academicOptions, organizationOptions]);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -32,7 +32,7 @@ function RegisterStep2({
   };
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <AuthPagesHeader />
       <main className={styles.main}>
         <div className={styles.container}>
@@ -57,9 +57,9 @@ function RegisterStep2({
 
           <div className={styles.footer}>
             <Button
-              onClick={() => {
-                setStep((step) => step - 1);
-              }}
+              onClick={() =>
+                setStep((step) => (oAuthProvider ? step - 2 : step - 1))
+              }
               sx={{
                 width: "100px",
                 borderRadius: "3px",
@@ -78,16 +78,14 @@ function RegisterStep2({
             <Button
               type="submit"
               sx={{ width: "100px", borderRadius: "3px" }}
-              onClick={() => {
-                setStep((step) => step + 1);
-              }}
+              onClick={() => setStep((step) => step + 1)}
             >
               Next &rarr;
             </Button>
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }
 
@@ -96,6 +94,9 @@ function OccupationOptionCard({ label, isSelected, onSelect, img, alt }) {
     <li
       className={`${styles.option} ${isSelected ? styles.selected : ""}`}
       onClick={onSelect}
+      role="button"
+      tabIndex="0"
+      aria-pressed={isSelected}
     >
       <img src={img} alt={alt} style={{ width: "40px", height: "40px" }} />
       <Typography>{label}</Typography>

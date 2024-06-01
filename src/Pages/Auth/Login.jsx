@@ -11,12 +11,14 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../Components/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { CircularProgress } from "@mui/joy";
 import Cookies from "js-cookie";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -30,8 +32,10 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true);
     try {
       if (email && password) await login(email, password);
+      setIsLoading(false);
     } catch (error) {
       setError(error.message);
     }
@@ -52,7 +56,7 @@ export default function Login() {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <AuthPagesHeader />
+        <AuthPagesHeader bgColor={"#fff"} paddingBottom={"40px"} />
         <div className={styles.oauth}>
           <GoogleLoginButton
             label="Login With Google"
@@ -108,7 +112,11 @@ export default function Login() {
             sx={{ width: "100px", borderRadius: "3px" }}
             onClick={handleSubmit}
           >
-            LOG IN
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <span style={{ fontSize: "16px" }}>Login</span>
+            )}
           </Button>
         </div>
       </main>

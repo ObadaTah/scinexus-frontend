@@ -1,38 +1,58 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    Avatar,
-    Box,
-    Button,
-    DialogTitle,
-    Drawer,
-    Dropdown,
-    IconButton,
-    Input,
-    ListDivider,
-    Menu,
-    MenuButton,
-    MenuItem,
-    ModalClose,
-    Stack,
-    Typography,
+  Avatar,
+  Box,
+  Button,
+  DialogTitle,
+  Drawer,
+  Dropdown,
+  IconButton,
+  Input,
+  ListDivider,
+  Menu,
+  MenuButton,
+  MenuItem,
+  ModalClose,
+  Stack,
+  Typography,
 } from "@mui/joy";
 import Badge from "@mui/material/Badge";
+import { useAuth } from "/src/Components/contexts/AuthContext";
+import MarkunreadOutlinedIcon from "@mui/icons-material/MarkunreadOutlined";
+import DraftsOutlinedIcon from "@mui/icons-material/DraftsOutlined";
+import { useState } from "react";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import {
-    HelpRounded as HelpRoundedIcon,
-    LogoutRounded as LogoutRoundedIcon,
-    MenuRounded as MenuRoundedIcon,
-    OpenInNewRounded as OpenInNewRoundedIcon,
-    SearchRounded as SearchRoundedIcon,
-    SettingsRounded as SettingsRoundedIcon,
-    NotificationsNone as NotificationsNoneIcon,
-    MarkunreadOutlined as MarkunreadOutlinedIcon,
-    DraftsOutlined as DraftsOutlinedIcon,
-    PersonOutlined as PersonOutlinedIcon,
+  HelpRounded as HelpRoundedIcon,
+  LogoutRounded as LogoutRoundedIcon,
+  MenuRounded as MenuRoundedIcon,
+  OpenInNewRounded as OpenInNewRoundedIcon,
+  SearchRounded as SearchRoundedIcon,
+  SettingsRounded as SettingsRoundedIcon,
+  NotificationsNone as NotificationsNoneIcon,
+  MarkunreadOutlined as MarkunreadOutlinedIcon,
+  DraftsOutlined as DraftsOutlinedIcon,
+  PersonOutlined as PersonOutlinedIcon,
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
+
+import Logo from "/src/assets/svg/logoText.svg";
 import styles from "./Navbar.module.css";
 import TeamNav from "./Navigation";
+import { useUser } from "../contexts/UserContext";
+export default function Navbar({ bgColor }) {
+  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
+  const { logout } = useAuth();
+  const { user } = useUser();
+
+  const handleHomeClick = () => {
+    navigate("/");
+  };
 import { useAuth } from "../../Components/contexts/AuthContext";
 import NotificationList from "./NotificationList";
 import Logo from "/src/assets/svg/logo.svg";
@@ -115,21 +135,21 @@ export default function Navbar({
         navigate("/");
     };
 
-    const handleUploadClick = () => {
-        navigate("/upload");
-    };
+  const handleUploadClick = () => {
+    navigate("/upload");
+  };
 
-    const handleConnectionClick = () => {
-        navigate("/connections");
-    };
+  const handleConnectionClick = () => {
+    navigate("/connections");
+  };
 
-    const handleNotificationClick = () => {
-        setIsNotificationOpen(!isNotificationOpen);
-    };
-
-    const handleMessagesClick = () => {
-        setIsMessagesOpen(!isMessagesOpen);
-    };
+  const handleNotificationClick = () => {
+    setIsNotificationOpen(!isNotificationOpen);
+  };
+  const handleMessagesClick = () => {
+    navigate("/chatting");
+    // setIsMessagesOpen(!isMessagesOpen);
+  };
 
     return (
         <Box
@@ -141,7 +161,8 @@ export default function Navbar({
                 paddingBottom: 3,
                 paddingLeft: { xs: 3, sm: 0 },
                 paddingRight: { xs: 3, sm: 0 },
-                boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)", // Add bottom box shadow
+                backgroundColor: bgColor ? bgColor : "white",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)", // Add bottom box shadow
                 position: "relative",
             }}
         >
@@ -206,74 +227,76 @@ export default function Navbar({
                     onClose={() => setOpen(false)}
                 >
                     <ModalClose />
-                    <DialogTitle>Acme Co.</DialogTitle>
+                    <DialogTitle>
+            <img src={Logo} alt="logo" className={styles.logo} />
+          </DialogTitle>
                     <Box sx={{ px: 1 }}>
                         <TeamNav />
                     </Box>
                 </Drawer>
             </Box>
 
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 2,
-                    alignItems: "center",
-                }}
-            >
-                <Input
-                    size="md"
-                    variant="outlined"
-                    placeholder="Search anything…"
-                    startDecorator={<SearchRoundedIcon color="primary" />}
-                    sx={{
-                        alignSelf: "center",
-                        width: "25vw",
-                        height: "45px",
-                        display: { xs: "none", sm: "flex" },
-                    }}
-                />
-                <IconButton
-                    size="md"
-                    variant="outlined"
-                    color="neutral"
-                    sx={{
-                        display: { xs: "inline-flex", sm: "none" },
-                        alignSelf: "center",
-                    }}
-                >
-                    <SearchRoundedIcon />
-                </IconButton>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 2,
+          alignItems: "center",
+        }}
+      >
+        <Input
+          size="md"
+          variant="outlined"
+          placeholder="Search anything…"
+          startDecorator={<SearchRoundedIcon color="primary" />}
+          sx={{
+            alignSelf: "center",
+            width: "25vw",
+            height: "45px",
+            display: { xs: "none", sm: "flex" },
+          }}
+        />
+        <IconButton
+          size="md"
+          variant="outlined"
+          color="neutral"
+          sx={{
+            display: { xs: "inline-flex", sm: "none" },
+            alignSelf: "center",
+          }}
+        >
+          <SearchRoundedIcon />
+        </IconButton>
 
-                <Dropdown>
-                    <MenuButton
-                        variant="plain"
-                        color="neutral"
-                        component="a"
-                        onClick={handleNotificationClick}
-                        size="md"
-                        sx={{ alignSelf: "center" }}
-                    >
-                        {/* <Badge badgeContent={4} color="error"> */}
-                        <NotificationsNoneIcon sx={{ fontSize: "32px" }} />
-                        {/* </Badge> */}
-                    </MenuButton>
-                    <Menu
-                        placement="bottom-start"
-                        sx={{
-                            marginTop: "20px !important",
-                            width: { xs: "90%", sm: "23%" },
-                            zIndex: "99999",
-                            p: 1,
-                            gap: 1,
-                            "--ListItem-radius": "var(--joy-radius-sm)",
-                        }}
-                    >
-                        <p className={styles.paragraph}>Notifications</p>
-                        <ListDivider />
-                        <NotificationList />
-                    </Menu>
-                </Dropdown>
+        <Dropdown>
+          <MenuButton
+            variant="plain"
+            color="neutral"
+            component="a"
+            onClick={handleNotificationClick}
+            size="md"
+            sx={{ alignSelf: "center" }}
+          >
+            {/* <Badge badgeContent={4} color="error"> */}
+            <NotificationsNoneIcon sx={{ fontSize: "32px" }} />
+            {/* </Badge> */}
+          </MenuButton>
+          <Menu
+            placement="bottom-start"
+            sx={{
+              marginTop: "20px !important",
+              width: { xs: "90%", sm: "23%" },
+              zIndex: "99999",
+              p: 1,
+              gap: 1,
+              "--ListItem-radius": "var(--joy-radius-sm)",
+            }}
+          >
+            <p className={styles.paragraph}>Notifications</p>
+            <ListDivider />
+            <NotificationList />
+          </Menu>
+        </Dropdown>
 
                 <Dropdown>
                     <MenuButton
@@ -285,7 +308,7 @@ export default function Navbar({
                         size="md"
                         sx={{ alignSelf: "center" }}
                     >
-                        <Badge badgeContent={4} color="error">
+                        {/* <Badge badgeContent={0} color="error">
                             {!isMessagesOpen ? (
                                 <MarkunreadOutlinedIcon
                                     sx={{ fontSize: "32px" }}
@@ -311,7 +334,7 @@ export default function Navbar({
                         <MenuItem>Message 1</MenuItem>
                         <MenuItem>Message 2</MenuItem>
                         <MenuItem>Message 3</MenuItem>
-                    </Menu>
+                    </Menu> */}
                 </Dropdown>
 
                 <Dropdown>
@@ -377,10 +400,7 @@ export default function Navbar({
                             Settings
                         </MenuItem>
                         <ListDivider />
-                        <MenuItem component="a" href="/blog/first-look-at-joy/">
-                            First look at Joy UI
-                            <OpenInNewRoundedIcon />
-                        </MenuItem>
+                        
                         <MenuItem
                             component="a"
                             href="https://github.com/mui/material-ui/tree/master/docs/data/joy/getting-started/templates/email"
