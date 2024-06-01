@@ -14,6 +14,8 @@ import {
     Option,
     Snackbar,
     CircularProgress,
+    List,
+    ListItem,
 } from "@mui/joy";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -90,11 +92,14 @@ function NewPostWidget({ onSubmit }) {
         if (content) {
             setLoading(true); // Start loading spinner
             try {
-                const mediaResponse = await mediaing(selectedFiles);
+                var mediaIds = [];
+                if (selectedFiles.length !== 0) {
+                    const mediaResponse = await mediaing(selectedFiles);
 
-                const mediaIds = mediaResponse._embedded.mediaList.map(
-                    (media) => media.id
-                );
+                    mediaIds = mediaResponse._embedded.mediaList.map(
+                        (media) => media.id
+                    );
+                }
 
                 const postData = {
                     content,
@@ -121,18 +126,23 @@ function NewPostWidget({ onSubmit }) {
                 const postId = postResult.id;
 
                 // Attach media to the post
-                await fetch(`http://localhost:8080/journals/${postId}/media`, {
-                    method: "POST",
-                    body: JSON.stringify({ mediaIds: mediaIds }),
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${jwtToken}`,
-                    },
-                });
-                console.log(
-                    "Post created successfully: " +
-                        JSON.stringify({ mediaIds: mediaIds })
-                );
+                if (selectedFiles.length !== 0) {
+                    await fetch(
+                        `http://localhost:8080/journals/${postId}/media`,
+                        {
+                            method: "POST",
+                            body: JSON.stringify({ mediaIds: mediaIds }),
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${jwtToken}`,
+                            },
+                        }
+                    );
+                    console.log(
+                        "Post created successfully: " +
+                            JSON.stringify({ mediaIds: mediaIds })
+                    );
+                }
                 setOpen(true);
                 setContent("");
                 setSelectedFiles([]);
@@ -224,7 +234,9 @@ function NewPostWidget({ onSubmit }) {
                                     {filePreviews.map((preview, index) => (
                                         <Box
                                             key={index}
-                                            sx={{ position: "relative" }}
+                                            sx={{
+                                                position: "relative",
+                                            }}
                                         >
                                             <IconButton
                                                 sx={{
@@ -258,7 +270,9 @@ function NewPostWidget({ onSubmit }) {
                                             </IconButton>
                                             <AspectRatio
                                                 ratio="16/9"
-                                                sx={{ mb: 1 }}
+                                                sx={{
+                                                    mb: 1,
+                                                }}
                                             >
                                                 {selectedFiles[
                                                     index
