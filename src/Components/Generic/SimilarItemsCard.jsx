@@ -39,14 +39,14 @@ const SimilarItem = ({ name, sharedSkills, imgSrc, type, linked, onClick }) => (
         </Typography>
         {type === "people" ? (
           <Typography level="body3" color="neutral">
-            {sharedSkills} shared skills
+            {sharedSkills ? `${sharedSkills} shared skills` : null}
           </Typography>
         ) : null}
       </Box>
     </Box>
     {type === "people" && linked ? null : (
       <Button variant="outlined" color="primary" size="sm">
-        Follow
+        Link
       </Button>
     )}
   </SimilarItemContainer>
@@ -85,7 +85,7 @@ function SimilarItemsCard({ title, items, type, isLoading }) {
             <div key={index}>
               <SimilarItem
                 name={item.name}
-                sharedSkills={item.sharedSkills}
+                sharedSkills={item.sharedSkills ? item.sharedSkills : 0}
                 linked={item.linked}
                 imgSrc={item.imgSrc}
                 type={type}

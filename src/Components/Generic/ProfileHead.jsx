@@ -294,9 +294,7 @@ function ProfileHead({
                     user.fieldOfWork
                   }`}
             </Typography>
-            <Typography level="body2" color="neutral">
-              Palestinian Territory ·{" "}
-            </Typography>
+            <Typography level="body2" color="neutral"></Typography>
           </Box>
         </Box>
         <StackedItems>
@@ -430,7 +428,7 @@ function ProfileHead({
               </LeftContainer>
               <RightContainer>
                 <SimilarItemsCard
-                  title="People You May Know"
+                  title="People With Similar Interests"
                   items={peopleYouMayKnow}
                   type="people"
                   isLoading={isPeopleYouMayKnowLoading}
@@ -459,11 +457,7 @@ function ProfileHead({
         {!userProfile && (
           <ActionButtons
             sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
-          >
-            <ActionButton variant="outlined" color="primary">
-              + Add Journal
-            </ActionButton>
-          </ActionButtons>
+          ></ActionButtons>
         )}
       </Box>
     </div>

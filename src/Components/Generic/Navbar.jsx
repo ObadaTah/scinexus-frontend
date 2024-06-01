@@ -42,6 +42,7 @@ import Logo from "/src/assets/svg/logoText.svg";
 import styles from "./Navbar.module.css";
 import TeamNav from "./Navigation";
 import { useUser } from "../contexts/UserContext";
+import { useStateContext } from "../contexts/StateContext";
 
 export default function Navbar({
   email = "switi.2003@gmail.com",
@@ -55,7 +56,7 @@ export default function Navbar({
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const { logout, jwtToken, user } = useAuth();
   const [data, setData] = useState([]);
-  const [journalModalOpen, setJournalModalOpen] = useState(false);
+  const { journalModalOpen, setJournalModalOpen } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -357,20 +358,7 @@ export default function Navbar({
               <HelpRoundedIcon />
               Help
             </MenuItem>
-            <MenuItem>
-              <SettingsRoundedIcon />
-              Settings
-            </MenuItem>
-            <ListDivider />
 
-            <MenuItem
-              component="a"
-              href="https://github.com/mui/material-ui/tree/master/docs/data/joy/getting-started/templates/email"
-            >
-              Sourcecode
-              <OpenInNewRoundedIcon />
-            </MenuItem>
-            <ListDivider />
             <MenuItem onClick={logout}>
               <LogoutRoundedIcon />
               Log out

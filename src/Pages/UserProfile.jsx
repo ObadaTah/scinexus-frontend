@@ -167,9 +167,13 @@ function UserProfile() {
         maxWidth="lg"
         sx={{ marginTop: "20px", paddingTop: "20px" }}
       >
-        <ProfileHead userProfile={userProfile} />
+        <ProfileHead
+          isPeopleYouMayKnowLoading={isPeopleYouMayKnowLoading}
+          peopleYouMayKnow={peopleYouMayKnow}
+          organizationsYouMayFollow={organizationsYouMayFollow}
+        />
       </ProfileContainer>
-
+      {/* 
       <MainContentContainer>
         <LeftContainer>
           <ProfileCard userProfile={userProfile} />
@@ -188,7 +192,7 @@ function UserProfile() {
             type="organizations"
           />
         </RightContainer>
-      </MainContentContainer>
+      </MainContentContainer> */}
     </div>
   );
 }

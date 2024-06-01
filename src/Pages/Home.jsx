@@ -1,17 +1,19 @@
-import { Container, Grid } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import JournalsList from "../Components/Generic/JournalsList";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../Components/contexts/AuthContext";
-import { useState } from "react";
+import HomeProfileCard from "../Components/Generic/HomeProfileCard";
+import SimilarItemsCard from "../Components/Generic/SimilarItemsCard";
 
 function Home() {
   const { jwtToken } = useAuth();
   const [data, setData] = useState([]);
+  const [isUserYouMayLinkLoading, setisUserYouMayLinkLoading] = useState(false);
+  const [userYouMayLink, setuserYouMayLink] = useState([]);
 
   useEffect(() => {
     async function fetchName() {
       try {
-        // Assuming you have a function to get the JWT token from cookies
         const response = await fetch("http://localhost:8080/users/userinfo", {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -25,44 +27,107 @@ function Home() {
         const data = await response.json();
         console.log("User data:", data);
         setData(data);
-        // Handle redirection here
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
       }
     }
 
     fetchName();
-  }, []);
+  }, [jwtToken]);
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const response = await fetch("http://localhost:8080/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const data = await response.json();
+        console.log("User data:", data);
+
+        const transformedData = data["_embedded"].userList.map((user) => ({
+          id: user.id,
+          name: user.firstName,
+          sharedSkills: user.sharedSkills,
+          imgSrc: user.profilePicture
+            ? user.profilePicture.fileName
+            : "https://i.pravatar.cc/40?img=100",
+          linked: user.accepted,
+        }));
+
+        console.log("Transformed data:", transformedData);
+        setuserYouMayLink(transformedData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+
+    fetchUserData();
+  }, [jwtToken]);
 
   return (
-    <>
-      <Grid
-        // container
-        // spacing={0}
-        // direction="column"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ minHeight: "100vh" }}
+    <Box
+      display="flex"
+      alignItems={{ xs: "center", md: "flex-start" }}
+      justifyContent={{ xs: "center", md: "space-around" }}
+      flexDirection={{ xs: "column", md: "row" }}
+      sx={{ minHeight: "100vh" }}
+      s
+    >
+      <Box
+        sx={{
+          width: { xs: "100%", md: "20%" },
+          paddingLeft: { xs: 0, md: 20 },
+          paddingTop: { xs: 2, md: 13 },
+          position: "sticky",
+          top: { xs: 0, md: 20 }, // Adjust the top value as needed
+          mb: { xs: 2, md: 0 },
+        }}
       >
-        <Container>
-          {/* <Grid item xs={3}> */}
-          <h1>Home</h1>
-          <div>
-            <h1>User Profile</h1>
-            <p>First Name: {data.firstName}</p>
-            <p>Last Name: {data.lastName}</p>
-            <p>Email: {data.email}</p>
-            <p>Username: {data.username}</p>
-            <p>Status: {data.status}</p>
-            {/* Add more fields as needed */}
-          </div>
-          {/* <Container> */}
+        <HomeProfileCard data={data} />
+      </Box>
+      <Box
+        sx={{
+          flexGrow: 1,
+          padding: 2,
+          marginTop: { xs: 10, md: 9 },
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Container sx={{ flexGrow: 1 }}>
           <JournalsList />
-          {/* </Container> */}
-          {/* </Grid> */}
         </Container>
-      </Grid>
-    </>
+      </Box>
+      <Box
+        sx={{
+          width: { xs: "100%", md: "20%" },
+          paddingRight: { xs: 0, md: 2 },
+          paddingTop: { xs: 2, md: 13 },
+          position: "sticky",
+          top: { xs: 0, md: 20 },
+          mb: { xs: 2, md: 0 },
+          zIndex: 2,
+        }}
+      >
+        <SimilarItemsCard
+          title="People You May Link With"
+          items={userYouMayLink}
+          type="people"
+          isLoading={isUserYouMayLinkLoading}
+        />
+      </Box>
+    </Box>
   );
 }
+
 export default Home;

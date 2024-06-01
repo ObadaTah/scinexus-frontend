@@ -33,6 +33,7 @@ import CssBaseline from "@mui/joy/CssBaseline";
 import ChatLayout from "./Components/layouts/ChatLayout";
 import ResearchPaperPage from "./Pages/ResearchPaperPage";
 import ArticlePage from "./Pages/ArticlePage";
+import { StateProvider } from "./Components/contexts/StateContext";
 const defaultTheme = createTheme({
   palette: {
     mode: "dark",
@@ -143,7 +144,9 @@ function App() {
             element={
               <ProtectedRoute>
                 <UserProvider>
-                  <AppLayout />
+                  <StateProvider>
+                    <AppLayout />
+                  </StateProvider>
                 </UserProvider>
               </ProtectedRoute>
             }
