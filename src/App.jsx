@@ -1,12 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "react-bootstrap";
 import {
-    BrowserRouter,
-    Route,
-    Routes,
-    RouterProvider,
-    createBrowserRouter,
-    createRoutesFromElements,
+  BrowserRouter,
+  Route,
+  Routes,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
 } from "react-router-dom";
 import Navbar from "./Components/Generic/Navbar";
 import Login from "./Pages/Auth/Login";
@@ -34,44 +34,44 @@ import ChatLayout from "./Components/layouts/ChatLayout";
 import ResearchPaperPage from "./Pages/ResearchPaperPage";
 import ArticlePage from "./Pages/ArticlePage";
 const defaultTheme = createTheme({
-    palette: {
-        mode: "dark",
-        primary: {
-            main: "#d2191c",
-        },
-        secondary: {
-            main: "#1c24de",
-        },
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#d2191c",
     },
+    secondary: {
+      main: "#1c24de",
+    },
+  },
 });
-const router = createBrowserRouter(
-    createRoutesFromElements(
-        <>
-            <Route path="/" element={<Navbar />}>
-                <Route index element={<Home />} />
+// const router = createBrowserRouter(
+//     createRoutesFromElements(
+//         <>
+//             <Route path="/" element={<Navbar />}>
+//                 <Route index element={<Home />} />
 
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<RegistrationProcess />} />
+//                 <Route path="/login" element={<Login />} />
+//                 <Route path="/register" element={<RegistrationProcess />} />
 
-        <Route path="/settings" element={<Settings />} />
-        {/* <Route path="/logout" element={<Logout />} /> */}
-        <Route path="/myLinks" element={<MyLinks />} />
-        <Route path="/myProfile" element={<MyProfile />} />
+//         <Route path="/settings" element={<Settings />} />
+//         {/* <Route path="/logout" element={<Logout />} /> */}
+//         <Route path="/myLinks" element={<MyLinks />} />
+//         <Route path="/myProfile" element={<MyProfile />} />
 
-        <Route path="/*" element={<NotFound />} />
-      </Route>
-    </>
-  )
-                <Route path="/settings" element={<Settings />} />
-                {/* <Route path="/logout" element={<Logout />} /> */}
-                <Route path="/myLinks" element={<MyLinks />} />
-                <Route path="/myProfile" element={<MyProfile />} />
-                {/* <Route path="/myOrganization" element={<MyOrganization />} /> */}
-                <Route path="/*" element={<NotFound />} />
-            </Route>
-        </>
-    )
-);
+//         <Route path="/*" element={<NotFound />} />
+//       </Route>
+//     </>
+//   )
+//                 <Route path="/settings" element={<Settings />} />
+//                 {/* <Route path="/logout" element={<Logout />} /> */}
+//                 <Route path="/myLinks" element={<MyLinks />} />
+//                 <Route path="/myProfile" element={<MyProfile />} />
+//                 {/* <Route path="/myOrganization" element={<MyOrganization />} /> */}
+//                 <Route path="/*" element={<NotFound />} />
+//             </Route>
+//         </>
+//     )
+// );
 // function App() {
 //   return (
 //     <AuthProvider>
@@ -86,15 +86,15 @@ const router = createBrowserRouter(
 // }
 
 function App() {
-    return (
-        <AuthProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="login" element={<Login />} />
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="login" element={<Login />} />
 
-                    <Route path="settings" element={<Settings />} />
-                    <Route path="register" element={<RegistrationProcess />} />
-                    <Route path="logo" element={<AuthPagesHeader />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="register" element={<RegistrationProcess />} />
+          <Route path="logo" element={<AuthPagesHeader />} />
 
           <Route
             path="/"
@@ -152,36 +152,12 @@ function App() {
             <Route path="profile" element={<MyProfile />} />
             <Route path="profile/:userId" element={<UserProfile />} />{" "}
             <Route path="myLinks" element={<MyLinks />} />
+            <Route path="research-paper" element={<ResearchPaperPage />} />
+            <Route path="article" element={<ArticlePage />} />
           </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
   );
-                    <Route path="nav" element={<Navbar />} />
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <UserProvider>
-                                    <AppLayout />
-                                </UserProvider>
-                            </ProtectedRoute>
-                        }
-                    >
-                        <Route index element={<Home />} />
-                        <Route path="profile" element={<MyProfile />} />
-                        <Route
-                            path="research-paper"
-                            element={<ResearchPaperPage />}
-                        />
-                        <Route path="article" element={<ArticlePage />} />
-
-                        <Route path="myLinks" element={<MyLinks />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        </AuthProvider>
-    );
 }
-
 export default App;
