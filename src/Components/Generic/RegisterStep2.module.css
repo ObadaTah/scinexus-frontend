@@ -1,14 +1,14 @@
 .main {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
   background-color: #f8f8f8;
   width: 100%;
-  height: 100vh;
-
+  flex: 1 0 auto; /* Allow main to grow and shrink */
   row-gap: 30px;
+  padding: 20px 0; /* Add some padding to prevent the header from overlapping */
 }
+
 .container {
   display: flex;
   align-items: flex-start;
@@ -18,6 +18,8 @@
   width: 40%;
   padding: 20px;
   min-width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 .optionContainer {
@@ -27,7 +29,7 @@
   padding: 0;
   margin: 10px 0;
   width: 100%;
-  height: auto; /* Allow the container to expand dynamically */
+  height: auto;
 }
 
 .option {
@@ -35,23 +37,48 @@
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 60px; /* Set the height of each option card */
+  height: 60px;
   border: 1px solid #dddde2;
-  margin: 10px 0; /* Adjust margin as needed */
+  margin: 10px 0;
   cursor: pointer;
   column-gap: 3%;
   padding: 0 10px;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.option:hover {
+  background-color: #eaeaea;
 }
 
 .selected {
-  background-color: #f0f0f0; /* Change background color when selected */
-  border-color: #999999; /* Change border color when selected */
-  font-weight: bold; /* Example: Make text bold when selected */
-  /* Add any other styles for selected state */
+  background-color: #f0f0f0;
+  border-color: #999999;
+  font-weight: bold;
 }
 
 .footer {
   display: flex;
   width: 100%;
   justify-content: space-between;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 80%;
+    padding: 10px;
+  }
+
+  .option {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 10px;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+  }
 }

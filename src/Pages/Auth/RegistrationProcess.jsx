@@ -300,6 +300,7 @@ function RegistrationProcess() {
           setSelectedOption={setSelectedOption}
           position={position}
           setPosition={setPosition}
+          oAuthProvider={oAuthProvider}
         />
       )}
       {/* {step === 3 && role === "ORGANIZATION" && (

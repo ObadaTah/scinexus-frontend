@@ -1,6 +1,5 @@
 import { Header } from "antd/es/layout/layout";
 import styles from "./AuthPagesHeader.module.css";
-
 import Logo from "/src/assets/svg/logoText.svg"; // Correct import
 
 function AuthPagesHeader({ bgColor, paddingBottom }) {

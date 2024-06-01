@@ -1,30 +1,3 @@
-import AuthPagesHeader from "../../Components/Generic/AuthPagesHeader";
-import styles from "../../Components/Generic/Register.module.css";
-import st from "../../Components/Generic/RegisterAcademicStep3.module.css";
-import { useEffect, useState } from "react";
-import Stack from "@mui/joy/Stack";
-import Input from "@mui/joy/Input";
-import Button from "@mui/joy/Button";
-import LinearProgress from "@mui/joy/LinearProgress";
-import Typography from "@mui/joy/Typography";
-import Key from "@mui/icons-material/Key";
-import { Link } from "react-router-dom";
-import Textarea from "@mui/joy/Textarea";
-const excludedCountries = ["US", "CA", "AU"]; // Example of countries to exclude
-import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Autocomplete from "@mui/joy/Autocomplete";
-import CircularProgress from "@mui/joy/CircularProgress";
-import EmailConfirmation from "./EmailConfirmation";
-import Alert from "@mui/joy/Alert";
-import WarningIcon from "@mui/icons-material/Warning";
-import CheckCricleIcon from "@mui/icons-material/CheckCircle";
-
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 const fieldOfWorkOptions = [
   "Accounting",
   "Aerospace Engineering",
@@ -140,7 +113,33 @@ const fieldOfWorkOptions = [
   "Virology",
   "Zoology",
 ];
+import AuthPagesHeader from "../../Components/Generic/AuthPagesHeader";
+import styles from "../../Components/Generic/Register.module.css";
+import st from "../../Components/Generic/RegisterAcademicStep3.module.css";
+import { useEffect, useState } from "react";
+import Stack from "@mui/joy/Stack";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
+import LinearProgress from "@mui/joy/LinearProgress";
+import Typography from "@mui/joy/Typography";
+import Key from "@mui/icons-material/Key";
+import { Link } from "react-router-dom";
+import Textarea from "@mui/joy/Textarea";
+const excludedCountries = ["US", "CA", "AU"]; // Example of countries to exclude
+import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Autocomplete from "@mui/joy/Autocomplete";
+import CircularProgress from "@mui/joy/CircularProgress";
+import EmailConfirmation from "./EmailConfirmation";
+import Alert from "@mui/joy/Alert";
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckCricleIcon from "@mui/icons-material/CheckCircle";
 
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 const schema = Yup.object().shape({
   phoneNumber: Yup.string()
     .required("Phone number is required")
@@ -238,10 +237,28 @@ function RegisterStep3({
 
   return (
     <div className={styles.container}>
-      <main className={styles.main}>
-        <AuthPagesHeader />
+      <main
+        className={styles.main}
+        style={{
+          border: "1px solid #e0e0e0",
+          borderRadius: "5px",
+          backgroundColor: "#ffffff",
+        }}
+      >
+        <AuthPagesHeader
+          bgColor={"#ffffff"}
+          style={{
+            backgroundColor: "#ffffff",
+          }}
+        />
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form
+          className={styles.form}
+          style={{
+            bgcolor: "#ffffff",
+          }}
+          onSubmit={handleSubmit}
+        >
           <Stack spacing={2} direction="column">
             <div>
               <label htmlFor="username">Username</label>
