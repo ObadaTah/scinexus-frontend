@@ -3,7 +3,7 @@
     /* z-index: 1000; */
     float: left;
     bottom: 40px;
-    left: 5px;
+    left: -5px;
 }
 .reactionButton {
     overflow: hidden;

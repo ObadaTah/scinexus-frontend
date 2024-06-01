@@ -8,10 +8,10 @@ import * as React from "react";
 import ReactionButton from "../Components/ReactionButton";
 import OpinionBar from "./OpinionBar";
 import { useAuth } from "../../contexts/AuthContext";
-import EditIcon from "@mui/icons-material/Edit"; // Import edit icon
 import DeleteIcon from "@mui/icons-material/Delete"; // Import delete icon
 import { Textarea } from "@mui/joy";
-
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
 function Opinion(props) {
     const { jwtToken } = useAuth();
     async function updateOpinion(content, id) {
@@ -37,10 +37,27 @@ function Opinion(props) {
             },
         });
         if (response.ok) {
+            console.log(props.opinions);
             // Remove the opinion from the state
-            props.setOpinions((prevOpinions) =>
-                prevOpinions.filter((opinion) => opinion.id !== id)
-            );
+            let newOpinions = [];
+            props.opinions.map((opinion) => {
+                if (opinion.id == id) {
+                    return;
+                }
+                let newSubOpinions = [];
+                opinion.subOpinions.map((subOpinion) => {
+                    if (subOpinion.id != id) newSubOpinions.push(subOpinion);
+                });
+                opinion.subOpinions = newSubOpinions;
+                newOpinions.push(opinion);
+            });
+            console.log(newOpinions);
+            props.setOpinions(newOpinions);
+            // props.setOpinions((prevOpinions) =>
+            //     prevOpinions.filter((opinion) => opinion.id !== id)
+            // );
+
+            props.setOpinionCountState(props.opinionCountState - 1);
         }
     }
 
@@ -63,7 +80,13 @@ function Opinion(props) {
     return (
         <>
             <Card
+                // size="sm"
+                style={{
+                    paddingBottom: "0px",
+                    marginBottom: "10px",
+                }}
                 sx={{
+                    // mb: 1,
                     width: props.papaOpinion == null ? "100%" : "90%",
                     "--Card-radius": (theme) => "15px",
                 }}
@@ -110,17 +133,17 @@ function Opinion(props) {
                     {props.opinionOwner.email === user.USER.email && (
                         <>
                             <IconButton
-                                variant="plain"
-                                color="neutral"
+                                variant="outlined"
+                                color="primary"
                                 size="sm"
                                 onClick={handleEdit}
                                 sx={{ ml: "auto" }}
                             >
-                                <EditIcon />
+                                {isEditing ? <SaveIcon /> : <EditIcon />}
                             </IconButton>
                             <IconButton
-                                variant="plain"
-                                color="neutral"
+                                variant="outlined"
+                                color="danger"
                                 size="sm"
                                 onClick={handleDelete}
                             >
