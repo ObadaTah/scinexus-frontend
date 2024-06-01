@@ -62,6 +62,10 @@ import { useUser } from "../contexts/UserContext"; // Correct import path
 import { useState } from "react";
 import { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import ArticlesTab from "../../Pages/Tabs/ArticlesTab";
+import ResearchpapersTab from "../../Pages/Tabs/ResearchpapersTab";
+import PostsTab from "../../Pages/Tabs/PostsTab";
+import SimilarItemsCard from "./SimilarItemsCard";
 const StyledTabs = styled(Tabs)({
   "& .MuiTabs-indicator": {
     backgroundColor: "var(--joy-palette-primary-main)",
@@ -126,7 +130,47 @@ const StackedItems = styled(Box)({
   },
 });
 
-function ProfileHead({ userProfile }) {
+const MainContentContainer = styled(Box)({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "flex-start",
+  alignItems: "flex-start",
+  gap: "20px",
+  width: "100%",
+  marginTop: "20px",
+  maxWidth: "1200px", // Ensure consistent max width
+  "@media (max-width: 960px)": {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+});
+const LeftContainer = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+  width: "70%", // Adjust width as needed
+  "@media (max-width: 960px)": {
+    alignItems: "center",
+    width: "100%", // Full width on smaller screens
+  },
+});
+const RightContainer = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+  width: "30%", // Adjust width as needed
+  "@media (max-width: 960px)": {
+    alignItems: "center",
+    width: "100%", // Full width on smaller screens
+  },
+});
+
+function ProfileHead({
+  userProfile,
+  peopleYouMayKnow,
+  organizationsYouMayFollow,
+  isPeopleYouMayKnowLoading,
+}) {
   let user = userProfile;
 
   if (userProfile === undefined) {
@@ -377,6 +421,39 @@ function ProfileHead({ userProfile }) {
             <StyledTab>Researches</StyledTab>
             <StyledTab>Posts</StyledTab>
           </TabList>
+
+          <TabPanel value={0}>
+            <MainContentContainer>
+              <LeftContainer>
+                <ProfileCard />
+                <AboutMeCard />
+              </LeftContainer>
+              <RightContainer>
+                <SimilarItemsCard
+                  title="People You May Know"
+                  items={peopleYouMayKnow}
+                  type="people"
+                  isLoading={isPeopleYouMayKnowLoading}
+                />
+                <SimilarItemsCard
+                  title="Organizations You May Follow"
+                  items={organizationsYouMayFollow}
+                  type="organizations"
+                />
+              </RightContainer>
+            </MainContentContainer>
+          </TabPanel>
+
+          <TabPanel value={1}>
+            <ArticlesTab id={user.id} />
+          </TabPanel>
+          <TabPanel value={2}>
+            <ResearchpapersTab id={user.id} />
+          </TabPanel>
+
+          <TabPanel value={3}>
+            <PostsTab id={user.id} />
+          </TabPanel>
         </StyledTabs>
 
         {!userProfile && (
