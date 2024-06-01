@@ -49,6 +49,19 @@ export default function MyProfile() {
     //@ts-ignore
   }, [messages, selectedChatDemo.username]);
 
+  function onLogout() {
+    const stompClient = stompClientRef.current;
+    if (stompClient && user) {
+      stompClient.publish({
+        destination: "/app/user.disconnectUser",
+        body: JSON.stringify({
+          username: user.username,
+          fullName: `${user.firstName} ${user.lastName}`,
+          status: "OFFLINE",
+        }),
+      });
+    }
+  }
   function connect() {
     const client = new Client({
       brokerURL: "ws://localhost:8080/ws/websocket",

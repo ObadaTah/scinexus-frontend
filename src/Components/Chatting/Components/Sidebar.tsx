@@ -29,7 +29,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import BrightnessAutoRoundedIcon from "@mui/icons-material/BrightnessAutoRounded";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
 // @ts-ignore
 import Logo from "/src/assets/svg/logoText.svg"; // Adjust this path if necessary
 import ColorSchemeToggle from "./ColorSchemeToggle";
@@ -66,11 +66,17 @@ function Toggler(props: {
     </React.Fragment>
   );
 }
-
+import { useNavigate } from "react-router-dom";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 export default function Sidebar() {
   //@ts-ignore
   const { user } = useUser();
   const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  function navigateTo(path: string) {
+    navigate(path);
+  }
 
   return (
     <Sheet
@@ -137,11 +143,7 @@ export default function Sidebar() {
         />
         <ColorSchemeToggle sx={{ ml: "auto" }} />
       </Box>
-      <Input
-        size="sm"
-        startDecorator={<SearchRoundedIcon />}
-        placeholder="Search"
-      />
+
       <Box
         sx={{
           minHeight: 0,
@@ -163,7 +165,7 @@ export default function Sidebar() {
           }}
         >
           <ListItem>
-            <ListItemButton>
+            <ListItemButton onClick={() => navigateTo("/")}>
               <HomeRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Home</Typography>
@@ -171,8 +173,8 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
           <ListItem>
-            <ListItemButton>
-              <DashboardRoundedIcon />
+            <ListItemButton onClick={() => navigateTo("/profile")}>
+              <PersonOutlineOutlinedIcon />
               <ListItemContent>
                 <Typography level="title-sm">My Profile</Typography>
               </ListItemContent>
@@ -184,7 +186,7 @@ export default function Sidebar() {
               component="a"
               href="/joy-ui/getting-started/templates/order-dashboard/"
             >
-              <ShoppingCartRoundedIcon />
+              <InsertLinkOutlinedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Connections</Typography>
               </ListItemContent>
@@ -213,12 +215,7 @@ export default function Sidebar() {
             mb: 2,
           }}
         >
-          <ListItem>
-            <ListItemButton>
-              <SupportRoundedIcon />
-              Support
-            </ListItemButton>
-          </ListItem>
+          <ListItem></ListItem>
           <ListItem>
             <ListItemButton>
               <SettingsRoundedIcon />

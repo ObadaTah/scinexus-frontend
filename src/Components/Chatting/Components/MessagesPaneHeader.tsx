@@ -11,6 +11,7 @@ import PhoneInTalkRoundedIcon from "@mui/icons-material/PhoneInTalkRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import { UserProps } from "../../../types";
 import { toggleMessagesPane } from "../../../utils";
+import { useNavigate } from "react-router-dom";
 
 type MessagesPaneHeaderProps = {
   sender: UserProps;
@@ -18,6 +19,16 @@ type MessagesPaneHeaderProps = {
 
 export default function MessagesPaneHeader(props: MessagesPaneHeaderProps) {
   const { sender } = props;
+  const navigate = useNavigate();
+
+  console.log("Sender", sender);
+  function onClick(id) {
+    if (!id) return;
+    console.log("Clicked on item with id:", id);
+
+    navigate(`/profile/${id}`);
+  }
+
   return (
     <Stack
       direction="row"
@@ -75,23 +86,13 @@ export default function MessagesPaneHeader(props: MessagesPaneHeaderProps) {
       </Stack>
       <Stack spacing={1} direction="row" alignItems="center">
         <Button
-          startDecorator={<PhoneInTalkRoundedIcon />}
           color="neutral"
           variant="outlined"
           size="sm"
           sx={{
             display: { xs: "none", md: "inline-flex" },
           }}
-        >
-          Call
-        </Button>
-        <Button
-          color="neutral"
-          variant="outlined"
-          size="sm"
-          sx={{
-            display: { xs: "none", md: "inline-flex" },
-          }}
+          onClick={() => onClick(sender.id)}
         >
           View profile
         </Button>

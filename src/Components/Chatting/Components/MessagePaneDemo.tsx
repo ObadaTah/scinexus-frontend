@@ -38,6 +38,7 @@ export default function MessagesPaneDemo(props: any) {
           username: `@${chat.username}`,
           avatar: "/static/images/avatar/2.jpg",
           online: chat.status === "ONLINE",
+          id: chat.userId,
         }}
       />
       <Box

@@ -64,7 +64,8 @@ export default function Navbar({ bgColor }) {
     setIsNotificationOpen(!isNotificationOpen);
   };
   const handleMessagesClick = () => {
-    setIsMessagesOpen(!isMessagesOpen);
+    navigate("/chatting");
+    // setIsMessagesOpen(!isMessagesOpen);
   };
 
   return (
@@ -238,7 +239,7 @@ export default function Navbar({ bgColor }) {
             size="md"
             sx={{ alignSelf: "center" }}
           >
-            <Badge badgeContent={4} color="error">
+            <Badge badgeContent={0} color="error">
               {!isMessagesOpen ? (
                 <MarkunreadOutlinedIcon
                   sx={{
