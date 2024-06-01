@@ -3,7 +3,6 @@ import JournalsList from "../Components/Generic/JournalsList";
 import { useEffect } from "react";
 import { useAuth } from "../Components/contexts/AuthContext";
 import { useState } from "react";
-import NewPostWidget from "../Components/Jouranl/Components/NewPostWidget";
 
 function Home() {
     const { jwtToken } = useAuth();
@@ -64,7 +63,6 @@ function Home() {
                         {/* Add more fields as needed */}
                     </div>
                     {/* <Container> */}
-                    <NewPostWidget />
                     <JournalsList />
                     {/* </Container> */}
                     {/* </Grid> */}
