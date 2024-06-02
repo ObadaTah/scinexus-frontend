@@ -29,6 +29,7 @@ function getTimeDifference(dateString) {
 
 function ResearchPaperPage() {
   const [summarize, setSummarize] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const location = useLocation();
   const [csvData, setCsvData] = useState("");
   const [numPages, setNumPages] = useState();
@@ -66,7 +67,7 @@ function ResearchPaperPage() {
 
         setNumPages(numPages);
         setPdfText(text);
-        console.log("PDF TEXT:", text);
+        // console.log("PDF TEXT:", text);
       } catch (error) {
         console.error("Error extracting text:", error);
       }
@@ -106,7 +107,7 @@ function ResearchPaperPage() {
         });
 
         setCompletionText(completion.choices[0].message.content);
-        console.log("OCTO AI:", completion.choices[0].message.content);
+        // console.log("OCTO AI:", completion.choices[0].message.content);
       } catch (error) {
         console.error("Error creating completion:", error);
       }
@@ -136,7 +137,12 @@ function ResearchPaperPage() {
               {getTimeDifference(location.state.createDateTime)} | {numPages}{" "}
               Pages | {location.state.medias.length} File
             </Typography>
-            <Button onClick={() => setSummarize(true)}>
+            <Button
+              onClick={() => {
+                setSummarize(true);
+                setOpenModal(true);
+              }}
+            >
               Summarize Research Paper
             </Button>
           </Grid>
@@ -181,7 +187,7 @@ function ResearchPaperPage() {
         <Grid container spacing={2}>
           <Grid item xs={12} sx={{ my: 4 }}>
             {location.state.medias.map((media) => {
-              console.log(media);
+              // console.log(media);
               if (media.type === "application/pdf") {
                 return (
                   <Paper elevation={3} sx={{ p: 2 }}>
@@ -244,8 +250,8 @@ function ResearchPaperPage() {
       </Box>
 
       <PdfSummrizerModal
-        open={summarize}
-        setOpen={setSummarize}
+        open={openModal}
+        setOpen={setOpenModal}
         summarizedText={completionText}
       />
     </>

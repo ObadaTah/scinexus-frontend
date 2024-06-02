@@ -58,7 +58,7 @@ export const UserProvider = ({ children }) => {
   const [user, dispatch] = useReducer(userReducer, initialState);
 
   const setUser = (userData) => {
-    console.log("USER DATA FROM SETTER", userData);
+    // console.log("USER DATA FROM SETTER", userData);
     dispatch({ type: SET_USER, payload: userData });
   };
 
@@ -80,11 +80,11 @@ export const UserProvider = ({ children }) => {
           throw new Error("Failed to fetch user data");
         }
         const userData = await response.json();
-        console.log("USER DATA FROM FETCH BEFORE", userData);
+        // console.log("USER DATA FROM FETCH BEFORE", userData);
         if (userData.profilePicture)
           userData.profilePicture = `http://localhost:8080/medias/${userData.profilePicture.id}/files`;
 
-        console.log("USER DATA FROM FETCH AFTER", userData);
+        // console.log("USER DATA FROM FETCH AFTER", userData);
         setUser(userData);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -98,7 +98,6 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider value={{ user, setUser, updateUser }}>
-      {console.log("User From Context:", user)}
       {children}
     </UserContext.Provider>
   );
