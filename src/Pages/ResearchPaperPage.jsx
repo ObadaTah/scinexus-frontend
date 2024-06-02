@@ -2,11 +2,16 @@ import { Avatar, Button } from "@mui/joy";
 import { useEffect, useState } from "react";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import { useLocation } from "react-router-dom";
-
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { pdfjs } from "react-pdf";
 import { Container } from "react-bootstrap";
+
+import PdfSummrizerModal from "../Components/Generic/PdfSummrizerModal";
 pdfjs.GlobalWorkerOptions.workerSrc = `../../../src/pdf.worker.min.mjs`;
+import { Client } from "@octoai/client";
+
+const client = new Client(process.env.REACT_APP_OCTOAI_TOKEN);
+
 function getTimeDifference(dateString) {
   const date = new Date(dateString);
   const currentDate = new Date();
@@ -21,14 +26,101 @@ function getTimeDifference(dateString) {
     return `${daysDifference} Days Ago`;
   }
 }
+
 function ResearchPaperPage() {
+  const [summarize, setSummarize] = useState(false);
+  const location = useLocation();
+  const [csvData, setCsvData] = useState("");
   const [numPages, setNumPages] = useState();
   const [pageNumber, setPageNumber] = useState(1);
+  const [pdfText, setPdfText] = useState("");
+  const [completionText, setCompletionText] = useState("");
+
+  useEffect(() => {
+    if (!summarize) return;
+
+    async function getPdfText() {
+      try {
+        const pdfMedia = location.state.medias.find(
+          (media) => media.type === "application/pdf"
+        );
+        if (!pdfMedia) {
+          console.error("No PDF media found");
+          return;
+        }
+
+        const response = await fetch(
+          `http://localhost:8080/medias/${pdfMedia.id}/files`
+        );
+        const buffer = await response.arrayBuffer();
+        const pdf = await pdfjs.getDocument({ data: buffer }).promise;
+        const numPages = pdf.numPages;
+
+        let text = "";
+        for (let i = 1; i <= numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const strings = content.items.map((item) => item.str);
+          text += strings.join(" ");
+        }
+
+        setNumPages(numPages);
+        setPdfText(text);
+        console.log("PDF TEXT:", text);
+      } catch (error) {
+        console.error("Error extracting text:", error);
+      }
+    }
+
+    getPdfText();
+  }, [location.state.medias, summarize]);
+
+  useEffect(() => {
+    async function fetchCompletion() {
+      const contextLimit = 8192;
+      const maxTokens = 512;
+
+      let truncatedText = pdfText;
+
+      // Ensure the length of the prompt + max_tokens does not exceed the context limit
+      if (pdfText.length + maxTokens > contextLimit) {
+        const availableTokens = contextLimit - maxTokens;
+        truncatedText = pdfText.slice(0, availableTokens);
+      }
+
+      try {
+        const completion = await client.chat.completions.create({
+          model: "llama-2-13b-chat-fp16",
+          messages: [
+            {
+              role: "system",
+              content:
+                "Hello, I am a friendly AI assistant, how can I help you today?",
+            },
+            {
+              role: "user",
+              content: `Can you summarize this research paper for me? ${truncatedText}`,
+            },
+          ],
+          max_tokens: maxTokens,
+        });
+
+        setCompletionText(completion.choices[0].message.content);
+        console.log("OCTO AI:", completion.choices[0].message.content);
+      } catch (error) {
+        console.error("Error creating completion:", error);
+      }
+    }
+
+    if (pdfText) {
+      fetchCompletion();
+    }
+  }, [pdfText]);
+
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
-  let location = useLocation();
-  console.log(location.state);
+
   return (
     <>
       <Box sx={{ m: 4 }}>
@@ -41,19 +133,13 @@ function ResearchPaperPage() {
               {location.state.description}
             </Typography>
             <Typography variant="body2" color="textSecondary" gutterBottom>
-              {getTimeDifference(location.state.createDateTime)} |{" "}
-              {location.state.noOfPages} Pages | {location.state.medias.length}{" "}
-              File
+              {getTimeDifference(location.state.createDateTime)} | {numPages}{" "}
+              Pages | {location.state.medias.length} File
             </Typography>
+            <Button onClick={() => setSummarize(true)}>
+              Summarize Research Paper
+            </Button>
           </Grid>
-          {/* <Box item sx={{ my: 2 }}>
-                        <Button variant="contained" color="primary" sx={{ mr: 2 }}>
-                        Download PDF
-                    </Button>
-                    <Button variant="contained" color="secondary">
-                        Download Full PDF Package
-                    </Button>
-                    </Box> */}
           <Grid item xs={3}>
             <Paper elevation={3} sx={{ p: 2 }}>
               <Typography variant="h6" gutterBottom>
@@ -119,18 +205,7 @@ function ResearchPaperPage() {
                           border: "none",
                         }}
                         src={`http://localhost:8080/medias/${media.id}/files`}
-                        // frameborder="0"
                       ></iframe>
-                      {/* <Document
-                                                style={{ maxWidth: "100%" }}
-                                                // renderMode="none"
-                                                file={`http://localhost:8080/medias/${media.id}/files`}
-                                                onLoadSuccess={
-                                                    onDocumentLoadSuccess
-                                                }
-                                            >
-                                                <Page pageNumber={pageNumber} />
-                                            </Document> */}
                     </Box>
                   </Paper>
                 );
@@ -147,39 +222,37 @@ function ResearchPaperPage() {
                   });
 
                 return (
-                  <>
-                    {/* <Button onAbort={load}>
-                                            Load CSV Table
-                                        </Button> */}
-                    <Box
-                      sx={{
-                        my: 4,
-                        border: "5px groove #b0b0af",
-                        height: " 100vh",
-                        backgroundColor: "#f0f0f0",
-                        overflow: "auto",
-                        width: "90vw",
-                      }}
-                    >
-                      <CsvToHtmlTable
-                        id="csv"
-                        data={csvData}
-                        csvDelimiter=","
-                        tableClassName="table table-striped table-hover box"
-                      />
-                    </Box>
-                  </>
+                  <Box
+                    sx={{
+                      my: 4,
+                      border: "5px groove #b0b0af",
+                      height: " 100vh",
+                      backgroundColor: "#f0f0f0",
+                      overflow: "auto",
+                      width: "90vw",
+                    }}
+                  >
+                    <CsvToHtmlTable
+                      id="csv"
+                      data={csvData}
+                      csvDelimiter=","
+                      tableClassName="table table-striped table-hover box"
+                    />
+                  </Box>
                 );
               }
             })}
           </Grid>
         </Grid>
       </Box>
+
+      <PdfSummrizerModal
+        open={summarize}
+        setOpen={setSummarize}
+        summarizedText={completionText}
+      />
     </>
   );
 }
+
 export default ResearchPaperPage;
-
-// <Container>
-
-// </Container>
