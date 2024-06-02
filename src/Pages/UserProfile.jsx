@@ -168,6 +168,7 @@ function UserProfile() {
         sx={{ marginTop: "20px", paddingTop: "20px" }}
       >
         <ProfileHead
+          userProfile={userProfile}
           isPeopleYouMayKnowLoading={isPeopleYouMayKnowLoading}
           peopleYouMayKnow={peopleYouMayKnow}
           organizationsYouMayFollow={organizationsYouMayFollow}
