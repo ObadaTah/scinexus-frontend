@@ -73,12 +73,13 @@ function NewResearchPaper(props) {
                         variant="soft"
                         color="warning"
                         orientation="horizontal"
+                        backgroundcolor="#f9f7f4"
                         style={{
                             minWidth: "100%",
-                            borderTop: "1px solid #d49515",
-                            borderRight: "1px solid #d49515",
-                            borderBottom: "1px solid #d49515",
-                            borderLeft: "4px solid #d49515",
+                            borderTop: "1px solid #cdc5af",
+                            borderRight: "1px solid #cdc5af",
+                            borderBottom: "1px solid #cdc5af",
+                            borderLeft: "4px solid #cdc5af",
                             // border,
                         }}
                     >

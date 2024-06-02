@@ -17,7 +17,7 @@ export default function BioCard(props) {
     return (
         <Card
             sx={{
-                width: 320,
+                // width: 320,
                 maxWidth: "100%",
                 boxShadow: "lg",
             }}
@@ -124,10 +124,7 @@ export default function BioCard(props) {
                         sx={{ bgcolor: "background.surface" }}
                     >
                         <Button>Message</Button>
-                        <LinkButton
-                            email={props.publisher.email}
-                            id={props.publisher.id}
-                        />
+                        <LinkButton id={props.publisher.id} />
                     </ButtonGroup>
                 </CardActions>
             </CardOverflow>

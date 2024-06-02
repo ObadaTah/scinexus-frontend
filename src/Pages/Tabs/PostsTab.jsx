@@ -4,11 +4,13 @@ import { helix } from "ldrs";
 import NewPost from "../../Components/Jouranl/Post/NewPost";
 import { useAuth } from "../../Components/contexts/AuthContext";
 import SkeletonLoader from "../../Components/Jouranl/Post/SkeletonLoader";
+import { Snackbar } from "@mui/joy";
 
 function PostsTab() {
     const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState("block");
     const { jwtToken } = useAuth();
+    const [open, setOpen] = useState(false);
 
     useEffect(function () {
         async function getAllPosts() {
@@ -21,7 +23,12 @@ function PostsTab() {
             });
             if (response.status === 200 || response.status === 201) {
                 const data = await response.json();
-                setPosts(data["_embedded"].postList);
+                if (data["_embedded"] === undefined) {
+                    setPosts([]);
+                    setIsLoading("none");
+                    return;
+                }
+                setPosts(data["_embedded"]?.postList);
                 console.log(data["_embedded"].postList);
             } else {
                 // Handle error
@@ -63,11 +70,40 @@ function PostsTab() {
                                 }
                             }
                         >
-                            <NewPost {...post} owner={true} />
+                            <NewPost
+                                open={open}
+                                setOpen={setOpen}
+                                {...post}
+                                owner={true}
+                            />
                         </Grid>
                     ))}
+                    {posts.length === 0 && (
+                        <Grid
+                            item
+                            xs={12}
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
+                            }}
+                        >
+                            <h1>You Don't have any Posts</h1>
+                        </Grid>
+                    )}
                 </Grid>
             </Container>
+            <Snackbar
+                autoHideDuration={3000}
+                open={open}
+                variant={"solid"}
+                color="danger"
+                onClose={(event) => {
+                    setOpen(false);
+                }}
+            >
+                Your Post has Been Deleted{" "}
+            </Snackbar>
         </>
     );
 }

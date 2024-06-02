@@ -24,8 +24,12 @@ function ArticlesTab() {
             );
             if (response.status === 200 || response.status === 201) {
                 const data = await response.json();
+                if (data["_embedded"] === undefined) {
+                    setArticles([]);
+                    setIsLoading("none");
+                    return;
+                }
                 setArticles(data["_embedded"].articleList);
-                console.log(data["_embedded"].articleList);
             } else {
                 // Handle error
             }
@@ -47,7 +51,7 @@ function ArticlesTab() {
                 }}
             >
                 <SkeletonLoader
-                    style={{ width: "100%" }}
+                    // style={{ maxWidth: "50%" }}
                     isLoading={isLoading}
                 />
                 <Grid spacing={5} container>
@@ -67,6 +71,19 @@ function ArticlesTab() {
                             <Article {...article} />
                         </Grid>
                     ))}
+                    {articles.length === 0 && (
+                        <Grid
+                            item
+                            xs={12}
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
+                            }}
+                        >
+                            <h1>You Don't Have Any Articles</h1>
+                        </Grid>
+                    )}
                 </Grid>
             </Container>
         </>

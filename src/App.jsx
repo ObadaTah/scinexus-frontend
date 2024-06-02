@@ -1,12 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "react-bootstrap";
 import {
-  BrowserRouter,
-  Route,
-  Routes,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
+    BrowserRouter,
+    Route,
+    Routes,
+    RouterProvider,
+    createBrowserRouter,
+    createRoutesFromElements,
 } from "react-router-dom";
 import Navbar from "./Components/Generic/Navbar";
 import Login from "./Pages/Auth/Login";
@@ -34,16 +34,17 @@ import ChatLayout from "./Components/layouts/ChatLayout";
 import ResearchPaperPage from "./Pages/ResearchPaperPage";
 import ArticlePage from "./Pages/ArticlePage";
 import { StateProvider } from "./Components/contexts/StateContext";
+import Search from "./Pages/Search";
 const defaultTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#d2191c",
+    palette: {
+        mode: "dark",
+        primary: {
+            main: "#d2191c",
+        },
+        secondary: {
+            main: "#1c24de",
+        },
     },
-    secondary: {
-      main: "#1c24de",
-    },
-  },
 });
 // const router = createBrowserRouter(
 //     createRoutesFromElements(
@@ -87,80 +88,92 @@ const defaultTheme = createTheme({
 // }
 
 function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="login" element={<Login />} />
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="login" element={<Login />} />
 
-          <Route path="settings" element={<Settings />} />
-          <Route path="register" element={<RegistrationProcess />} />
-          <Route path="logo" element={<AuthPagesHeader />} />
+                    <Route path="settings" element={<Settings />} />
+                    <Route path="register" element={<RegistrationProcess />} />
+                    <Route path="logo" element={<AuthPagesHeader />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <UserProvider>
-                  <ChatLayout />
-                </UserProvider>
-              </ProtectedRoute>
-            }
-          >
-            <Route
-              path="chatting"
-              element={
-                <CssVarsProvider disableTransitionOnChange>
-                  <CssBaseline />
-                  <Box sx={{ display: "flex", minHeight: "100dvh" }}>
-                    <Sidebar />
-                    <Header />
-                    <Box
-                      component="main"
-                      className="MainContent"
-                      sx={{ flex: 1 }}
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <UserProvider>
+                                    <ChatLayout />
+                                </UserProvider>
+                            </ProtectedRoute>
+                        }
                     >
-                      <MyMessages />
-                    </Box>
-                  </Box>
-                </CssVarsProvider>
-              }
-            />
-          </Route>
-          <Route
-            path="admin"
-            element={
-              <ProtectedRoute>
-                <UserProvider>
-                  <AdminAppLayout />
-                </UserProvider>
-              </ProtectedRoute>
-            }
-          >
-            <Route path="dashboard" element={<AdminDashboard />} />
-          </Route>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <UserProvider>
-                  <StateProvider>
-                    <AppLayout />
-                  </StateProvider>
-                </UserProvider>
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Home />} />
-            <Route path="profile" element={<MyProfile />} />
-            <Route path="profile/:userId" element={<UserProfile />} />{" "}
-            <Route path="myLinks" element={<MyLinks />} />
-            <Route path="research-paper" element={<ResearchPaperPage />} />
-            <Route path="article" element={<ArticlePage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  );
+                        <Route
+                            path="chatting"
+                            element={
+                                <CssVarsProvider disableTransitionOnChange>
+                                    <CssBaseline />
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            minHeight: "100dvh",
+                                        }}
+                                    >
+                                        <Sidebar />
+                                        <Header />
+                                        <Box
+                                            component="main"
+                                            className="MainContent"
+                                            sx={{ flex: 1 }}
+                                        >
+                                            <MyMessages />
+                                        </Box>
+                                    </Box>
+                                </CssVarsProvider>
+                            }
+                        />
+                    </Route>
+                    <Route
+                        path="admin"
+                        element={
+                            <ProtectedRoute>
+                                <UserProvider>
+                                    <AdminAppLayout />
+                                </UserProvider>
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route path="dashboard" element={<AdminDashboard />} />
+                    </Route>
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <UserProvider>
+                                    <StateProvider>
+                                        <AppLayout />
+                                    </StateProvider>
+                                </UserProvider>
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route index element={<Home />} />
+                        <Route path="profile" element={<MyProfile />} />
+                        <Route
+                            path="profile/:userId"
+                            element={<UserProfile />}
+                        />{" "}
+                        <Route path="myLinks" element={<MyLinks />} />
+                        <Route path="search" element={<Search />} />
+                        <Route
+                            path="research-paper"
+                            element={<ResearchPaperPage />}
+                        />
+                        <Route path="article" element={<ArticlePage />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+    );
 }
 export default App;
