@@ -5,6 +5,7 @@ import { Typography, CircularProgress, Divider } from "@mui/joy";
 import Sheet from "@mui/joy/Sheet";
 import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import ReactMarkdown from "react-markdown";
 
 function PdfSummarizerModal({ open, setOpen, summarizedText }) {
   return (
@@ -95,18 +96,55 @@ function PdfSummarizerModal({ open, setOpen, summarizedText }) {
               <ArticleOutlinedIcon
                 sx={{ marginBottom: "8px", width: "30px", height: "30px" }}
               />
-
-              <Typography
-                variant="body1"
-                sx={{
-                  whiteSpace: "pre-wrap",
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  color: "#666",
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
-                {summarizedText}
-              </Typography>
+                <ReactMarkdown
+                  children={summarizedText}
+                  components={{
+                    p: ({ node, ...props }) => (
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          whiteSpace: "pre-wrap",
+                          fontSize: "16px",
+                          lineHeight: "24px",
+                          color: "#666",
+                        }}
+                        {...props}
+                      />
+                    ),
+                    h1: ({ node, ...props }) => (
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          fontSize: "20px",
+                          fontWeight: "bold",
+                          marginTop: "16px",
+                          color: "#444",
+                        }}
+                        {...props}
+                      />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          fontSize: "18px",
+                          fontWeight: "bold",
+                          marginTop: "16px",
+                          color: "#555",
+                        }}
+                        {...props}
+                      />
+                    ),
+                    // Add more custom components as needed
+                  }}
+                />
+              </div>
             </div>
           </>
         ) : (

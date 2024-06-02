@@ -175,9 +175,6 @@ function ResearchPaperPage() {
                 {location.state.publisher.bio} |
                 {location.state.publisher.position}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                Followers: 1,925 | Papers: 4
-              </Typography>
             </Paper>
           </Grid>
         </Grid>
