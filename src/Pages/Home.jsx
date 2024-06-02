@@ -8,130 +8,118 @@ import { Grid } from "@mui/joy";
 import { Height } from "@mui/icons-material";
 
 function Home() {
-    const { jwtToken } = useAuth();
-    const [data, setData] = useState([]);
-    const [isUserYouMayLinkLoading, setisUserYouMayLinkLoading] =
-        useState(false);
-    const [userYouMayLink, setuserYouMayLink] = useState([]);
+  const { jwtToken } = useAuth();
+  const [data, setData] = useState([]);
+  const [isUserYouMayLinkLoading, setisUserYouMayLinkLoading] = useState(false);
+  const [userYouMayLink, setuserYouMayLink] = useState([]);
 
-    useEffect(() => {
-        async function fetchName() {
-            try {
-                const response = await fetch(
-                    "http://localhost:8080/users/userinfo",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${jwtToken}`,
-                        },
-                    }
-                );
+  useEffect(() => {
+    async function fetchName() {
+      try {
+        const response = await fetch("http://localhost:8080/users/userinfo", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
 
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-
-                const data = await response.json();
-                console.log("User data:", data);
-                setData(data);
-            } catch (error) {
-                console.error(
-                    "There was a problem with the fetch operation:",
-                    error
-                );
-            }
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
 
-        fetchName();
-    }, [jwtToken]);
+        const data = await response.json();
+        console.log("User data:", data);
+        setData(data);
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
+      }
+    }
 
-    useEffect(() => {
-        async function fetchUserData() {
-            try {
-                const response = await fetch("http://localhost:8080/users", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${jwtToken}`,
-                    },
-                });
+    fetchName();
+  }, [jwtToken]);
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch user data");
-                }
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const response = await fetch("http://localhost:8080/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
 
-                const data = await response.json();
-                console.log("User data:", data);
-
-                const transformedData = data["_embedded"].userList.map(
-                    (user) => ({
-                        id: user.id,
-                        name: user.firstName,
-                        sharedSkills: user.sharedSkills,
-                        imgSrc: user.profilePicture
-                            ? user.profilePicture.fileName
-                            : "https://i.pravatar.cc/40?img=100",
-                        linked: user.accepted,
-                    })
-                );
-
-                console.log("Transformed data:", transformedData);
-                setuserYouMayLink(transformedData);
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            }
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
         }
 
-        fetchUserData();
-    }, [jwtToken]);
+        const data = await response.json();
+        console.log("User data:", data);
 
-    return (
-        <Container sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-                <Grid
-                    item
-                    xs={12}
-                    md={3}
-                    sx={{
-                        // height: "100%",
-                        alignItems: "center",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 2,
-                    }}
-                    style={{
-                        top: 0,
-                        zIndex: 2,
-                        // height: "100%",
-                    }}
-                >
-                    <HomeProfileCard
-                        style={{ position: "sticky" }}
-                        data={data}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Container sx={{ flexGrow: 1 }}>
-                        <JournalsList />
-                    </Container>
-                </Grid>
-                <Grid
-                    style={{
-                        position: "sticky",
-                    }}
-                    item
-                    xs={12}
-                    md={3}
-                >
-                    <SimilarItemsCard
-                        title="People You May Link With"
-                        items={userYouMayLink}
-                        type="people"
-                        isLoading={isUserYouMayLinkLoading}
-                    />
-                </Grid>
-            </Grid>
-        </Container>
-    );
+        const transformedData = data["_embedded"].userList.map((user) => ({
+          id: user.id,
+          name: user.firstName,
+          sharedSkills: user.sharedSkills,
+          imgSrc: user.profilePicture
+            ? user.profilePicture.fileName
+            : "https://i.pravatar.cc/40?img=100",
+          linked: user.accepted,
+        }));
+
+        console.log("Transformed data:", transformedData);
+        setuserYouMayLink(transformedData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+
+    fetchUserData();
+  }, [jwtToken]);
+
+  return (
+    <Container sx={{ mt: 3 }}>
+      <Grid container spacing={2}>
+        <Grid
+          item
+          xs={12}
+          md={3}
+          sx={{
+            // height: "100%",
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+          style={{
+            top: 0,
+            zIndex: 2,
+            // height: "100%",
+          }}
+        >
+          <HomeProfileCard style={{ position: "sticky" }} data={data} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Container sx={{ flexGrow: 1 }}>
+            <JournalsList />
+          </Container>
+        </Grid>
+        <Grid
+          style={{
+            position: "sticky",
+          }}
+          item
+          xs={12}
+          md={3}
+        >
+          <SimilarItemsCard
+            title="People You May Link With"
+            items={userYouMayLink}
+            type="people"
+            isLoading={isUserYouMayLinkLoading}
+          />
+        </Grid>
+      </Grid>
+    </Container>
+  );
 }
 
 export default Home;
