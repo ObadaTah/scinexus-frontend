@@ -83,19 +83,16 @@ function Home() {
           xs={12}
           md={3}
           sx={{
-            // height: "100%",
+            display: { xs: "none", md: "flex" },
             alignItems: "center",
-            display: "flex",
             flexDirection: "column",
             gap: 2,
-          }}
-          style={{
+            position: "sticky",
             top: 0,
-            zIndex: 2,
-            // height: "100%",
+            height: "100vh",
           }}
         >
-          <HomeProfileCard style={{ position: "sticky" }} data={data} />
+          <HomeProfileCard data={data} />
         </Grid>
         <Grid item xs={12} md={6}>
           <Container sx={{ flexGrow: 1 }}>
@@ -103,12 +100,15 @@ function Home() {
           </Container>
         </Grid>
         <Grid
-          style={{
-            position: "sticky",
-          }}
           item
           xs={12}
           md={3}
+          sx={{
+            display: { xs: "none", md: "block" },
+            position: "sticky",
+            top: 0,
+            height: "100vh",
+          }}
         >
           <SimilarItemsCard
             title="People You May Link With"
