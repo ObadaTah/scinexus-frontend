@@ -41,8 +41,8 @@ const SimilarItem = ({
     onClick,
     id,
 }) => (
-    <SimilarItemContainer onClick={onClick}>
-        <Box display="flex" alignItems="center">
+    <SimilarItemContainer>
+        <Box display="flex" alignItems="center" onClick={onClick}>
             <Avatar src={imgSrc} alt={name} sx={{ mr: 2 }} />
             <Box>
                 <Typography level="body1" fontWeight="bold">
@@ -71,11 +71,11 @@ function SimilarItemsCard({ title, items, type, isLoading }) {
     function onClick(id) {
         if (!id) return;
         console.log("Clicked on item with id:", id);
-        // if (type === "people") {
-        //     navigate(`/profile/${id}`);
-        // } else {
-        //     navigate(`/organization/${id}`);
-        // }
+        if (type === "people") {
+            navigate(`/profile/${id}`);
+        } else {
+            navigate(`/organization/${id}`);
+        }
     }
 
     return (
