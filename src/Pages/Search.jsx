@@ -40,15 +40,16 @@ export default function Search() {
             let data = await response.json();
             // console.log(data["_embedded"].articleList);
             if (response.ok) {
-                setArticles(data["_embedded"].articleList);
-                setPosts(data["_embedded"].postList);
-                setResearchPapers(data["_embedded"].researchPaperList);
-                setIsLoading("none");
+                setArticles(data["_embedded"]?.articleList);
+                setPosts(data["_embedded"]?.postList);
+                setResearchPapers(data["_embedded"]?.researchPaperList);
             }
+            setIsLoading("none");
             console.log(() => articles);
             console.log(() => posts);
             console.log(() => researchPapers);
         }
+        // sleep(1000);
         fetchSearch(e);
     };
 
@@ -71,59 +72,65 @@ export default function Search() {
                         <Tab>Articles</Tab>
                         <Tab>Research Papers</Tab>
                     </TabList>
-                    <TabPanel value={0}>
+                    <TabPanel value={0} style={{ width: "100%" }}>
                         <b>Posts</b> tab panel
-                        <>
-                            <Container
-                                sx={{
-                                    wordWrap: "break-word",
-                                    // marginTop: 2,
-                                    // display: "flex",
-                                    // flexDirection: "column",
-                                    // alignItems: "center",
-                                    // width: { xs: "100%", sm: "80%", md: "60%" },
-                                }}
-                            >
+                        <Container
+                            sx={{
+                                wordWrap: "break-word",
+                                // marginTop: 2,
+                                // display: "flex",
+                                // flexDirection: "column",
+                                // alignItems: "center",
+                                // width: { xs: "100%", sm: "80%", md: "60%" },
+                            }}
+                        >
+                            <Grid item xs={5} style={{ display: isLoading }}>
                                 <SkeletonLoader
                                     // style={{ maxWidth: "50%" }}
                                     isLoading={isLoading}
                                 />
+                            </Grid>
+                            <Grid item xs={5} style={{ display: isLoading }}>
+                                <SkeletonLoader
+                                    // style={{ maxWidth: "50%" }}
+                                    isLoading={isLoading}
+                                />
+                            </Grid>
 
-                                <Grid spacing={5} container>
-                                    {posts?.map((post, index) => (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                            lg={6}
-                                            key={index}
-                                            sx={
-                                                {
-                                                    // display: "flex",
-                                                    // justifyContent: "center",
-                                                    // width: "100%",
-                                                }
+                            <Grid spacing={5} container>
+                                {posts?.map((post, index) => (
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        md={6}
+                                        lg={6}
+                                        key={index}
+                                        sx={
+                                            {
+                                                // display: "flex",
+                                                // justifyContent: "center",
+                                                // width: "100%",
                                             }
-                                        >
-                                            <NewPost {...post} owner={true} />
-                                        </Grid>
-                                    ))}
-                                    {posts === undefined && (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                width: "100%",
-                                            }}
-                                        >
-                                            <h1>There Are no Posts To Show</h1>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                            </Container>
-                        </>
+                                        }
+                                    >
+                                        <NewPost {...post} owner={true} />
+                                    </Grid>
+                                ))}
+                                {posts === undefined && (
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            width: "100%",
+                                        }}
+                                    >
+                                        <h1>There Are no Posts To Show</h1>
+                                    </Grid>
+                                )}
+                            </Grid>
+                        </Container>
                     </TabPanel>
                     <TabPanel value={1}>
                         <>

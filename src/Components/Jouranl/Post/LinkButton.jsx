@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
-import { Button } from "@mui/joy";
+import { Button, CircularProgress } from "@mui/joy";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUser } from "../../contexts/UserContext";
 
-function LinkButton(props) {
+function LinkButton({ id, ...props }) {
     const { jwtToken } = useAuth();
     const { user } = useUser();
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState("");
-    function getStatus() {
+    async function getStatus() {
         console.log(user);
-        if (user.id === props.id) {
+        if (user.id === id) {
             setStatus("SELF");
             return;
         }
-        fetch(`http://localhost:8080/users/links/${props.id}`, {
+        if (!jwtToken) return;
+        if (!user.id) return;
+        setLoading(true);
+        await fetch(`http://localhost:8080/users/links/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -24,6 +27,8 @@ function LinkButton(props) {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
+                setLoading(false);
+
                 if (data.accepted === true) {
                     setStatus("LINKED");
                     return;
@@ -41,16 +46,16 @@ function LinkButton(props) {
             });
     }
     useEffect(() => {
-        setLoading(true);
+        console.log("STATUS: " + status);
         getStatus();
-        setLoading(false);
-    }, []);
+        console.log("STATUS: " + status);
+    }, [jwtToken, user.id]);
     let connect = () => {
-        // setLoading(true);
+        setLoading(true);
         // console.log(loading);
         // console.log(loading);
         if (status === "LINKED" || status === "SENT") {
-            fetch(`http://localhost:8080/users/links/${props.id}`, {
+            fetch(`http://localhost:8080/users/links/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -65,17 +70,14 @@ function LinkButton(props) {
                     console.error("Error:", error);
                 });
         } else if (status === "RECEIVED") {
-            fetch(
-                `http://localhost:8080/users/links/${props.id}/response/true`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${jwtToken}`,
-                    },
-                    body: JSON.stringify({ answer: true }),
-                }
-            )
+            fetch(`http://localhost:8080/users/links/${id}/response/true`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwtToken}`,
+                },
+                body: JSON.stringify({ answer: true }),
+            })
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data);
@@ -84,7 +86,8 @@ function LinkButton(props) {
                     console.error("Error:", error);
                 });
         } else if (status === "NOTHING") {
-            fetch(`http://localhost:8080/users/links/${props.id}`, {
+            console.log("LINKING: " + id);
+            fetch(`http://localhost:8080/users/links/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -99,11 +102,11 @@ function LinkButton(props) {
                 .catch((error) => {
                     console.error("Error:", error);
                 });
+            setLoading(false);
         }
         setTimeout(() => {
             getStatus();
         }, 500);
-        setLoading(false);
     };
 
     return (
@@ -126,7 +129,9 @@ function LinkButton(props) {
 
                 connect();
             }}
-            loading={loading}
+            // loading={loading !== undefined ? loading : false}
+            // loadingIndicator={<CircularProgress color="inherit" size={16} />}
+
             disabled={
                 !(
                     status === "LINKED" ||
@@ -138,9 +143,8 @@ function LinkButton(props) {
                 loading
             }
         >
-            {loading
-                ? "Just a sec..."
-                : status === "LINKED"
+            {loading ? <CircularProgress /> : null}
+            {status === "LINKED"
                 ? "Unlink"
                 : status === "SENT"
                 ? "Unsend"
@@ -150,7 +154,7 @@ function LinkButton(props) {
                 ? "Link"
                 : status === "SELF"
                 ? "It is You :)"
-                : "Just a sec..."}
+                : null}
         </Button>
     );
 }
