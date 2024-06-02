@@ -226,7 +226,7 @@ export default function Navbar({
         <Button
           variant="plain"
           color="neutral"
-          aria-pressed="true"
+          aria-pressed="false"
           component="a"
           size="lg"
           sx={{ alignSelf: "center" }}
