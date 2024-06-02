@@ -5,7 +5,7 @@ import Article from "../../Components/Jouranl/Post/Article";
 import { useAuth } from "../../Components/contexts/AuthContext";
 import SkeletonLoader from "../../Components/Jouranl/Post/SkeletonLoader";
 
-function ArticlesTab() {
+function ArticlesTab(props) {
     const [articles, setArticles] = useState([]);
     const [isLoading, setIsLoading] = useState("block");
     const { jwtToken } = useAuth();
@@ -13,7 +13,7 @@ function ArticlesTab() {
     useEffect(function () {
         async function getAllArticles() {
             const response = await fetch(
-                "http://localhost:8080/users/articles",
+                `http://localhost:8080/users/${props.id}/articles`,
                 {
                     method: "GET",
                     headers: {
@@ -81,7 +81,7 @@ function ArticlesTab() {
                                 width: "100%",
                             }}
                         >
-                            <h1>You Don't Have Any Articles</h1>
+                            <h1>There Are No Any Articles To Show</h1>
                         </Grid>
                     )}
                 </Grid>

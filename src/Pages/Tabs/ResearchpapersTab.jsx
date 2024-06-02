@@ -5,7 +5,7 @@ import NewResearchPaper from "../../Components/Jouranl/ResearchPaper/NewResearch
 import { useAuth } from "../../Components/contexts/AuthContext";
 import SkeletonLoader from "../../Components/Jouranl/Post/SkeletonLoader";
 
-function ResearchpapersTab() {
+function ResearchpapersTab(props) {
     const [researchpapers, setResearchpapers] = useState([]);
     const [isLoading, setIsLoading] = useState("block");
 
@@ -14,7 +14,7 @@ function ResearchpapersTab() {
     useEffect(function () {
         async function getAllResearchpapers() {
             const response = await fetch(
-                "http://localhost:8080/users/researchpapers",
+                `http://localhost:8080/users/${props.id}/researchpapers`,
                 {
                     method: "GET",
                     headers: {
@@ -83,7 +83,7 @@ function ResearchpapersTab() {
                                 width: "100%",
                             }}
                         >
-                            <h1>You Don't have any Research Papers</h1>
+                            <h1>There Are No Any Research Papers To Show</h1>
                         </Grid>
                     )}
                 </Grid>

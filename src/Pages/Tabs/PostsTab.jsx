@@ -6,7 +6,7 @@ import { useAuth } from "../../Components/contexts/AuthContext";
 import SkeletonLoader from "../../Components/Jouranl/Post/SkeletonLoader";
 import { Snackbar } from "@mui/joy";
 
-function PostsTab() {
+function PostsTab(props) {
     const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState("block");
     const { jwtToken } = useAuth();
@@ -14,13 +14,17 @@ function PostsTab() {
 
     useEffect(function () {
         async function getAllPosts() {
-            const response = await fetch("http://localhost:8080/users/posts", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${jwtToken}`,
-                },
-            });
+            const response = await fetch(
+                `http://localhost:8080/users/${props.id}/posts`,
+
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${jwtToken}`,
+                    },
+                }
+            );
             if (response.status === 200 || response.status === 201) {
                 const data = await response.json();
                 if (data["_embedded"] === undefined) {
@@ -88,7 +92,7 @@ function PostsTab() {
                                 width: "100%",
                             }}
                         >
-                            <h1>You Don't have any Posts</h1>
+                            <h1>There Are No Any Posts To Show</h1>
                         </Grid>
                     )}
                 </Grid>
