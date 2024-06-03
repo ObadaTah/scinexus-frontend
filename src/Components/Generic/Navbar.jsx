@@ -223,6 +223,8 @@ export default function Navbar({
         >
           HOME
         </Button>
+        <ColorSchemeToggle sx={{ ml: "auto" }} />
+
         <Button
           variant="plain"
           color="neutral"
