@@ -34,6 +34,9 @@ import styles from "./Navbar.module.css";
 import TeamNav from "./Navigation";
 import { useUser } from "../contexts/UserContext";
 import { useStateContext } from "../contexts/StateContext";
+import { Paper } from "@mui/material";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 
 export default function Navbar({
   email = "switi.2003@gmail.com",
@@ -125,7 +128,7 @@ export default function Navbar({
   };
 
   return (
-    <Box
+    <Paper
       sx={{
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
@@ -223,7 +226,6 @@ export default function Navbar({
         >
           HOME
         </Button>
-        <ColorSchemeToggle sx={{ ml: "auto" }} />
 
         <Button
           variant="plain"
@@ -269,6 +271,12 @@ export default function Navbar({
           }}
         >
           <SearchRoundedIcon />
+        </IconButton>
+        <IconButton
+        //  onClick={toggleColorScheme}
+        >
+          {/* Toggle to {mode === "dark" ? "Light" : "Dark"} Mode */}
+          {true ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
         </IconButton>
 
         <Dropdown>
@@ -384,6 +392,6 @@ export default function Navbar({
           </Menu>
         </Dropdown>
       </Box>
-    </Box>
+    </Paper>
   );
 }

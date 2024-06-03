@@ -86,10 +86,11 @@ function NewResearchPaper(props) {
           >
             <AspectRatio id="arPhoto" ratio="1/1.5" sx={{ width: "30%" }}>
               <img
-                src={
-                  preview ||
-                  "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg?ts=1637012564"
-                }
+                style={{
+                  border: "1px solid #cdc5af",
+                  borderRadius: "5px",
+                }}
+                src={preview || "./thumbnail.png"}
                 // src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg?ts=1637012564"
                 // srcSet="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg?ts=1637012564"
                 alt=""

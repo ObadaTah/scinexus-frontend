@@ -1,4 +1,4 @@
-import { Box, Container } from "@mui/material";
+import { Box, Container, Paper } from "@mui/material";
 import JournalsList from "../Components/Generic/JournalsList";
 import { useEffect, useState } from "react";
 import { useAuth } from "../Components/contexts/AuthContext";
@@ -76,49 +76,51 @@ function Home() {
   }, [jwtToken]);
 
   return (
-    <Container sx={{ mt: 3 }}>
-      <Grid container spacing={2}>
-        <Grid
-          item
-          xs={12}
-          md={3}
-          sx={{
-            display: { xs: "none", md: "flex" },
-            alignItems: "center",
-            flexDirection: "column",
-            gap: 2,
-            position: "sticky",
-            top: 0,
-            height: "100vh",
-          }}
-        >
-          <HomeProfileCard data={data} />
+    <Paper>
+      <Container sx={{ mt: 3 }}>
+        <Grid container spacing={2}>
+          <Grid
+            item
+            xs={12}
+            md={3}
+            sx={{
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+              flexDirection: "column",
+              gap: 2,
+              position: "sticky",
+              top: 0,
+              height: "100vh",
+            }}
+          >
+            <HomeProfileCard data={data} />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Container sx={{ flexGrow: 1 }}>
+              <JournalsList />
+            </Container>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={3}
+            sx={{
+              display: { xs: "none", md: "block" },
+              position: "sticky",
+              top: 0,
+              height: "100vh",
+            }}
+          >
+            <SimilarItemsCard
+              title="People You May Link With"
+              items={userYouMayLink}
+              type="people"
+              isLoading={isUserYouMayLinkLoading}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Container sx={{ flexGrow: 1 }}>
-            <JournalsList />
-          </Container>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={3}
-          sx={{
-            display: { xs: "none", md: "block" },
-            position: "sticky",
-            top: 0,
-            height: "100vh",
-          }}
-        >
-          <SimilarItemsCard
-            title="People You May Link With"
-            items={userYouMayLink}
-            type="people"
-            isLoading={isUserYouMayLinkLoading}
-          />
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Paper>
   );
 }
 
